@@ -1,12 +1,11 @@
 {% extends 'layout/master.html' %}
 
-{% set title = 'Dashboard' %}
 {% set body_class = 'hold-transition sidebar-mini' %}
 
 {% block layout %}
 <div class="wrapper">
-    {% include 'layout/partials/navigation.html' %}
-    {% include 'layout/partials/sidebar.html' %}
+    {% include 'layout/partials/top_navigation.html' %}
+    {% include 'layout/partials/side_navigation.html' %}
     <div class="content-wrapper">
         {% block content %}
         {% endblock content %}

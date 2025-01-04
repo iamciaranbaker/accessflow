@@ -1,0 +1,55 @@
+<aside class="main-sidebar sidebar-dark-olive elevation-4">
+    <a href="#" class="brand-link text-center">
+        <span class="brand-text font-weight-light"><b>Access</b>Flow</span>
+    </a>
+    <div class="sidebar">
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item">
+                    <a href="#" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link {% if request.endpoint == 'requests' %}active{% endif %}">
+                        <i class="nav-icon fas fa-tasks"></i>
+                        <p>Requests</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link {% if 'directory' in request.endpoint %}active{% endif %}">
+                        <i class="nav-icon fas fa-folder"></i>
+                        <p>Cloud Directory <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link {% if request.endpoint == 'directory/users' %}active{% endif %}">
+                                <div class="nav-item-content">
+                                    <i class="fas fa-user nav-icon"></i>
+                                    <p>Users</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link {% if request.endpoint == 'directory/groups' %}active{% endif %}">
+                                <div class="nav-item-content">
+                                    <i class="fas fa-users nav-icon"></i>
+                                    <p>Groups</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link {% if request.endpoint == 'directory/services' %}active{% endif %}">
+                                <div class="nav-item-content">
+                                    <i class="fas fa-server nav-icon"></i>
+                                    <p>Services</p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
