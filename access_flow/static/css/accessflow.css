@@ -1,9 +1,3 @@
-/* Indent only the content (text and icon) without affecting hover area */
-.nav-item-content {
-    margin-left: 20px; /* Indentation for nested items */
-}
-
-/* Ensures the hover area stays the same size for all items */
 .nav-link {
     padding-left: 10px;
 }
