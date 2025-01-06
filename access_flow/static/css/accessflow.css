@@ -14,43 +14,12 @@
   transform: rotate(180deg);
 }
 
-.avatar {
-    width: 40px;
-    height: 40px;
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1rem;
-    line-height: 1;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.avatar .initials {
-    transform: translateY(-1px);
-}
-
 .user-info {
     line-height: 1.2;
     max-width: 150px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.user-name,
-.user-handle {
-    display: block;
-    text-align: left;
-    line-height: 1.2;
-}
-
-.user-dropdown:hover .avatar,
-.user-dropdown:focus .avatar {
-    filter: brightness(0.9);
 }
 
 .btn-actions:hover {
@@ -65,20 +34,42 @@
     border-radius: 5px;
 }
 
+/*
 .card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px; /* Adjusted padding for overall header */
+    padding: 10px 20px;
 }
 
 .card-header .card-title {
     flex-grow: 1;
     margin: 0;
-    align-self: center; /* Force vertical center alignment */
+    align-self: center;
 }
 
 .card-tools {
     display: flex;
-    align-items: center; /* This ensures that all items in card-tools are also vertically centered */
+    align-items: center;
+}
+*/
+
+.user-permissions-table {
+    width: 100%;
+}
+
+.user-permission-name {
+    width: 70%;
+}
+
+.user-permissions-table th:not(.user-permission-name), .user-permissions-table td:not(.user-permission-name) {
+    width: 10%;
+}
+
+.user-permission-name {
+    line-height: 1.2;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

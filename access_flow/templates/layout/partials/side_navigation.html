@@ -24,7 +24,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ url_for('directory/users') }}" class="nav-link {% if request.endpoint == 'directory/users' %}active{% endif %}" data-tooltip="Users">
+                            <a href="{{ url_for('directory/users') }}" class="nav-link {% if 'directory/users' in request.endpoint %}active{% endif %}" data-tooltip="Users">
                                 <div class="nav-item-content">
                                     <i class="fas fa-user nav-icon"></i>
                                     <p>Users</p>
@@ -32,7 +32,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('directory/groups') }}" class="nav-link {% if request.endpoint == 'directory/groups' %}active{% endif %}" data-tooltip="Groups">
+                            <a href="{{ url_for('directory/groups') }}" class="nav-link {% if 'directory/groups' in request.endpoint %}active{% endif %}" data-tooltip="Groups">
                                 <div class="nav-item-content">
                                     <i class="fas fa-users nav-icon"></i>
                                     <p>Groups</p>
@@ -40,7 +40,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('directory/services') }}" class="nav-link {% if request.endpoint == 'directory/services' %}active{% endif %}" data-tooltip="Services">
+                            <a href="{{ url_for('directory/services') }}" class="nav-link {% if 'directory/services' in request.endpoint %}active{% endif %}" data-tooltip="Services">
                                 <div class="nav-item-content">
                                     <i class="fas fa-server nav-icon"></i>
                                     <p>Services</p>
@@ -56,7 +56,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ url_for('administration/users') }}" class="nav-link {% if request.endpoint == 'administration/users' %}active{% endif %}" data-tooltip="Users">
+                            <a href="{{ url_for('administration/users') }}" class="nav-link {% if 'administration/users' in request.endpoint %}active{% endif %}" data-tooltip="Users">
                                 <div class="nav-item-content">
                                     <i class="fas fa-user nav-icon"></i>
                                     <p>Users</p>
@@ -64,7 +64,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('administration/logs') }}" class="nav-link {% if request.endpoint == 'administration/logs' %}active{% endif %}" data-tooltip="Logs">
+                            <a href="{{ url_for('administration/logs') }}" class="nav-link {% if 'administration/logs' in request.endpoint %}active{% endif %}" data-tooltip="Logs">
                                 <div class="nav-item-content">
                                     <i class="fas fa-list-ul nav-icon"></i>
                                     <p>Logs</p>

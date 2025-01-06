@@ -1,8 +1,14 @@
 import re
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import ValidationError, DataRequired, Length, Regexp, EqualTo
+from wtforms import StringField, EmailField, PasswordField, SubmitField
+from wtforms.validators import ValidationError, DataRequired, Length, Email, Regexp, EqualTo
 from access_flow.models.user import User
+
+def email_address_validator(form, field):
+    # Check if user already exists with given email address.
+    user = User.query.filter_by(email_address = field.data).first()
+    if user:
+        raise ValidationError("Your email address is already in use.")
 
 """
 Passwords need to:
@@ -34,7 +40,7 @@ def password_validator(form, field):
         raise ValidationError("Your password must contain a symbol.")
 
 class LoginForm(FlaskForm):
-    username = StringField("Username", [DataRequired()])
+    email_address = EmailField("Email Address", [DataRequired()])
     password = PasswordField("Password", [DataRequired()])
     submit = SubmitField("Login")
 
@@ -46,3 +52,11 @@ class UpdatePasswordForm(FlaskForm):
     password = PasswordField("Password", [DataRequired(), password_validator])
     confirm_password = PasswordField("Confirm Password", [DataRequired(), EqualTo("password", message = "The entered passwords must match.")])
     submit = SubmitField("Update Password")
+
+class CreateUserForm(FlaskForm):
+    first_name = StringField("First Name", [DataRequired(), Length(min = 2, max = 50), Regexp(regex = r"^([\u00c0-\u01ffa-zA-Z'\-])+$", message = "The entered first name is invalid.")])
+    last_name = StringField("Last Name", [DataRequired(), Length(min = 2, max = 50), Regexp(regex = r"^([\u00c0-\u01ffa-zA-Z'\-])+$", message = "The entered last name is invalid.")])
+    email_address = EmailField("Email Address", [DataRequired(), Length(max = 100), Email(message = "The entered email address is invalid."), email_address_validator])
+    password = PasswordField("Password", [DataRequired(), password_validator])
+    confirm_password = PasswordField("Confirm Password", [DataRequired(), EqualTo("password", message = "The entered passwords must match.")])
+    submit = SubmitField("Create")
