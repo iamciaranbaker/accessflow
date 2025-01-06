@@ -6,25 +6,25 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column nav-legacy nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                    <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" data-tooltip="Dashboard">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ url_for('requests') }}" class="nav-link {% if request.endpoint == 'requests' %}active{% endif %}">
+                    <a href="{{ url_for('requests') }}" class="nav-link {% if request.endpoint == 'requests' %}active{% endif %}" data-tooltip="Requests">
                         <i class="nav-icon fas fa-tasks"></i>
                         <p>Requests</p>
                     </a>
                 </li>
                 <li class="nav-item {% if 'directory' in request.endpoint %}menu-open{% endif %}">
-                    <a href="#" class="nav-link {% if 'directory' in request.endpoint %}active{% endif %}">
+                    <a href="#" class="nav-link {% if 'directory' in request.endpoint %}active{% endif %}" data-tooltip="Directory">
                         <i class="nav-icon fas fa-folder"></i>
-                        <p>Directory <i class="fas fa-angle-left right"></i></p>
+                        <p>Directory <i class="fas fa-angle-down right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ url_for('directory/users') }}" class="nav-link {% if request.endpoint == 'directory/users' %}active{% endif %}">
+                            <a href="{{ url_for('directory/users') }}" class="nav-link {% if request.endpoint == 'directory/users' %}active{% endif %}" data-tooltip="Users">
                                 <div class="nav-item-content">
                                     <i class="fas fa-user nav-icon"></i>
                                     <p>Users</p>
@@ -32,7 +32,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('directory/groups') }}" class="nav-link {% if request.endpoint == 'directory/groups' %}active{% endif %}">
+                            <a href="{{ url_for('directory/groups') }}" class="nav-link {% if request.endpoint == 'directory/groups' %}active{% endif %}" data-tooltip="Groups">
                                 <div class="nav-item-content">
                                     <i class="fas fa-users nav-icon"></i>
                                     <p>Groups</p>
@@ -40,7 +40,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('directory/services') }}" class="nav-link {% if request.endpoint == 'directory/services' %}active{% endif %}">
+                            <a href="{{ url_for('directory/services') }}" class="nav-link {% if request.endpoint == 'directory/services' %}active{% endif %}" data-tooltip="Services">
                                 <div class="nav-item-content">
                                     <i class="fas fa-server nav-icon"></i>
                                     <p>Services</p>
@@ -50,13 +50,13 @@
                     </ul>
                 </li>
                 <li class="nav-item {% if 'administration' in request.endpoint %}menu-open{% endif %}">
-                    <a href="#" class="nav-link {% if 'administration' in request.endpoint %}active{% endif %}">
+                    <a href="#" class="nav-link {% if 'administration' in request.endpoint %}active{% endif %}" data-tooltip="Administration">
                         <i class="nav-icon fas fa-cog"></i>
-                        <p>Administration <i class="fas fa-angle-left right"></i></p>
+                        <p>Administration <i class="fas fa-angle-down right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ url_for('administration/users') }}" class="nav-link {% if request.endpoint == 'administration/users' %}active{% endif %}">
+                            <a href="{{ url_for('administration/users') }}" class="nav-link {% if request.endpoint == 'administration/users' %}active{% endif %}" data-tooltip="Users">
                                 <div class="nav-item-content">
                                     <i class="fas fa-user nav-icon"></i>
                                     <p>Users</p>
@@ -64,7 +64,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('administration/logs') }}" class="nav-link {% if request.endpoint == 'administration/logs' %}active{% endif %}">
+                            <a href="{{ url_for('administration/logs') }}" class="nav-link {% if request.endpoint == 'administration/logs' %}active{% endif %}" data-tooltip="Logs">
                                 <div class="nav-item-content">
                                     <i class="fas fa-list-ul nav-icon"></i>
                                     <p>Logs</p>

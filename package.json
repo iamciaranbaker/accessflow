@@ -1,0 +1,24 @@
+{
+  "name": "access-flow",
+  "version": "1.0.0",
+  "description": "AccessFlow is a comprehensive user access management system designed to streamline CIS engineers' workflows by integrating Jira Service Desk and GitLab. The system enables engineers to view, approve, or decline user requests which automatically trigger GitLab pipelines to provision user accounts on requested services and environments.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-js": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.alm.corp.hmrc.gov.uk:U.8904064/access-flow.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "terser-webpack-plugin": "^5.3.11"
+  }
+}
