@@ -1,1 +1,4 @@
-from access_flow import app
+from accessflow import app
+
+if __name__ == "__main__":
+    app.run(debug = True)

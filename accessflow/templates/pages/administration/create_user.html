@@ -1,0 +1,153 @@
+{% extends 'layout/base.html' %}
+
+{% set title = 'Create User' %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <h1>Create User</h1>
+        <span class="text-muted">Create a user in the system.</span>
+    </div>
+</div>
+<div class="content">
+    <div class="container-fluid">
+        <form method="post" class="form-horizontal">
+            {{ form.csrf_token(id = False) }}
+            <div class="row">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-12 user-identity">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Identity</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        {{ form.first_name.label(class = 'col-3 col-form-label') }}
+                                        <div class="col-9">
+                                            {{ form.first_name(class = 'form-control is-invalid' if 'first_name' in form.errors else 'form-control', placeholder = 'First Name', autofocus = True if autofocus == 'first_name' else False) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        {{ form.last_name.label(class = 'col-3 col-form-label') }}
+                                        <div class="col-9">
+                                            {{ form.last_name(class = 'form-control is-invalid' if 'last_name' in form.errors else 'form-control', placeholder = 'Last Name', autofocus = True if autofocus == 'last_name' else False) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        {{ form.email_address.label(class = 'col-3 col-form-label') }}
+                                        <div class="col-9">
+                                            {{ form.email_address(class = 'form-control is-invalid' if 'email_address' in form.errors else 'form-control', placeholder = 'Email Address', autofocus = True if autofocus == 'email_address' else False) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 user-password">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Password</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        {{ form.password.label(class = 'col-3 col-form-label') }}
+                                        <div class="col-9">
+                                            <div class="input-group">
+                                                {{ form.password(class='form-control', id='password', placeholder='Password') }}
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-default toggle-password" title="Reveal Password">
+                                                        <i class="far fa-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        {{ form.confirm_password.label(class = 'col-3 col-form-label') }}
+                                        <div class="col-9">
+                                            <div class="input-group">
+                                                {{ form.confirm_password(class='form-control', id='confirm_password', placeholder='Confirm Password') }}
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-default toggle-password" title="Reveal Password">
+                                                        <i class="far fa-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="offset-3 col-9">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="changePass">
+                                                <label class="form-check-label" for="changePass">Require password change on first login?</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary float-right">Create User</button>
+                                </div>
+                            </div>
+                        </div>                     
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-12 user-permissions">
+                            <div class="card">
+                                <div class="card-header" style="border-bottom: none">
+                                    <h3 class="card-title">Permissions</h3>
+                                </div>
+                                <div class="card-body table-responsive p-0">
+                                    <form>
+                                        <table class="table table-head-fixed user-permissions-table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="user-permission-name"></th>
+                                                    <th class="text-center">Yes</th>
+                                                    <th class="text-center">No</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% set permission_groups = {
+                                                    'General Permissions': ['View', 'Edit', 'Delete'],
+                                                    'Administrator Permissions': ['View', 'Edit', 'Delete']
+                                                } %}
+                                                {% for group, permissions in permission_groups.items() %}
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <strong>{{ group }}</strong>
+                                                    </td>
+                                                </tr>
+                                                {% for permission in permissions %}
+                                                <tr class="disabled">
+                                                    <td class="align-middle user-permission-name">
+                                                        <div class="d-flex align-items-center">
+                                                            <div style="line-height: 1.2">
+                                                                <span class="d-block">{{ permission }}</span>
+                                                                <span class="small text-muted">This is an example description.</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <input type="radio" name="{{ permission }}" value="Yes" disabled>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <input type="radio" name="{{ permission }}" value="No" disabled>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
