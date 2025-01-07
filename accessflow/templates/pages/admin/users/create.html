@@ -109,36 +109,41 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% set permission_groups = {
-                                                    'General Permissions': ['View', 'Edit', 'Delete'],
-                                                    'Administrator Permissions': ['View', 'Edit', 'Delete']
-                                                } %}
-                                                {% for group, permissions in permission_groups.items() %}
-                                                <tr>
-                                                    <td colspan="3">
-                                                        <strong>{{ group }}</strong>
-                                                    </td>
-                                                </tr>
-                                                {% for permission in permissions %}
-                                                <tr class="disabled">
-                                                    <td class="align-middle user-permission-name">
-                                                        <div class="d-flex align-items-center">
-                                                            <div style="line-height: 1.2">
-                                                                <span class="d-block">{{ permission }}</span>
-                                                                <span class="small text-muted">This is an example description.</span>
+                                                {% set displayed_types = namespace(types = []) %}
+                                                {% for permission in get_all_permissions(ordered = True) %}
+                                                    {% set user_has_permission = current_user.has_permission(permission.name) %}
+                                                    {% if permission.type_id not in displayed_types.types %}
+                                                        {% set permission_type = get_permission_type_by_id(permission.type_id) %}
+                                                        <tr>
+                                                            <td class="align-middle" colspan="3">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div style="line-height: 1.2">
+                                                                        <span class="font-weight-bold d-block">{{ permission_type.friendly_name }}</span>
+                                                                        <span class="small text-muted">{{ permission_type.description }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        {% set displayed_types.types = displayed_types.types + [permission.type_id] %}
+                                                    {% endif %}
+                                                    <tr {% if not user_has_permission %}class="disabled"{% endif %}>
+                                                        <td class="align-middle user-permission-name">
+                                                            <div class="d-flex align-items-center">
+                                                                <div style="line-height: 1.2">
+                                                                    <span class="d-block">{{ permission.friendly_name }}</span>
+                                                                    <span class="small text-muted">{{ permission.description }}</span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="align-middle text-center">
-                                                        <input type="radio" name="{{ permission }}" value="Yes" disabled>
-                                                    </td>
-                                                    <td class="align-middle text-center">
-                                                        <input type="radio" name="{{ permission }}" value="No" disabled>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                        <td class="align-middle text-center">
+                                                            <input type="radio" name="{{ permission.name }}" value="Yes" {% if not user_has_permission %}disabled{% endif %}>
+                                                        </td>
+                                                        <td class="align-middle text-center">
+                                                            <input type="radio" name="{{ permission.name }}" value="No" {% if not user_has_permission %}disabled{% endif %}>
+                                                        </td>
+                                                    </tr>
                                                 {% endfor %}
-                                                {% endfor %}
-                                            </tbody>
+                                            </tbody>                                            
                                         </table>
                                     </form>
                                 </div>

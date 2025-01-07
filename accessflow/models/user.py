@@ -1,5 +1,6 @@
 import bcrypt, base64, os, onetimepass
 from datetime import datetime
+from accessflow.utils import get_permission_by_name
 from accessflow import db
 
 class User(db.Model):
@@ -50,6 +51,16 @@ class User(db.Model):
 
     def has_permission(self, name):
         return any(permission.name == name for permission in self.permissions)
+    
+    def add_permission(self, name):
+        permission = get_permission_by_name(name)
+        if permission not in self.permissions:
+            self.permissions.append(permission)
+
+    def remove_permission(self, name):
+        permission = get_permission_by_name(name)
+        if permission in self.permissions:
+            self.permissions.remove(permission)
 
     # Required for flask-login.
     def get_id(self):
@@ -66,3 +77,12 @@ class User(db.Model):
     # Required for flask-login.
     def is_anonymous(self):
         return False
+
+def get_all_users():
+    """
+    Retrieve all User objects.
+
+    Returns:
+      list: A list of all User objects.
+    """
+    return User.query.all()
