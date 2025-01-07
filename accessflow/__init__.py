@@ -16,7 +16,7 @@ login_manager.login_message = "You must be logged in to access this page."
 login_manager.login_message_category = "danger"
 
 from accessflow.models.permission_type import PermissionType
-from accessflow.models.permission import Permission
+from accessflow.models.permission import Permission, get_all_permissions
 from accessflow.models.user import User, get_all_users
 from accessflow.models.user_permission import UserPermission
 
@@ -27,7 +27,6 @@ def load_user(id):
     return User.query.filter_by(id = id).first()
 
 from accessflow.scripts.seed import seed_database
-from accessflow.utils import get_all_permissions
 from accessflow.utils import get_permission_type_by_id
 from accessflow.utils import get_permission_type_by_name
 
@@ -43,6 +42,7 @@ from accessflow.views.admin.users.list import UserListView
 from accessflow.views.admin.users.create import UserCreateView
 from accessflow.views.admin.logs.list import LogListView
 from accessflow.views.auth.login import LoginView
+from accessflow.views.auth.login_two_factor import LoginTwoFactorView
 from accessflow.views.auth.logout import LogoutView
 
 # General Routes
@@ -55,4 +55,5 @@ app.add_url_rule("/admin/users/create", view_func = UserCreateView.as_view("admi
 app.add_url_rule("/admin/logs", view_func = LogListView.as_view("admin/logs"))
 # Auth Routes
 app.add_url_rule("/login", view_func = LoginView.as_view("login"))
+app.add_url_rule("/login/two-factor", view_func = LoginTwoFactorView.as_view("login/two-factor"))
 app.add_url_rule("/logout", view_func = LogoutView.as_view("logout"))

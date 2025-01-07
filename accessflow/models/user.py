@@ -12,6 +12,7 @@ class User(db.Model):
     last_name = db.Column(db.String(50), nullable = False)
     email_address = db.Column(db.String(100), unique = True, nullable = False)
     password = db.Column(db.String(250), nullable = False)
+    password_reset_required = db.Column(db.Boolean, default = False, nullable = False)
     has_two_factor = db.Column(db.Boolean, default = False, nullable = False)
     two_factor_secret = db.Column(db.String(16), nullable = False)
     permissions = db.relationship("Permission", secondary = "user_permissions", backref = db.backref("users", lazy = "dynamic"))

@@ -1,40 +1,23 @@
 from accessflow.models.user import User
 from accessflow.models.permission_type import PermissionType
 from accessflow.models.permission import Permission
-from accessflow.utils import get_all_permissions, get_permission_type_by_name
+from accessflow.utils import get_permission_type_by_name
+from accessflow.models.permission import get_all_permissions
 from accessflow import app, db
 
 def seed_permission_types():
     permission_types = [
         {
-            "name": "requests",
-            "friendly_name": "Requests",
+            "name": "general",
+            "friendly_name": "General",
             "description": "",
             "order_id": 1
         },
         {
-            "name": "users",
-            "friendly_name": "Users",
+            "name": "admin",
+            "friendly_name": "Administrator",
             "description": "",
             "order_id": 2
-        },
-        {
-            "name": "groups",
-            "friendly_name": "Groups",
-            "description": "",
-            "order_id": 3
-        },
-        {
-            "name": "services",
-            "friendly_name": "Services",
-            "description": "",
-            "order_id": 4
-        },
-        {
-            "name": "admin",
-            "friendly_name": "Administration",
-            "description": "",
-            "order_id": 5
         }
     ]
 
@@ -77,95 +60,44 @@ def seed_permission_types():
 def seed_permissions():
     permissions = [
         {
-            "name": "view_requests",
-            "friendly_name": "View Requests",
-            "description": "",
-            "type": "requests",
-            "order_id": 1
+            "name": "list_requests",
+            "friendly_name": "List Requests",
+            "description": "The ability to list requests.",
+            "type": "general",
+            "order_id": 1,
+            "given_by_default": True
         },
         {
-            "name": "view_users",
-            "friendly_name": "View Users",
-            "description": "",
-            "type": "users",
-            "order_id": 2
+            "name": "admin_list_users",
+            "friendly_name": "List Users",
+            "description": "The ability to list system users.",
+            "type": "admin",
+            "order_id": 2,
+            "given_by_default": False
         },
         {
-            "name": "edit_user",
+            "name": "admin_create_users",
+            "friendly_name": "Create Users",
+            "description": "The ability to create system users.",
+            "type": "admin",
+            "order_id": 3,
+            "given_by_default": False
+        },
+        {
+            "name": "admin_edit_users",
             "friendly_name": "Edit Users",
-            "description": "",
-            "type": "users",
-            "order_id": 3
+            "description": "The ability to edit system users.",
+            "type": "admin",
+            "order_id": 4,
+            "given_by_default": False
         },
         {
-            "name": "delete_user",
+            "name": "admin_delete_users",
             "friendly_name": "Delete Users",
-            "description": "",
-            "type": "users",
-            "order_id": 4
-        },
-        {
-            "name": "view_groups",
-            "friendly_name": "View Groups",
-            "description": "",
-            "type": "groups",
-            "order_id": 5
-        },
-        {
-            "name": "edit_groups",
-            "friendly_name": "Edit Groups",
-            "description": "",
-            "type": "groups",
-            "order_id": 6
-        },
-        {
-            "name": "delete_groups",
-            "friendly_name": "Delete Groups",
-            "description": "",
-            "type": "groups",
-            "order_id": 7
-        },
-        {
-            "name": "view_services",
-            "friendly_name": "View Services",
-            "description": "",
-            "type": "services",
-            "order_id": 8
-        },
-        {
-            "name": "edit_services",
-            "friendly_name": "Edit Services",
-            "description": "",
-            "type": "services",
-            "order_id": 9
-        },
-        {
-            "name": "delete_services",
-            "friendly_name": "Delete Services",
-            "description": "",
-            "type": "services",
-            "order_id": 10
-        },
-        {
-            "name": "view_users",
-            "friendly_name": "View Users",
-            "description": "",
+            "description": "The ability to delete system users.",
             "type": "admin",
-            "order_id": 11
-        },
-        {
-            "name": "edit_users",
-            "friendly_name": "Edit Users",
-            "description": "",
-            "type": "admin",
-            "order_id": 12
-        },
-        {
-            "name": "delete_users",
-            "friendly_name": "Delete Users",
-            "description": "",
-            "type": "admin",
-            "order_id": 13
+            "order_id": 5,
+            "given_by_default": False
         }
     ]
 
@@ -193,6 +125,10 @@ def seed_permissions():
                 permission.order_id = permission_data["order_id"]
                 updated = True
 
+            if permission.given_by_default != permission_data["given_by_default"]:
+                permission.given_by_default = permission_data["given_by_default"]
+                updated = True
+
             if updated:
                 print(f"Updated existing permission: {permission.name}")
         else:
@@ -202,7 +138,8 @@ def seed_permissions():
                 friendly_name = permission_data["friendly_name"],
                 description = permission_data["description"],
                 type_id = get_permission_type_by_name(permission_data["type"]).id,
-                order_id = permission_data["order_id"]
+                order_id = permission_data["order_id"],
+                given_by_default = permission_data["given_by_default"]
             )
             db.session.add(permission)
             print(f"Added new permission: {permission.name}")

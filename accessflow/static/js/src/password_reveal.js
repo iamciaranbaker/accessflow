@@ -14,10 +14,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 input.type = "text";
                 icon.classList.remove("fa-eye");
                 icon.classList.add("fa-eye-slash");
+                button.setAttribute("title", "Conceal Password");
             } else {
                 input.type = "password";
                 icon.classList.remove("fa-eye-slash");
                 icon.classList.add("fa-eye");
+                button.setAttribute("title", "Reveal Password");
             }
         });
     });

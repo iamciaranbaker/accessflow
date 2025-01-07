@@ -1,0 +1,37 @@
+{% extends 'layout/master.html' %}
+
+{% set title = 'Login' %}
+{% set body_class = 'hold-transition login-page' %}
+
+{% block layout %}
+<div class="login-box">
+    <div class="card card-outline card-info">
+        <div class="card-header text-center">
+            <span class="h3 font-weight-light">
+                Access<i>Flow</i>
+            </span>
+        </div>
+        <div class="card-body">
+            {% for category, message in get_flashed_messages(with_categories = True) %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            <form method="post">
+                {{ form.csrf_token }}
+                <div class="row">
+                    <div class="col-12">
+                        {{ form.code.label }}
+                        {{ form.code(class = 'form-control is-invalid' if 'code' in form.errors else 'form-control', placeholder = 'Two-Factor Code', autofocus = True) }}
+                    </div>
+                </div>
+                <div class="row pt-3">
+                    <div class="col-12">
+                        {{ form.submit(class = 'btn btn-info btn-block')}}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock layout %}

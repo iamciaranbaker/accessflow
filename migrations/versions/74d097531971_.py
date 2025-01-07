@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 45cbba448346
+Revision ID: 74d097531971
 Revises: 
-Create Date: 2025-01-07 16:39:04.223839
+Create Date: 2025-01-07 22:05:51.911913
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '45cbba448346'
+revision = '74d097531971'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,6 +21,7 @@ def upgrade():
     op.create_table('permission_types',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=100), nullable=False),
+    sa.Column('friendly_name', sa.String(length=100), nullable=False),
     sa.Column('description', sa.String(length=250), nullable=False),
     sa.Column('order_id', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
@@ -33,6 +34,7 @@ def upgrade():
     sa.Column('last_name', sa.String(length=50), nullable=False),
     sa.Column('email_address', sa.String(length=100), nullable=False),
     sa.Column('password', sa.String(length=250), nullable=False),
+    sa.Column('password_reset_required', sa.Boolean(), nullable=False),
     sa.Column('has_two_factor', sa.Boolean(), nullable=False),
     sa.Column('two_factor_secret', sa.String(length=16), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
@@ -43,9 +45,11 @@ def upgrade():
     op.create_table('permissions',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=100), nullable=False),
+    sa.Column('friendly_name', sa.String(length=100), nullable=False),
     sa.Column('description', sa.String(length=250), nullable=False),
     sa.Column('type_id', sa.Integer(), nullable=False),
     sa.Column('order_id', sa.Integer(), nullable=False),
+    sa.Column('given_by_default', sa.Boolean(), nullable=False),
     sa.ForeignKeyConstraint(['type_id'], ['permission_types.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id'),

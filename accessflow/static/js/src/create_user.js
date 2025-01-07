@@ -20,5 +20,10 @@ document.addEventListener("DOMContentLoaded", function() {
     var permissionsBodyHeight = totalLeftHeight - permissionsHeader - permissionsFooter - 16;
 
     var permissionsBody = permissionsCard.querySelector('.card-body');
-    permissionsBody.style.height = permissionsBodyHeight + 'px';
+    var currentPermissionsBodyHeight = permissionsBody.offsetHeight;
+
+    // Only set the height if the current body height is larger than the calculated height
+    if (currentPermissionsBodyHeight > permissionsBodyHeight) {
+        permissionsBody.style.height = permissionsBodyHeight + 'px';
+    }
 });
