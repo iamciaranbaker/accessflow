@@ -11,7 +11,7 @@
 </div>
 <div class="content">
     <div class="container-fluid">
-        <form method="post" class="form-horizontal">
+        <form method="post">
             {{ form.csrf_token(id = False) }}
             <div class="row">
                 <div class="col-12">
@@ -32,19 +32,19 @@
                                     <div class="form-group row">
                                         {{ form.first_name.label(class = 'col-3 col-form-label') }}
                                         <div class="col-9">
-                                            {{ form.first_name(class = 'form-control is-invalid' if 'first_name' in form.errors else 'form-control', placeholder = 'First Name', autofocus = True if autofocus == 'first_name' else False) }}
+                                            {{ render_field(form.first_name, autofocus = (autofocus == 'first_name')) }}
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         {{ form.last_name.label(class = 'col-3 col-form-label') }}
                                         <div class="col-9">
-                                            {{ form.last_name(class = 'form-control is-invalid' if 'last_name' in form.errors else 'form-control', placeholder = 'Last Name', autofocus = True if autofocus == 'last_name' else False) }}
+                                            {{ render_field(form.last_name, autofocus = (autofocus == 'last_name')) }}
                                         </div>
                                     </div>
                                     <div class="form-group row mb-0">
                                         {{ form.email_address.label(class = 'col-3 col-form-label') }}
                                         <div class="col-9">
-                                            {{ form.email_address(class = 'form-control is-invalid' if 'email_address' in form.errors else 'form-control', placeholder = 'Email Address', autofocus = True if autofocus == 'email_address' else False) }}
+                                            {{ render_field(form.email_address, autofocus = (autofocus == 'email_address')) }}
                                         </div>
                                     </div>
                                 </div>
@@ -60,7 +60,7 @@
                                         {{ form.password.label(class = 'col-3 col-form-label') }}
                                         <div class="col-9">
                                             <div class="input-group">
-                                                {{ form.password(class = 'form-control is-invalid' if 'password' in form.errors else 'form-control', placeholder = 'Password', autofocus = True if autofocus == 'password' else False) }}
+                                                {{ render_field(form.password, autofocus = (autofocus == 'password')) }}
                                                 <div class="input-group-append">
                                                     <button type="button" class="btn btn-default toggle-password" title="Reveal Password">
                                                         <i class="far fa-eye"></i>
@@ -73,7 +73,7 @@
                                         {{ form.confirm_password.label(class = 'col-3 col-form-label') }}
                                         <div class="col-9">
                                             <div class="input-group">
-                                                {{ form.confirm_password(class = 'form-control is-invalid' if 'confirm_password' in form.errors else 'form-control', placeholder = 'Confirm Password', autofocus = True if autofocus == 'confirm_password' else False) }}
+                                                {{ render_field(form.confirm_password, autofocus = (autofocus == 'confirm_password')) }}
                                                 <div class="input-group-append">
                                                     <button type="button" class="btn btn-default toggle-password" title="Reveal Password">
                                                         <i class="far fa-eye"></i>

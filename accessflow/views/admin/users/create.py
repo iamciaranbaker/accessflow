@@ -15,7 +15,7 @@ class UserCreateView(View):
 
         if request.method == "POST":
             for group in form.permission_groups:
-                for permission_field in group["permissions"]:
+                for permission_field in group["permission_fields"]:
                     print(permission_field.name)
                     print(permission_field.data)
 

@@ -1,0 +1,4 @@
+{% macro render_field(field, placeholder = None, autofocus = False) %}
+    {% set dynamic_placeholder = placeholder or field.label.text %}
+    {{ field(class = 'form-control' + (' is-invalid' if field.errors else ''), placeholder = dynamic_placeholder, autofocus = autofocus) }}
+{% endmacro %}
