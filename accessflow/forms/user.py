@@ -89,7 +89,7 @@ class CreateUserForm(FlaskForm):
                 default = "true" if permission.given_by_default else "false",
                 description = permission.description
             )
-            field_name = f"p_{permission.name}"
+            field_name = f"permission[{permission.name}]"
 
             # Bind the field to the form and set its default value to its data attribute.
             bound_field = field.bind(self, field_name)

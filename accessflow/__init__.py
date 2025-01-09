@@ -16,24 +16,21 @@ login_manager.login_message = "You must be logged in to access this page."
 login_manager.login_message_category = "danger"
 
 from accessflow.models.permission_type import PermissionType
-from accessflow.models.permission import Permission, get_all_permissions
+from accessflow.models.permission import Permission
 from accessflow.models.user import User, get_all_users
 from accessflow.models.user_permission import UserPermission
 
-migrate = Migrate(app, db, compare_type=True)
+migrate = Migrate(app, db, compare_type = True)
 
 @login_manager.user_loader
 def load_user(id):
     return User.query.filter_by(id = id).first()
 
 from accessflow.scripts.seed import seed_database
-from accessflow.utils import get_permission_type_by_id
-from accessflow.utils import get_permission_type_by_name
 
-app.jinja_env.globals["get_all_permissions"] = get_all_permissions
-app.jinja_env.globals["get_permission_type_by_id"] = get_permission_type_by_id
-app.jinja_env.globals["get_permission_type_by_name"] = get_permission_type_by_name
 app.jinja_env.globals["get_all_users"] = get_all_users
+app.jinja_env.trim_blocks = True
+app.jinja_env.lstrip_blocks = True
 
 from accessflow.views.index import IndexView
 from accessflow.views.dashboard import DashboardView
