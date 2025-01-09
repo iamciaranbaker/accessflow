@@ -1,4 +1,4 @@
-from accessflow.models.permission_type import PermissionType
+from accessflow.models.permission_group import PermissionGroup
 from accessflow.models.permission import Permission
 
 def get_permission_type_by_name(name):

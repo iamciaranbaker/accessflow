@@ -34,6 +34,10 @@
     border-radius: 5px;
 }
 
+.table tbody tr:first-child td {
+    border-top: none;
+}
+
 .user-permissions-table {
     width: 100%;
 }

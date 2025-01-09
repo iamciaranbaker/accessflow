@@ -1,12 +1,12 @@
 import bcrypt, base64, os, onetimepass
-from datetime import datetime
-from accessflow.utils import get_permission_by_name
-from accessflow import db
+from accessflow.models.permission import Permission
+from accessflow import db, login_manager
 
 class User(db.Model):
-    # Set the DB table name.
+    # Table Name
     __tablename__ = "users"
 
+    # Columns
     id = db.Column(db.Integer, autoincrement = True, primary_key = True, unique = True, nullable = False)
     first_name = db.Column(db.String(50), nullable = False)
     last_name = db.Column(db.String(50), nullable = False)
@@ -15,15 +15,21 @@ class User(db.Model):
     password_reset_required = db.Column(db.Boolean, default = False, nullable = False)
     has_two_factor = db.Column(db.Boolean, default = False, nullable = False)
     two_factor_secret = db.Column(db.String(16), nullable = False)
-    permissions = db.relationship("Permission", secondary = "user_permissions", backref = db.backref("users", lazy = "dynamic"))
-    created_at = db.Column(db.DateTime, nullable = False)
+    created_at = db.Column(db.DateTime, default = db.func.now())
+    updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
+
+    # Relationships
+    permissions = db.relationship("Permission", secondary = "user_permissions", lazy = "joined")
 
     # Override the default constructor to pass in what we need to create a user. Everything else is set as a default.
     def __init__(self, first_name, last_name, email_address):
         self.first_name = first_name
         self.last_name = last_name
         self.email_address = email_address
-        self.created_at = datetime.now()
+        self.reset_two_factor()
+
+    def __repr__(self):
+        return f"<User(id=\"{self.id}\", first_name=\"{self.first_name}\", last_name=\"{self.last_name}\", email_address=\"{self.email_address}\")"
 
     # Set the password to the hashed value.
     def set_password(self, password):
@@ -50,18 +56,24 @@ class User(db.Model):
     def reset_two_factor(self):
         self.two_factor_secret = base64.b32encode(os.urandom(10)).decode("utf-8")
 
-    def has_permission(self, name):
-        return any(permission.name == name for permission in self.permissions)
+    def has_permission(self, permission_name):
+        return any(permission.name == permission_name for permission in self.permissions)
     
-    def add_permission(self, name):
-        permission = get_permission_by_name(name)
-        if permission not in self.permissions:
+    def add_permission(self, permission_name):
+        permission = Permission.query.filter_by(name = permission_name).first()
+        if not permission:
+            raise ValueError(f"Permission with name '{permission_name}' does not exist.")
+        if not self.permissions.filter_by(id = permission.id).first():
             self.permissions.append(permission)
+            db.session.commit()
 
-    def remove_permission(self, name):
-        permission = get_permission_by_name(name)
-        if permission in self.permissions:
+    def remove_permission(self, permission_name):
+        permission = Permission.query.filter_by(name = permission_name).first()
+        if not permission:
+            raise ValueError(f"Permission with name '{permission_name}' does not exist.")
+        if self.permissions.filter_by(id = permission.id).first():
             self.permissions.remove(permission)
+            db.session.commit()
 
     # Required for flask-login.
     def get_id(self):
@@ -78,12 +90,23 @@ class User(db.Model):
     # Required for flask-login.
     def is_anonymous(self):
         return False
+    
+    @staticmethod
+    def seed_default():
+        if User.query.count() == 0:
+            user = User("Default", "User", "default@example.com")
+            user.set_password("default")
 
-def get_all_users():
-    """
-    Retrieve all User objects.
+            for permission in Permission.get_all():
+                user.add_permission(permission.name)
 
-    Returns:
-      list: A list of all User objects.
-    """
-    return User.query.all()
+            db.session.add(user)
+            db.session.commit()
+
+    @staticmethod
+    def get_all():
+        return User.query.all()
+    
+@login_manager.user_loader
+def load_user(id):
+    return User.query.filter_by(id = id).first()

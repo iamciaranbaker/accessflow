@@ -115,32 +115,36 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for group in form.permission_groups %}
+                                            {% for permission_group in form.permissions %}
                                                 <tr>
                                                     <td class="align-middle" colspan="3">
                                                         <div class="d-flex align-items-center">
                                                             <div style="line-height: 1.2">
-                                                                <span class="font-weight-bold d-block">{{ group.permission_type.friendly_name }}</span>
-                                                                <span class="small text-muted">{{ group.permission_type.description }}</span>
+                                                                <span class="font-weight-bold d-block">{{ permission_group.permission_group.friendly_name }}</span>
+                                                                {% if permission_group.permission_group.description %}
+                                                                    <span class="small text-muted">{{ permission_group.permission_group.description }}</span>
+                                                                {% endif %}
                                                             </div>
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                {% for field in group.permission_fields %}
+                                                {% for permission in permission_group.permissions %}
                                                     <tr>
                                                         <td class="align-middle user-permission-name">
                                                             <div class="d-flex align-items-center">
                                                                 <div style="line-height: 1.2">
-                                                                    <span class="d-block">{{ field.label.text }}</span>
-                                                                    <span class="small text-muted">{{ field.description }}</span>
+                                                                    <span class="d-block">{{ permission.permission.friendly_name }}</span>
+                                                                    {% if permission.permission.description %}
+                                                                    <span class="small text-muted">{{ permission.permission.description }}</span>
+                                                                {% endif %}
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td class="align-middle text-center">
-                                                            <input type="radio" name="{{ field.name }}" value="true" {% if field.data == "true" %}checked{% endif %}>
+                                                            <input type="radio" name="{{ permission.field.name }}" value="true" {% if permission.field.data == "true" %}checked{% endif %}>
                                                         </td>
                                                         <td class="align-middle text-center">
-                                                            <input type="radio" name="{{ field.name }}" value="false" {% if field.data == "false" %}checked{% endif %}>
+                                                            <input type="radio" name="{{ permission.field.name }}" value="false" {% if permission.field.data == "false" %}checked{% endif %}>
                                                         </td>
                                                     </tr>
                                                 {% endfor %}
@@ -152,9 +156,6 @@
                         </div>
                     </div>
                 </div>
-                
-                
-                
             </div>
         </form>
     </div>

@@ -18,25 +18,25 @@ class LoginView(View):
         autofocus = "email_address"
 
         if request.method == "POST":
-            # If the login form passes the validation.
+            # If the login form passes the validation
             if form.validate_on_submit():
-                # Try and obtain the user from the database using the username provided.
+                # Try and obtain the user from the database using the username provided
                 user = User.query.filter_by(email_address = form.email_address.data).first()
                 
-                # Check if a user is returned and the password matches what the user has entered.
+                # Check if a user is returned and the password matches what the user has entered
                 if user and user.verify_password(form.password.data):
-                    # Check if the user has two-factor authentication enabled.
+                    # Check if the user has two-factor authentication enabled
                     if user.has_two_factor:
-                        # Set the username in the session so we know who is trying to login on the two-factor page.
+                        # Set the username in the session so we know who is trying to login on the two-factor page
                         session["email_address"] = user.email_address
 
-                        # Redirect the user to the two-factor authentication page.
+                        # Redirect the user to the two-factor authentication page
                         return redirect(url_for("login/two-factor"))
                     
-                    # If the user doesn't have two-factor authentication enabled, log them in.
+                    # If the user doesn't have two-factor authentication enabled, log them in
                     login_user(user)
 
-                    # Check if the user needs to be redirected anywhere after login.
+                    # Check if the user needs to be redirected anywhere after login
                     try:
                         destination = url_for(request.args.get("next"))
                     except:
@@ -44,10 +44,10 @@ class LoginView(View):
 
                     return redirect(destination)
                 else:
-                    # Either a user wasn't found in the database, or the password was incorrect.
+                    # Either a user wasn't found in the database, or the password was incorrect
                     flash("Invalid email address or password.", "danger")
             else:
-                # Find the first field with a validation error and set the autofocus to this for better UI experience.
+                # Find the first field with a validation error and set the autofocus to this for better UI experience
                 autofocus = list(form.errors.keys())[0]
 
                 for field in form.errors:

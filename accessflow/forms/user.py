@@ -3,10 +3,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, EmailField, PasswordField, BooleanField, RadioField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Length, Email, Regexp, EqualTo
 from accessflow.models.user import User
-from accessflow.models.permission import get_all_permissions
+from accessflow.models.permission import Permission
 
 def email_address_validator(form, field):
-    # Check if user already exists with given email address.
+    # Check if user already exists with given email address
     user = User.query.filter_by(email_address = field.data).first()
     if user:
         raise ValidationError("Your email address is already in use.")
@@ -21,14 +21,14 @@ def password_validator(form, field):
     * contain at least one symbol
     """
 
-    # Define error cases.
+    # Define error cases
     length_error = len(field.data) < 8
     lowercase_error = re.search(r"[a-z]", field.data) is None
     uppercase_error = re.search(r"[A-Z]", field.data) is None
     digit_error = re.search(r"\d", field.data) is None
     symbol_error = re.search(r"[ !#$%&'()*+,-./[\\\]^_`{|}~"+r'"]', field.data) is None
 
-    # Check if any error cases have been matched.
+    # Check if any error cases have been matched
     if length_error:
         raise ValidationError("Your password must be at least 8 characters.")
     elif lowercase_error:
@@ -65,39 +65,48 @@ class CreateUserForm(FlaskForm):
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.permission_groups = []
+        self.permissions = []
         self.populate_permissions()
 
     def populate_permissions(self):
-        permissions = get_all_permissions(ordered = True)
+        # Retrieve all permissions ordered by their group's display order and then by permission's display order
+        permissions = Permission.get_all(ordered = True)
 
-        current_type_id = None
-        current_group = {"permission_type": None, "permission_fields": []}
+        current_permission_group = None # Track the current permission group dictionary
 
         for permission in permissions:
-            if permission.type_id != current_type_id:
-                if current_group["permission_fields"]:
-                    self.permission_groups.append(current_group)
+            # Check if the permission belongs to a new group
+            if not current_permission_group or current_permission_group["permission_group"] != permission.group:
+                # Append the completed group to the permissions list
+                if current_permission_group:
+                    self.permissions.append(current_permission_group)
 
-                current_group = {"permission_type": permission.type, "permission_fields": []}
-                current_type_id = permission.type_id
+                # Start a new permission group
+                current_permission_group = {
+                    "permission_group": permission.group, # The PermissionGroup object
+                    "permissions": [] # Initialize a new list for this group's permissions
+                }
 
-            # Dynamically create and bind the field.
+            # Dynamically create and bind RadioField for the current permission
             field = RadioField(
-                label = permission.friendly_name,
                 choices = [("true", "Yes"), ("false", "No")],
                 default = "true" if permission.given_by_default else "false",
-                description = permission.description
             )
             field_name = f"permission[{permission.name}]"
 
-            # Bind the field to the form and set its default value to its data attribute.
+            # Bind the field to the form and set its default value
             bound_field = field.bind(self, field_name)
             bound_field.data = bound_field.default
 
+            # Add the field to the form
             setattr(self, field_name, bound_field)
 
-            current_group["permission_fields"].append(bound_field)
+            # Add the permission and its field to the current permission group
+            current_permission_group["permissions"].append({
+                "permission": permission,
+                "field": bound_field
+            })
 
-        if current_group["permission_fields"]:
-            self.permission_groups.append(current_group)
+        # Append the last permission group to the permissions object, if it has permissions
+        if current_permission_group:
+            self.permissions.append(current_permission_group)
