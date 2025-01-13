@@ -72,3 +72,9 @@ tr.disabled {
     justify-content: center;
     width: 44px;
 }
+
+.user-actions {
+    width: 100px; /* Adjust this width as needed */
+    min-width: 100px; /* Ensures the column does not shrink below this width */
+}
+

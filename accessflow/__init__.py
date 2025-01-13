@@ -15,14 +15,12 @@ login_manager.login_view = "login"
 login_manager.login_message = "You must be logged in to access this page."
 login_manager.login_message_category = "danger"
 
-import accessflow.models.permission_group
-import accessflow.models.permission
-import accessflow.models.user
+from accessflow.models.permission_group import PermissionGroup
+from accessflow.models.permission import Permission
+from accessflow.models.user import User
 import accessflow.models.user_permission
 
 migrate = Migrate(app, db, compare_type = True)
-
-from accessflow.scripts.seed import seed_database
 
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
@@ -49,3 +47,15 @@ app.add_url_rule("/admin/logs", view_func = LogListView.as_view("admin/logs"))
 app.add_url_rule("/login", view_func = LoginView.as_view("login"))
 app.add_url_rule("/login/two-factor", view_func = LoginTwoFactorView.as_view("login/two-factor"))
 app.add_url_rule("/logout", view_func = LogoutView.as_view("logout"))
+
+@app.cli.command("seed-db")
+def seed_database():
+    PermissionGroup.seed_all()
+    Permission.seed_all()
+    User.seed_default()
+
+@app.cli.command("recreate-db")
+def recreate_database():
+    db.drop_all()
+    db.create_all()
+    db.session.commit()

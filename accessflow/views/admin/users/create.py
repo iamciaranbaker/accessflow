@@ -1,7 +1,9 @@
-from flask import request, flash, render_template
+from flask import request, flash, redirect, url_for, render_template
 from flask.views import View
-from flask_login import login_required
+from flask_login import login_required, current_user
 from accessflow.forms.user import CreateUserForm
+from accessflow.models.user import User
+from accessflow import db
 
 class UserCreateView(View):
     methods = ["GET", "POST"]
@@ -9,24 +11,39 @@ class UserCreateView(View):
 
     def dispatch_request(self):
         form = CreateUserForm(request.form)
-        autofocus = "first_name"
 
-        #print(form._fields)
-
-        if request.method == "POST":
-            for group in form.permission_groups:
-                for permission_field in group["permission_fields"]:
-                    print(permission_field.name)
-                    print(permission_field.data)
-
+        if request.method == "POST":                         
             if form.validate_on_submit():
-                pass
-            else:
-                # Find the first field with a validation error and set the autofocus to this for better UI experience.
-                autofocus = list(form.errors.keys())[0]
+                user = User(
+                    first_name = form.first_name.data,
+                    last_name = form.last_name.data,
+                    email_address = form.email_address.data
+                )
+                user.set_password(form.password.data)
 
+                # Iterate through all permission groups
+                for permission_group in form.permission_groups:
+                    # Iterate through all permissions inside permission group
+                    for permission in permission_group["permissions"]:
+                        permission, field = permission["permission"], permission["field"]
+
+                        # Check if current user has permission, if not then skip as they can't grant a permission they don't have themselves
+                        if not current_user.has_permission(permission.name):
+                            continue
+
+                        # Flask Form doesn't return permission data properly as its generated dynamically, so use request.form instead
+                        if request.form[getattr(field, "name")] == "true":
+                            user.add_permission(permission.name)
+
+                db.session.add(user)
+                db.session.commit()
+
+                flash("User has been created successfully.", "success")
+
+                return redirect(url_for("admin/users"))
+            else:
                 for field in form.errors:
                     for error in form.errors[field]:
                         flash(error, "danger")
 
-        return render_template("pages/admin/users/create.html", form = form, autofocus = autofocus)
+        return render_template("pages/admin/users/create.html", form = form)

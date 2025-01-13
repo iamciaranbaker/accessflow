@@ -63,7 +63,7 @@ class User(db.Model):
         permission = Permission.query.filter_by(name = permission_name).first()
         if not permission:
             raise ValueError(f"Permission with name '{permission_name}' does not exist.")
-        if not self.permissions.filter_by(id = permission.id).first():
+        if permission not in self.permissions:
             self.permissions.append(permission)
             db.session.commit()
 
@@ -71,7 +71,7 @@ class User(db.Model):
         permission = Permission.query.filter_by(name = permission_name).first()
         if not permission:
             raise ValueError(f"Permission with name '{permission_name}' does not exist.")
-        if self.permissions.filter_by(id = permission.id).first():
+        if permission in self.permissions:
             self.permissions.remove(permission)
             db.session.commit()
 

@@ -17,7 +17,7 @@
                     <div class="card-header" style="border-bottom: none">
                         <h3 class="card-title">User List</h3>
                         <div class="card-tools">
-                            <div class="input-group input-group-sm" style="width: 300px;">
+                            <div class="input-group input-group-sm" style="width: 300px">
                                 <input type="text" name="search" class="form-control" placeholder="Search Users">
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-default">
@@ -26,7 +26,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                     <div class="card-body table-responsive p-0">
                         <table class="table table-head-fixed">
                             <thead>
@@ -34,7 +34,7 @@
                                     <th>Identity</th>
                                     <th>Two-Factor Authentication</th>
                                     <th>Last Activity</th>
-                                    <th></th>
+                                    <th class="user-actions"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -50,26 +50,32 @@
                                         </td>
                                         <td class="align-middle">
                                             {% if user.has_two_factor %}
-                                            <i class="fa fa-lock text-green"></i>
+                                                <i class="fa fa-lock text-green"></i>
                                             {% else %}
-                                            <i class="fa fa-unlock text-red"></i>
+                                                <i class="fa fa-unlock text-red"></i>
                                             {% endif %}
                                         </td>
                                         <td class="align-middle">Test</td>
                                         <td class="align-middle text-right">
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm btn-actions" type="button" data-toggle="dropdown">
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-right">
-                                                    <li>
-                                                        <a href="#" class="dropdown-item">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#" class="dropdown-item text-danger">Delete</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                            {% if current_user.has_permission('edit_user') or current_user.has_permission('delete_user') %}
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-actions" type="button" data-toggle="dropdown">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        {% if current_user.has_permission('edit_user') %}
+                                                            <li>
+                                                                <a href="#" class="dropdown-item">Edit</a>
+                                                            </li>
+                                                        {% endif %}
+                                                        {% if current_user.has_permission('delete_user') %}
+                                                            <li>
+                                                                <a href="#" class="dropdown-item text-danger">Delete</a>
+                                                            </li>
+                                                        {% endif %}
+                                                    </ul>
+                                                </div>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}

@@ -65,7 +65,7 @@ class CreateUserForm(FlaskForm):
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.permissions = []
+        self.permission_groups = []
         self.populate_permissions()
 
     def populate_permissions(self):
@@ -79,7 +79,7 @@ class CreateUserForm(FlaskForm):
             if not current_permission_group or current_permission_group["permission_group"] != permission.group:
                 # Append the completed group to the permissions list
                 if current_permission_group:
-                    self.permissions.append(current_permission_group)
+                    self.permission_groups.append(current_permission_group)
 
                 # Start a new permission group
                 current_permission_group = {
@@ -109,4 +109,4 @@ class CreateUserForm(FlaskForm):
 
         # Append the last permission group to the permissions object, if it has permissions
         if current_permission_group:
-            self.permissions.append(current_permission_group)
+            self.permission_groups.append(current_permission_group)

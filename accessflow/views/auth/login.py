@@ -15,7 +15,6 @@ class LoginView(View):
             session.pop("email_address")
 
         form = LoginForm(request.form)
-        autofocus = "email_address"
 
         if request.method == "POST":
             # If the login form passes the validation
@@ -46,12 +45,11 @@ class LoginView(View):
                 else:
                     # Either a user wasn't found in the database, or the password was incorrect
                     flash("Invalid email address or password.", "danger")
+                    form.email_address.errors.append("Invalid email address or password.")
+                    form.password.errors.append("Invalid email address or password.")
             else:
-                # Find the first field with a validation error and set the autofocus to this for better UI experience
-                autofocus = list(form.errors.keys())[0]
-
                 for field in form.errors:
                     for error in form.errors[field]:
                         flash(error, "danger")
 
-        return render_template("pages/auth/login.html", form = form, autofocus = autofocus)
+        return render_template("pages/auth/login.html", form = form)

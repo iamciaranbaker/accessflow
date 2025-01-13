@@ -14,13 +14,6 @@
         <form method="post">
             {{ form.csrf_token(id = False) }}
             <div class="row">
-                <div class="col-12">
-                    {% for category, message in get_flashed_messages(with_categories = True) %}
-                        <div class="alert alert-{{ category }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
                 <div class="col-6">
                     <div class="row">
                         <div class="col-12 user-identity">
@@ -32,19 +25,19 @@
                                     <div class="form-group row">
                                         {{ form.first_name.label(class = 'col-3 col-form-label') }}
                                         <div class="col-9">
-                                            {{ render_field(form.first_name, autofocus = (autofocus == 'first_name')) }}
+                                            {{ render_field(form.first_name, autofocus = True) }}
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         {{ form.last_name.label(class = 'col-3 col-form-label') }}
                                         <div class="col-9">
-                                            {{ render_field(form.last_name, autofocus = (autofocus == 'last_name')) }}
+                                            {{ render_field(form.last_name) }}
                                         </div>
                                     </div>
                                     <div class="form-group row mb-0">
                                         {{ form.email_address.label(class = 'col-3 col-form-label') }}
                                         <div class="col-9">
-                                            {{ render_field(form.email_address, autofocus = (autofocus == 'email_address')) }}
+                                            {{ render_field(form.email_address) }}
                                         </div>
                                     </div>
                                 </div>
@@ -60,9 +53,9 @@
                                         {{ form.password.label(class = 'col-3 col-form-label') }}
                                         <div class="col-9">
                                             <div class="input-group">
-                                                {{ render_field(form.password, autofocus = (autofocus == 'password')) }}
+                                                {{ render_field(form.password) }}
                                                 <div class="input-group-append">
-                                                    <button type="button" class="btn btn-default toggle-password" title="Reveal Password">
+                                                    <button type="button" class="btn btn-default toggle-password" title="Reveal Password" tabindex="-1">
                                                         <i class="far fa-eye"></i>
                                                     </button>
                                                 </div>
@@ -73,9 +66,9 @@
                                         {{ form.confirm_password.label(class = 'col-3 col-form-label') }}
                                         <div class="col-9">
                                             <div class="input-group">
-                                                {{ render_field(form.confirm_password, autofocus = (autofocus == 'confirm_password')) }}
+                                                {{ render_field(form.confirm_password) }}
                                                 <div class="input-group-append">
-                                                    <button type="button" class="btn btn-default toggle-password" title="Reveal Password">
+                                                    <button type="button" class="btn btn-default toggle-password" title="Reveal Password" tabindex="-1">
                                                         <i class="far fa-eye"></i>
                                                     </button>
                                                 </div>
@@ -115,7 +108,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for permission_group in form.permissions %}
+                                            {% for permission_group in form.permission_groups %}
                                                 <tr>
                                                     <td class="align-middle" colspan="3">
                                                         <div class="d-flex align-items-center">
@@ -129,7 +122,8 @@
                                                     </td>
                                                 </tr>
                                                 {% for permission in permission_group.permissions %}
-                                                    <tr>
+                                                    {% set user_has_permission = current_user.has_permission(permission.permission.name) %}
+                                                    <tr {% if not user_has_permission %}class="disabled" title="You cannot grant this permission as you do not have it."{% endif %}>
                                                         <td class="align-middle user-permission-name">
                                                             <div class="d-flex align-items-center">
                                                                 <div style="line-height: 1.2">
@@ -141,10 +135,10 @@
                                                             </div>
                                                         </td>
                                                         <td class="align-middle text-center">
-                                                            <input type="radio" name="{{ permission.field.name }}" value="true" {% if permission.field.data == "true" %}checked{% endif %}>
+                                                            <input type="radio" name="{{ permission.field.name }}" value="true" {% if not user_has_permission %}disabled{% elif permission.field.data == "true" %}checked{% endif %}>
                                                         </td>
                                                         <td class="align-middle text-center">
-                                                            <input type="radio" name="{{ permission.field.name }}" value="false" {% if permission.field.data == "false" %}checked{% endif %}>
+                                                            <input type="radio" name="{{ permission.field.name }}" value="false" {% if not user_has_permission %}disabled{% elif permission.field.data == "false" %}checked{% endif %}>
                                                         </td>
                                                     </tr>
                                                 {% endfor %}
@@ -152,7 +146,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
                 </div>
