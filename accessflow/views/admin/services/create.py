@@ -1,13 +1,14 @@
 from flask import request, flash, redirect, url_for, render_template
 from flask.views import View
 from flask_login import login_required, current_user
+from accessflow.decorators import permission_required
 from accessflow.forms.service import CreateServiceForm
 from accessflow.models.service import Service
 from accessflow import db
 
 class ServiceCreateView(View):
     methods = ["GET", "POST"]
-    decorators = [login_required]
+    decorators = [login_required, permission_required("create_services")]
 
     def dispatch_request(self):
         form = CreateServiceForm(request.form)

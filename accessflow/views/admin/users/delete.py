@@ -1,13 +1,14 @@
 from flask import request, flash, redirect, url_for, abort
 from flask.views import View
 from flask_login import login_required, current_user
+from accessflow.decorators import permission_required
 from accessflow.models.user_permission import UserPermission
 from accessflow.models.user import User
 from accessflow import db
 
 class UserDeleteView(View):
     methods = ["GET"]
-    decorators = [login_required]
+    decorators = [login_required, permission_required("delete_users")]
 
     def dispatch_request(self, user_id):
         # The user shouldn't be able to delete themselves.
