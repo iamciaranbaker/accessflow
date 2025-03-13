@@ -16,16 +16,6 @@
                 <div class="card">
                     <div class="card-header" style="border-bottom: none">
                         <h3 class="card-title">User List</h3>
-                        <div class="card-tools">
-                            <div class="input-group input-group-sm" style="width: 300px">
-                                <input type="text" name="search" class="form-control" placeholder="Search Users">
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-default">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="card-body table-responsive p-0">
                         <table class="table table-head-fixed">
@@ -39,12 +29,12 @@
                             </thead>
                             <tbody>
                                 {% for user in users %}
-                                    <tr>
+                                    <tr data-user-id="{{ user.id }}">
                                         <td class="align-middle">
                                             <div class="d-flex align-items-center">
                                                 <div style="line-height: 1.2">
                                                     <span class="d-block">{{ user.first_name }} {{ user.last_name }}</span>
-                                                    <span class="small text-muted">{{ user.email_address }}</span>
+                                                    <span class="small text-muted user-email-address">{{ user.email_address }}</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -65,12 +55,12 @@
                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                         {% if current_user.has_permission('edit_user') %}
                                                             <li>
-                                                                <a href="#" class="dropdown-item">Edit</a>
+                                                                <a href="" class="dropdown-item">Edit</a>
                                                             </li>
                                                         {% endif %}
-                                                        {% if current_user.has_permission('delete_user') %}
+                                                        {% if current_user.has_permission('delete_user') and current_user.id != user.id %}
                                                             <li>
-                                                                <a href="#" class="dropdown-item text-danger">Delete</a>
+                                                                <a class="dropdown-item text-danger user-delete">Delete</a>
                                                             </li>
                                                         {% endif %}
                                                     </ul>
@@ -84,15 +74,15 @@
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>
     </div>
 </div>
 {% endblock content %}
 
 {% block modals %}
 {% if current_user.has_permission('delete_user') %}
-<div class="modal fade" id="delete-user-modal">
-    <div class="modal-dialog">
+<div class="modal fade" id="delete-user-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Delete User</h4>
@@ -101,11 +91,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this user?
+                <p>Are you sure you want to delete this user?</p>
+                <p>Type the following to confirm: <code id="confirm-email-address"></code></p>
+                <input type="email" id="confirm-email-address-input" class="form-control" placeholder="Confirm Email Address" required>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger" id="delete-user-btn">Delete User</a>
+                <button id="delete-user-btn" class="btn btn-danger" type="button" disabled>Delete User</button>
             </div>
         </div>
     </div>
