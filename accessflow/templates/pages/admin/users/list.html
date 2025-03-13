@@ -47,18 +47,18 @@
                                         </td>
                                         <td class="align-middle">Test</td>
                                         <td class="align-middle text-right">
-                                            {% if current_user.has_permission('edit_user') or current_user.has_permission('delete_user') %}
+                                            {% if current_user.has_permission('edit_users') or current_user.has_permission('delete_users') %}
                                                 <div class="dropdown">
                                                     <button class="btn btn-sm btn-actions" type="button" data-toggle="dropdown">
                                                         <i class="fas fa-ellipsis-v"></i>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-right">
-                                                        {% if current_user.has_permission('edit_user') %}
+                                                        {% if current_user.has_permission('edit_users') %}
                                                             <li>
                                                                 <a href="" class="dropdown-item">Edit</a>
                                                             </li>
                                                         {% endif %}
-                                                        {% if current_user.has_permission('delete_user') and current_user.id != user.id %}
+                                                        {% if current_user.has_permission('delete_users') and current_user.id != user.id %}
                                                             <li>
                                                                 <a class="dropdown-item text-danger user-delete">Delete</a>
                                                             </li>
@@ -80,7 +80,7 @@
 {% endblock content %}
 
 {% block modals %}
-{% if current_user.has_permission('delete_user') %}
+{% if current_user.has_permission('delete_users') %}
 <div class="modal fade" id="delete-user-modal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
