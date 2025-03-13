@@ -16,16 +16,6 @@
                 <div class="card">
                     <div class="card-header" style="border-bottom: none">
                         <h3 class="card-title">Service List</h3>
-                        <div class="card-tools">
-                            <div class="input-group input-group-sm" style="width: 300px">
-                                <input type="text" name="search" class="form-control" placeholder="Search Services">
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-default">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="card-body table-responsive p-0">
                         <table class="table table-head-fixed">
@@ -34,43 +24,36 @@
                                     <th>Name</th>
                                     <th>Project URL</th>
                                     <th>Project Access Token Expires</th>
-                                    <th class="service-actions"></th>
+                                    <th class="row-actions"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for service in services %}
                                     <tr>
                                         <td class="align-middle">
-                                            <div class="d-flex align-items-center">
-                                                <div style="line-height: 1.2">
-                                                    <span class="d-block">{{ user.first_name }} {{ user.last_name }}</span>
-                                                    <span class="small text-muted">{{ user.email_address }}</span>
-                                                </div>
-                                            </div>
+                                            
                                         </td>
                                         <td class="align-middle">
-                                            {% if user.has_two_factor %}
-                                                <i class="fa fa-lock text-green"></i>
-                                            {% else %}
-                                                <i class="fa fa-unlock text-red"></i>
-                                            {% endif %}
+                                            
                                         </td>
-                                        <td class="align-middle">Test</td>
+                                        <td class="align-middle">
+
+                                        </td>
                                         <td class="align-middle text-right">
-                                            {% if current_user.has_permission('edit_user') or current_user.has_permission('delete_user') %}
+                                            {% if current_user.has_permission('edit_service') or current_user.has_permission('delete_service') %}
                                                 <div class="dropdown">
                                                     <button class="btn btn-sm btn-actions" type="button" data-toggle="dropdown">
                                                         <i class="fas fa-ellipsis-v"></i>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-right">
-                                                        {% if current_user.has_permission('edit_user') %}
+                                                        {% if current_user.has_permission('edit_service') %}
                                                             <li>
-                                                                <a href="#" class="dropdown-item">Edit</a>
+                                                                <a class="dropdown-item">Edit</a>
                                                             </li>
                                                         {% endif %}
-                                                        {% if current_user.has_permission('delete_user') %}
+                                                        {% if current_user.has_permission('delete_service') %}
                                                             <li>
-                                                                <a href="#" class="dropdown-item text-danger">Delete</a>
+                                                                <a class="dropdown-item text-danger">Delete</a>
                                                             </li>
                                                         {% endif %}
                                                     </ul>
