@@ -13,7 +13,7 @@ class ServiceCreateView(View):
     def dispatch_request(self):
         form = CreateServiceForm(request.form)
 
-        if request.method == "POST":                         
+        if request.method == "POST":
             if form.validate_on_submit():
                 service = Service(
                     name = form.name.data,
