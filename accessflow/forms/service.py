@@ -1,7 +1,6 @@
-import re
 from flask_wtf import FlaskForm
-from wtforms import StringField, EmailField, PasswordField, BooleanField, RadioField, SubmitField
-from wtforms.validators import ValidationError, DataRequired, Length, Email, Regexp, EqualTo
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Length, Regexp
 
 class CreateServiceForm(FlaskForm):
     name = StringField("Name", [DataRequired(), Length(min = 2, max = 50), Regexp(regex = r"^[a-zA-Z\s\/\-]+$", message = "Name is invalid.")])
