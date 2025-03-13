@@ -9,7 +9,7 @@ def email_address_validator(form, field):
     # Check if user already exists with given email address
     user = User.query.filter_by(email_address = field.data).first()
     if user:
-        raise ValidationError("Your email address is already in use.")
+        raise ValidationError("Email address is already in use.")
 
 def password_validator(form, field):
     """
@@ -30,15 +30,15 @@ def password_validator(form, field):
 
     # Check if any error cases have been matched
     if length_error:
-        raise ValidationError("Your password must be at least 8 characters.")
+        raise ValidationError("Password must be at least 8 characters.")
     elif lowercase_error:
-        raise ValidationError("Your password must contain a lowercase letter.")
+        raise ValidationError("Password must contain a lowercase letter.")
     elif uppercase_error:
-        raise ValidationError("Your password must contain an uppercase letter.")
+        raise ValidationError("Password must contain an uppercase letter.")
     elif digit_error:
-        raise ValidationError("Your password must contain a number.")
+        raise ValidationError("Password must contain a number.")
     elif symbol_error:
-        raise ValidationError("Your password must contain a symbol.")
+        raise ValidationError("Password must contain a symbol.")
 
 class LoginForm(FlaskForm):
     email_address = EmailField("Email Address", [DataRequired()])
@@ -51,15 +51,15 @@ class TwoFactorForm(FlaskForm):
 
 class UpdatePasswordForm(FlaskForm):
     password = PasswordField("Password", [DataRequired(), password_validator])
-    confirm_password = PasswordField("Confirm Password", [DataRequired(), EqualTo("password", message = "The entered passwords must match.")])
+    confirm_password = PasswordField("Confirm Password", [DataRequired(), EqualTo("password", message = "Both passwords must match.")])
     submit = SubmitField("Update Password")
 
 class CreateUserForm(FlaskForm):
-    first_name = StringField("First Name", [DataRequired(), Length(min = 2, max = 50), Regexp(regex = r"^([\u00c0-\u01ffa-zA-Z'\-])+$", message = "The entered first name is invalid.")])
-    last_name = StringField("Last Name", [DataRequired(), Length(min = 2, max = 50), Regexp(regex = r"^([\u00c0-\u01ffa-zA-Z'\-])+$", message = "The entered last name is invalid.")])
+    first_name = StringField("First Name", [DataRequired(), Length(min = 2, max = 50), Regexp(regex = r"^([\u00c0-\u01ffa-zA-Z'\-])+$", message = "First name is invalid.")])
+    last_name = StringField("Last Name", [DataRequired(), Length(min = 2, max = 50), Regexp(regex = r"^([\u00c0-\u01ffa-zA-Z'\-])+$", message = "Last name is invalid.")])
     email_address = EmailField("Email Address", [DataRequired(), Length(max = 100), Email(message = "The entered email address is invalid."), email_address_validator])
     password = PasswordField("Password", [DataRequired(), password_validator])
-    confirm_password = PasswordField("Confirm Password", [DataRequired(), EqualTo("password", message = "The entered passwords must match.")])
+    confirm_password = PasswordField("Confirm Password", [DataRequired(), EqualTo("password", message = "Both passwords must match.")])
     force_password_reset = BooleanField("Require password change on first login?")
     submit = SubmitField("Create User")
         

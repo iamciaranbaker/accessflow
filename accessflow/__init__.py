@@ -30,6 +30,7 @@ from accessflow.views.dashboard import DashboardView
 from accessflow.views.requests.list import RequestListView
 from accessflow.views.admin.users.list import UserListView
 from accessflow.views.admin.users.create import UserCreateView
+from accessflow.views.admin.users.delete import UserDeleteView
 from accessflow.views.admin.services.list import ServiceListView
 from accessflow.views.admin.services.create import ServiceCreateView
 from accessflow.views.admin.logs.list import LogListView
@@ -44,6 +45,7 @@ app.add_url_rule("/requests", view_func = RequestListView.as_view("requests"))
 # Admin Routes
 app.add_url_rule("/admin/users", view_func = UserListView.as_view("admin/users"))
 app.add_url_rule("/admin/users/create", view_func = UserCreateView.as_view("admin/users/create"))
+app.add_url_rule("/admin/users/<int:user_id>/delete", view_func = UserDeleteView.as_view("admin/users/delete"))
 app.add_url_rule("/admin/services", view_func = ServiceListView.as_view("admin/services"))
 app.add_url_rule("/admin/services/create", view_func = ServiceCreateView.as_view("admin/services/create"))
 app.add_url_rule("/admin/logs", view_func = LogListView.as_view("admin/logs"))
@@ -58,6 +60,7 @@ def seed_database():
     Permission.seed_all()
     User.seed_default()
 
+# For use during development ONLY
 @app.cli.command("recreate-db")
 def recreate_database():
     db.drop_all()

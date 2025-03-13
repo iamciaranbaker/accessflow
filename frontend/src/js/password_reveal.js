@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", function() {
     var toggleButtons = document.querySelectorAll(".toggle-password");
 
     toggleButtons.forEach(function(button) {
+        button.setAttribute("title", "Reveal " + button.getAttribute("data-tooltip"));
+
         button.addEventListener("click", function() {
             // Find the input associated with this button
             var inputGroup = button.closest(".input-group");
@@ -14,12 +16,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 input.type = "text";
                 icon.classList.remove("fa-eye");
                 icon.classList.add("fa-eye-slash");
-                button.setAttribute("title", "Conceal Password");
+                button.setAttribute("title", "Conceal " + button.getAttribute("data-tooltip"));
             } else {
                 input.type = "password";
                 icon.classList.remove("fa-eye-slash");
                 icon.classList.add("fa-eye");
-                button.setAttribute("title", "Reveal Password");
+                button.setAttribute("title", "Reveal " + button.getAttribute("data-tooltip"));
             }
         });
     });

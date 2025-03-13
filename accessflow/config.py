@@ -6,6 +6,9 @@ load_dotenv()
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY")
 
+    # URL of the GitLab instance
+    GITLAB_URL = os.getenv("GITLAB_URL")
+
     # MySQL database credentials
     MYSQL_USER = os.getenv("MYSQL_USER")
     MYSQL_PASS = os.getenv("MYSQL_PASS")
