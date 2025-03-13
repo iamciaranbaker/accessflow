@@ -10,14 +10,14 @@
         <link rel="stylesheet" href="{{ url_for('static', filename = 'vendors/toastr/css/toastr.min.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename = 'vendors/adminlte/css/adminlte.min.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename = 'css/accessflow.min.css') }}">
+    </head>
+    <body class="{{ body_class }}">
+        {% block layout %}
+        {% endblock layout %}
         <script src="{{ url_for('static', filename = 'vendors/jquery/js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static', filename = 'vendors/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ url_for('static', filename = 'vendors/toastr/js/toastr.min.js') }}"></script>
         <script src="{{ url_for('static', filename = 'vendors/adminlte/js/adminlte.min.js') }}"></script>
         <script src="{{ url_for('static', filename = 'js/accessflow.min.js') }}"></script>
-    </head>
-    <body class="{{ body_class }}">
-        {% block layout %}
-        {% endblock layout %}
     </body>
 </html>
