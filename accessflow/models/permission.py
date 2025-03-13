@@ -13,7 +13,7 @@ class Permission(db.Model):
     group_id = db.Column(db.Integer, db.ForeignKey("permission_groups.id"), nullable = False)
     display_order = db.Column(db.Integer, default = 1)
     given_by_default = db.Column(db.Boolean, default = False)
-    created_at = db.Column(db.DateTime, default = db.func.now())  
+    created_at = db.Column(db.DateTime, default = db.func.now())
     updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
 
     # Relationships
