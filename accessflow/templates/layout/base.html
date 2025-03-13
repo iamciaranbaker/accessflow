@@ -12,9 +12,11 @@
     </div>
     {% include 'layout/partials/footer.html' %}
 </div>
-{% set messages = get_flashed_messages(with_categories=True) %}
+{% block modals %}
+{% endblock modals %}
+{% set messages = get_flashed_messages(with_categories = True) %}
 {% if messages %}
-    <div id="flash-messages" style="display: none">
+    <div id="flash-messages">
         {% for category, message in messages %}
         <div class="flash-message" data-category="{{ category }}">{{ message }}</div>
         {% endfor %}

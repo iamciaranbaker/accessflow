@@ -74,3 +74,7 @@ tr.disabled {
     width: 100px; /* Adjust this width as needed */
     min-width: 100px; /* Ensures the column does not shrink below this width */
 }
+
+.flash-messages {
+    display: none;
+}

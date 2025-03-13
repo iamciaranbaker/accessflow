@@ -1,12 +1,12 @@
 {% extends 'layout/base.html' %}
 
-{% set title = 'Users' %}
+{% set title = 'Services' %}
 
 {% block content %}
 <div class="content-header">
     <div class="container-fluid">
-        <h1>Users</h1>
-        <span class="text-muted">A list of all registered system users.</span>
+        <h1>Services</h1>
+        <span class="text-muted">A list of all registered services.</span>
     </div>
 </div>
 <div class="content">
@@ -15,10 +15,10 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header" style="border-bottom: none">
-                        <h3 class="card-title">User List</h3>
+                        <h3 class="card-title">Service List</h3>
                         <div class="card-tools">
                             <div class="input-group input-group-sm" style="width: 300px">
-                                <input type="text" name="search" class="form-control" placeholder="Search Users">
+                                <input type="text" name="search" class="form-control" placeholder="Search Services">
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-default">
                                         <i class="fas fa-search"></i>
@@ -31,14 +31,14 @@
                         <table class="table table-head-fixed">
                             <thead>
                                 <tr>
-                                    <th>Identity</th>
-                                    <th>Two-Factor Authentication</th>
-                                    <th>Last Activity</th>
-                                    <th class="user-actions"></th>
+                                    <th>Name</th>
+                                    <th>Project URL</th>
+                                    <th>Project Access Token Expires</th>
+                                    <th class="service-actions"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for user in users %}
+                                {% for service in services %}
                                     <tr>
                                         <td class="align-middle">
                                             <div class="d-flex align-items-center">
@@ -88,27 +88,3 @@
     </div>
 </div>
 {% endblock content %}
-
-{% block modals %}
-{% if current_user.has_permission('delete_user') %}
-<div class="modal fade" id="delete-user-modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Delete User</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete this user?
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger" id="delete-user-btn">Delete User</a>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-{% endblock modals %}

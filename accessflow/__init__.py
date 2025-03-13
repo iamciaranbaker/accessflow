@@ -30,6 +30,8 @@ from accessflow.views.dashboard import DashboardView
 from accessflow.views.requests.list import RequestListView
 from accessflow.views.admin.users.list import UserListView
 from accessflow.views.admin.users.create import UserCreateView
+from accessflow.views.admin.services.list import ServiceListView
+from accessflow.views.admin.services.create import ServiceCreateView
 from accessflow.views.admin.logs.list import LogListView
 from accessflow.views.auth.login import LoginView
 from accessflow.views.auth.login_two_factor import LoginTwoFactorView
@@ -42,6 +44,8 @@ app.add_url_rule("/requests", view_func = RequestListView.as_view("requests"))
 # Admin Routes
 app.add_url_rule("/admin/users", view_func = UserListView.as_view("admin/users"))
 app.add_url_rule("/admin/users/create", view_func = UserCreateView.as_view("admin/users/create"))
+app.add_url_rule("/admin/services", view_func = ServiceListView.as_view("admin/services"))
+app.add_url_rule("/admin/services/create", view_func = ServiceCreateView.as_view("admin/services/create"))
 app.add_url_rule("/admin/logs", view_func = LogListView.as_view("admin/logs"))
 # Auth Routes
 app.add_url_rule("/login", view_func = LoginView.as_view("login"))

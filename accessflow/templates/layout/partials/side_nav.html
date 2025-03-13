@@ -32,6 +32,14 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ url_for('admin/services') }}" class="nav-link {% if 'admin/services' in request.endpoint %}active{% endif %}" data-tooltip="Services">
+                                <div class="nav-item-content">
+                                    <i class="fas fa-server nav-icon"></i>
+                                    <p>Services</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ url_for('admin/logs') }}" class="nav-link {% if 'admin/logs' in request.endpoint %}active{% endif %}" data-tooltip="Logs">
                                 <div class="nav-item-content">
                                     <i class="fas fa-list-ul nav-icon"></i>
