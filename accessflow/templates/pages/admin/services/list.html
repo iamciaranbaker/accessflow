@@ -22,7 +22,7 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Project URL</th>
+                                    <th>GitLab Project URL</th>
                                     <th>Project Access Token Expires</th>
                                     <th class="row-actions"></th>
                                 </tr>
@@ -31,27 +31,27 @@
                                 {% for service in services %}
                                     <tr>
                                         <td class="align-middle">
-                                            
+                                            {{ service.name }}
                                         </td>
                                         <td class="align-middle">
-                                            
+                                            <code>{{ service.gl_project_url }}</code>
                                         </td>
                                         <td class="align-middle">
-
+                                            {{ service.gl_pat_expires_at }}
                                         </td>
                                         <td class="align-middle text-right">
-                                            {% if current_user.has_permission('edit_service') or current_user.has_permission('delete_service') %}
+                                            {% if current_user.has_permission('edit_services') or current_user.has_permission('delete_services') %}
                                                 <div class="dropdown">
                                                     <button class="btn btn-sm btn-actions" type="button" data-toggle="dropdown">
                                                         <i class="fas fa-ellipsis-v"></i>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-right">
-                                                        {% if current_user.has_permission('edit_service') %}
+                                                        {% if current_user.has_permission('edit_services') %}
                                                             <li>
                                                                 <a class="dropdown-item">Edit</a>
                                                             </li>
                                                         {% endif %}
-                                                        {% if current_user.has_permission('delete_service') %}
+                                                        {% if current_user.has_permission('delete_services') %}
                                                             <li>
                                                                 <a class="dropdown-item text-danger">Delete</a>
                                                             </li>

@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Regexp
 from accessflow import gitlab_handler
+from accessflow.config import Config
 
 class CreateServiceForm(FlaskForm):
     name = StringField("Name", [DataRequired(), Length(min = 2, max = 50), Regexp(regex = r"^[a-zA-Z\s\/\-]+$", message = "Name is invalid.")])
@@ -10,14 +11,17 @@ class CreateServiceForm(FlaskForm):
     submit = SubmitField("Create Service")
 
     def validate_project_url_and_access_token(self):
-        project_url = self.project_url.data
+        project_url = self.project_url.data.replace(Config.GITLAB_URL, "")
         project_access_token = self.project_access_token.data
+        
+        print(gitlab_handler.validate_project_access_token(project_url, project_access_token))
         
         # Placeholder for GitLab PAT verification
         if not gitlab_handler.validate_project_access_token(project_url, project_access_token):
+            error = "Project URL and Project Access Token are invalid."
             # Manually add validation errors for both fields
-            self.project_url.errors.append("Project URL and Project Access Token are invalid.")
-            self.project_access_token.errors.append("Project URL and Project Access Token are invalid.")
+            self.project_url.errors.append(error)
+            self.project_access_token.errors.append(error)
             return False
         
         return True

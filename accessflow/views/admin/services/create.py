@@ -1,10 +1,11 @@
 from flask import request, flash, redirect, url_for, render_template
 from flask.views import View
-from flask_login import login_required, current_user
+from flask_login import login_required
+from datetime import datetime
 from accessflow.decorators import permission_required
 from accessflow.forms.service import CreateServiceForm
 from accessflow.models.service import Service
-from accessflow import db
+from accessflow import db, gitlab_handler
 
 class ServiceCreateView(View):
     methods = ["GET", "POST"]
@@ -17,7 +18,10 @@ class ServiceCreateView(View):
             if form.validate_on_submit():
                 service = Service(
                     name = form.name.data,
+                    gl_project_url = gitlab_handler.sanitize_project_url(form.project_url.data, url_encode = False),
+                    gl_project_access_token = form.project_access_token.data
                 )
+                service.set_gl_pat_expires_at(datetime.now()) # Testing
 
                 db.session.add(service)
                 db.session.commit()
