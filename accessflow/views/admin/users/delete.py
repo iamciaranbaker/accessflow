@@ -24,7 +24,7 @@ class UserDeleteView(View):
         if not user_permissions or not user:
             abort(404)
 
-        db.session.commit()
+        #db.session.commit()
 
         flash("User has been deleted successfully.", "success")
 

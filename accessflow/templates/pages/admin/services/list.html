@@ -29,7 +29,7 @@
                             </thead>
                             <tbody>
                                 {% for service in services %}
-                                    <tr>
+                                    <tr data-service-id="{{ service.id }}" data-service-name="{{ service.name }}">
                                         <td class="align-middle">
                                             {{ service.name }}
                                         </td>
@@ -53,7 +53,7 @@
                                                         {% endif %}
                                                         {% if current_user.has_permission('delete_services') %}
                                                             <li>
-                                                                <a class="dropdown-item text-danger">Delete</a>
+                                                                <a class="dropdown-item text-danger service-delete">Delete</a>
                                                             </li>
                                                         {% endif %}
                                                     </ul>
