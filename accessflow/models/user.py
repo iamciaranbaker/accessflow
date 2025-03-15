@@ -94,7 +94,7 @@ class User(db.Model):
     @staticmethod
     def seed_default():
         if User.query.count() == 0:
-            user = User("Default", "User", "default@example.com")
+            user = User("Ciaran", "Baker", "ciaran.baker@capgemini.com")
             user.set_password("default")
 
             for permission in Permission.get_all():
