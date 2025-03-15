@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Length, Regexp
 from accessflow import gitlab_handler
 from accessflow.config import Config
@@ -8,6 +8,7 @@ class CreateServiceForm(FlaskForm):
     name = StringField("Name", [DataRequired(), Length(min = 2, max = 50), Regexp(regex = r"^[a-zA-Z\s\/\-]+$", message = "Name is invalid.")])
     project_url = StringField("Project URL", [DataRequired()])
     project_access_token = PasswordField("Project Access Token", [DataRequired()])
+    auto_rotate_pat = BooleanField("Automatically rotate Project Access Token near expiration?", render_kw = {"checked": ""})
     submit = SubmitField("Create Service")
 
     def validate_project_url_and_access_token(self):
