@@ -14,11 +14,13 @@ class CreateServiceForm(FlaskForm):
     def validate_project_url_and_access_token(self):
         project_url = self.project_url.data.replace(Config.GITLAB_URL, "")
         project_access_token = self.project_access_token.data
-        
-        print(gitlab_handler.validate_project_access_token(project_url, project_access_token))
+
+        scopes_to_check = ["api", "read_repository"]
+        if self.auto_rotate_pat.data:
+            scopes_to_check.append("self_rotate")
         
         # Placeholder for GitLab PAT verification
-        if not gitlab_handler.validate_project_access_token(project_url, project_access_token):
+        if not gitlab_handler.validate_project_access_token(project_url, project_access_token, scopes = scopes_to_check):
             error = "Project URL and Project Access Token are invalid."
             # Manually add validation errors for both fields
             self.project_url.errors.append(error)

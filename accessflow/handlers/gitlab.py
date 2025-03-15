@@ -36,7 +36,7 @@ class GitLabHandler:
             project_url = urllib.parse.quote_plus(project_url)
         return project_url
 
-    def validate_project_access_token(self, project_url, project_access_token):
+    def validate_project_access_token(self, project_url, project_access_token, scopes = []):
         # Sanitize the project URL before use
         project_url = self.sanitize_project_url(project_url)
 
@@ -71,6 +71,10 @@ class GitLabHandler:
             # We only want the active token, not any expired or revoked ones
             # We also only want the token if the user ID matches the one from the user endpoint
             if token["active"] and not token["revoked"] and token["user_id"] == pat_user_id:
+                # If we are checking for scopes in this function, ensure all scopes listed are present in the token
+                if len(scopes) != 0:
+                    if not all(scope in token["scopes"] for scope in scopes):
+                        continue
                 project_access_tokens_endpoint_response_json = token
                 project_access_token_found = True
 
@@ -91,6 +95,10 @@ class GitLabHandler:
             # We only want the active token, not any expired or revoked ones
             # We also only want the token if the user ID matches the one from the user endpoint
             if token["active"] and not token["revoked"] and token["user_id"] == pat_user_id:
+                # If we are checking for scopes in this function, ensure all scopes listed are present in the token
+                if len(scopes) != 0:
+                    if not all(scope in token["scopes"] for scope in scopes):
+                        continue
                 personal_access_tokens_endpoint_response_json = token
                 personal_access_token_found = True
         
