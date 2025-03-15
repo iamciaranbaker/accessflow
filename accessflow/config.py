@@ -8,6 +8,7 @@ class Config:
 
     # URL of the GitLab instance
     GITLAB_URL = os.getenv("GITLAB_URL")
+    GITLAB_PROXY = os.getenv("GITLAB_PROXY")
 
     # MySQL database credentials
     MYSQL_USER = os.getenv("MYSQL_USER")
