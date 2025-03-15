@@ -38,14 +38,16 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">GitLab</h3>
+                                    <h3 class="card-title">GitLab Integration</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group row">
                                         {{ form.project_url.label(class = 'col-3 col-form-label') }}
                                         <div class="col-9">
-                                            {{ render_field(form.project_url) }}
-                                            <span class="text-muted small">The URL to the support users project.</span>
+                                            <div class="input-group">
+                                                {{ render_field(form.project_url) }}
+                                            </div>
+                                            <span class="small text-muted field-description">The URL to the support users project.</span>
                                         </div>
                                     </div>
                                     <div class="form-group row mb-2">
@@ -59,7 +61,7 @@
                                                     </button>
                                                 </div>
                                             </div>
-                                            <span class="text-muted small">A project access token for the support users project. This should have <code>api</code> scope.</span>
+                                            <span class="small text-muted field-description">A Project Access Token for the support users project. This should have <code>api</code> and <code>read_repository</code> scope. If automatic rotation is turned on, then <code>self_rotate</code> should be added too.</span>
                                         </div>
                                     </div>
                                     <div class="form-group row mb-0">

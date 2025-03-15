@@ -5,8 +5,15 @@
 {% block content %}
 <div class="content-header">
     <div class="container-fluid">
-        <h1>Users</h1>
-        <span class="text-muted">A list of all registered system users.</span>
+        <div class="row">
+            <div class="col-10">
+                <h1>Users</h1>
+                <span class="text-muted">A list of all registered system users.</span>
+            </div>
+            <div class="col-2 text-right align-self-center">
+                <a class="btn btn-primary" href="{{ url_for('admin/users/create') }}">Create User</a>
+            </div>
+        </div>
     </div>
 </div>
 <div class="content">

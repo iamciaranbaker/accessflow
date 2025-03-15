@@ -96,3 +96,10 @@ code:before, code:after {
 code {
     white-space: pre-wrap;
 }
+
+.field-description {
+    display: inline-block;
+    line-height: 1.2; /* Adjust this to control the line spacing */
+    padding-top: 0.2rem; /* Adjust this if the first line is too close to the top */
+    margin-top: 0.2rem; /* Optionally add some margin to avoid it being too close to the above element */
+}
