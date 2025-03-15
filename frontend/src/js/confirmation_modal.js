@@ -5,8 +5,9 @@ export function openConfirmationModal(modalTitle, modalText, buttonText, buttonU
     if (hasConfirmation) {
         modalBodyHtml = `
             <p>${modalText}</p>
-            <p>Type the following to confirm: <code>${confirmationValue}</code></p>
-            <input type="text" class="form-control" required>
+            <p>Type the following to confirm:</p>
+            <code>${confirmationValue}</code>
+            <input type="text" class="form-control mt-3" required>
         `;
     } else {
         modalBodyHtml = `
