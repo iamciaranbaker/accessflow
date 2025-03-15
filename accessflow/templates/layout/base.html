@@ -12,8 +12,6 @@
     </div>
     {% include 'layout/partials/footer.html' %}
 </div>
-{% block modals %}
-{% endblock modals %}
 {% set messages = get_flashed_messages(with_categories = True) %}
 {% if messages %}
     <div id="flash-messages">
