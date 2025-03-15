@@ -17,7 +17,7 @@ class ServiceDeleteView(View):
         if not service:
             abort(404)
 
-        #db.session.commit()
+        db.session.commit()
 
         flash("Service has been deleted successfully.", "success")
 
