@@ -3,7 +3,7 @@ import urllib.parse
 from accessflow.config import Config
 
 class GitLabHandler:
-    def get_api_url(self, path):
+    def make_api_url(self, path):
         return f"{Config.GITLAB_URL}/api/v4/{path}"
     
     def make_api_request(self, api_url, project_access_token, type = "GET", data = {}):
@@ -41,7 +41,7 @@ class GitLabHandler:
         project_url = self.sanitize_project_url(project_url)
 
         # First, make a request to the user endpoint to gather information about the PAT
-        user_endpoint_response = self.make_api_request(self.get_api_url("user"), project_access_token)
+        user_endpoint_response = self.make_api_request(self.make_api_url("user"), project_access_token)
         # If a 200 status code isn't reported, then the provided PAT isn't valid
         if user_endpoint_response.status_code != 200:
             return False
@@ -59,7 +59,7 @@ class GitLabHandler:
         pat_user_id = user_endpoint_response_json["id"]
         
         # Second, make a request to the project access tokens endpoint
-        project_access_tokens_endpoint_response = self.make_api_request(self.get_api_url(f"projects/{project_url}/access_tokens"), project_access_token)
+        project_access_tokens_endpoint_response = self.make_api_request(self.make_api_url(f"projects/{project_url}/access_tokens"), project_access_token)
         # If a 200 status code isn't reported, then the provided PAT isn't valid
         if project_access_tokens_endpoint_response.status_code != 200:
             return False
@@ -83,7 +83,7 @@ class GitLabHandler:
             return False
         
         # Last but not least, for a final verification, make a request to the personal access tokens endpoint
-        personal_access_tokens_endpoint_response = self.make_api_request(self.get_api_url("personal_access_tokens"), project_access_token)
+        personal_access_tokens_endpoint_response = self.make_api_request(self.make_api_url("personal_access_tokens"), project_access_token)
         # If a 200 status code isn't reported, then the provided PAT isn't valid
         if personal_access_tokens_endpoint_response.status_code != 200:
             return False
@@ -111,3 +111,18 @@ class GitLabHandler:
             return False
 
         return True
+    
+    def get_project_access_token(self, project_access_token):
+        personal_access_tokens_endpoint_response = self.make_api_request(self.make_api_url("personal_access_tokens"), project_access_token)
+        # If a 200 status code isn't reported, then the provided PAT isn't valid
+        if personal_access_tokens_endpoint_response.status_code != 200:
+            return False
+        
+        personal_access_tokens_endpoint_response_json = personal_access_tokens_endpoint_response.json()
+
+        for token in personal_access_tokens_endpoint_response_json:
+            # We only want the active token, not any expired or revoked ones
+            if token["active"] and not token["revoked"]:
+                return token
+            
+        return None

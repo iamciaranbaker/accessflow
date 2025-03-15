@@ -18,9 +18,10 @@ class UserCreateView(View):
                 user = User(
                     first_name = form.first_name.data,
                     last_name = form.last_name.data,
-                    email_address = form.email_address.data
+                    email_address = form.email_address.data,
+                    password = form.password.data,
+                    password_reset_required = form.force_password_reset.data
                 )
-                user.set_password(form.password.data)
 
                 # Iterate through all permission groups
                 for permission_group in form.permission_groups:

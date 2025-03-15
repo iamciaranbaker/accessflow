@@ -12,14 +12,15 @@ class CreateServiceForm(FlaskForm):
     submit = SubmitField("Create Service")
 
     def validate_project_url_and_access_token(self):
-        project_url = self.project_url.data.replace(Config.GITLAB_URL, "")
+        project_url = self.project_url.data
         project_access_token = self.project_access_token.data
 
         scopes_to_check = ["api", "read_repository"]
+        # If auto rotation is turned on, ensure the provided PAT has the `self_rotate` scope
         if self.auto_rotate_pat.data:
             scopes_to_check.append("self_rotate")
         
-        # Placeholder for GitLab PAT verification
+        # Check the provided Project URL and Project Access Token combination is valid
         if not gitlab_handler.validate_project_access_token(project_url, project_access_token, scopes = scopes_to_check):
             error = "Project URL and Project Access Token are invalid."
             # Manually add validation errors for both fields

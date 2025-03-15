@@ -16,12 +16,15 @@ class ServiceCreateView(View):
 
         if request.method == "POST":
             if form.validate_on_submit():
+                token = gitlab_handler.get_project_access_token(form.project_access_token.data)
                 service = Service(
                     name = form.name.data,
                     gl_project_url = gitlab_handler.sanitize_project_url(form.project_url.data, url_encode = False),
-                    gl_project_access_token = form.project_access_token.data
+                    gl_project_access_token = form.project_access_token.data,
+                    gl_project_access_token_auto_rotate = form.auto_rotate_pat.data
                 )
-                service.set_gl_pat_expires_at(datetime.now()) # Testing
+                service.set_gl_project_access_token_id(token["id"])
+                service.set_gl_project_access_token_expires_at(token["expires_at"])
 
                 db.session.add(service)
                 db.session.commit()
