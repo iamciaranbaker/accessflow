@@ -28,40 +28,46 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for service in services %}
-                                    <tr data-service-id="{{ service.id }}" data-service-name="{{ service.name }}">
-                                        <td class="align-middle">
-                                            {{ service.name }}
-                                        </td>
-                                        <td class="align-middle">
-                                            <code>{{ service.gl_project_url }}</code>
-                                        </td>
-                                        <td class="align-middle">
-                                            {{ service.gl_pat_expires_at }}
-                                        </td>
-                                        <td class="align-middle text-right">
-                                            {% if current_user.has_permission('edit_services') or current_user.has_permission('delete_services') %}
-                                                <div class="dropdown">
-                                                    <button class="btn btn-sm btn-actions" type="button" data-toggle="dropdown">
-                                                        <i class="fas fa-ellipsis-v"></i>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-right">
-                                                        {% if current_user.has_permission('edit_services') %}
-                                                            <li>
-                                                                <a class="dropdown-item">Edit</a>
-                                                            </li>
-                                                        {% endif %}
-                                                        {% if current_user.has_permission('delete_services') %}
-                                                            <li>
-                                                                <a class="dropdown-item text-danger service-delete">Delete</a>
-                                                            </li>
-                                                        {% endif %}
-                                                    </ul>
-                                                </div>
-                                            {% endif %}
-                                        </td>
+                                {% if services|length == 0 %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">You have no services yet :(</td>
                                     </tr>
-                                {% endfor %}
+                                {% else %}
+                                    {% for service in services %}
+                                        <tr data-service-id="{{ service.id }}" data-service-name="{{ service.name }}">
+                                            <td class="align-middle">
+                                                {{ service.name }}
+                                            </td>
+                                            <td class="align-middle">
+                                                <code>{{ service.gl_project_url }}</code>
+                                            </td>
+                                            <td class="align-middle">
+                                                {{ service.gl_pat_expires_at }}
+                                            </td>
+                                            <td class="align-middle text-right">
+                                                {% if current_user.has_permission('edit_services') or current_user.has_permission('delete_services') %}
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-sm btn-actions" type="button" data-toggle="dropdown">
+                                                            <i class="fas fa-ellipsis-v"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right">
+                                                            {% if current_user.has_permission('edit_services') %}
+                                                                <li>
+                                                                    <a class="dropdown-item">Edit</a>
+                                                                </li>
+                                                            {% endif %}
+                                                            {% if current_user.has_permission('delete_services') %}
+                                                                <li>
+                                                                    <a class="dropdown-item text-danger service-delete">Delete</a>
+                                                                </li>
+                                                            {% endif %}
+                                                        </ul>
+                                                    </div>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>
