@@ -59,7 +59,7 @@ export function openConfirmationModal(modalTitle, modalText, buttonText, buttonU
         });
     }
 
-    // Show the modal
+    // Show the modal - uses jQuery
     $("#confirmation-modal").modal("show");
 
     // Handle the button click
@@ -69,7 +69,7 @@ export function openConfirmationModal(modalTitle, modalText, buttonText, buttonU
         }
     });
 
-    // Remove modal from DOM after it is closed
+    // Remove modal from DOM after it is closed - uses jQuery
     $("#confirmation-modal").on("hidden.bs.modal", function() {
         $(this).remove();
     });

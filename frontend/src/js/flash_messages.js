@@ -27,4 +27,6 @@ if (flashMessagesContainer) {
         const toastrType = categoryMap[category] || "info"; // Map category to Toastr type, default to 'info' if not found
         toastr[toastrType](message);
     });
+
+    flashMessagesContainer.remove();
 }
