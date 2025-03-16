@@ -28,11 +28,25 @@ class Job(db.Model):
         self.last_run_at = db.func.now()
         self.next_run_at = db.session.query(db.func.now()).scalar() + timedelta(seconds = self.run_interval)
         db.session.commit()
+
+    def run(self):
+        try:
+            job_module = importlib.import_module(self.module_path)
+            job_class = getattr(job_module, self.class_name)
+
+            job_instance = job_class()
+            job_instance.run()
+        except ModuleNotFoundError:
+            raise ValueError(f"Module {self.module_path} not found.")
+        except AttributeError:
+            raise ValueError(f"Class {self.class_name} not found in module {self.module_path}.")
+        
+        self.mark_as_complete()
     
     @staticmethod
     def seed_all():
         jobs = [
-            Job("check_gl_project_access_tokens", "accessflow.jobs.check_gl_project_access_tokens", "CheckGLProjectAccessTokens", 60)
+            Job("check_gl_project_access_tokens", "accessflow.jobs.check_gl_project_access_tokens", "CheckGLProjectAccessTokens", 1)
         ]
 
         for job in jobs:
@@ -54,16 +68,4 @@ class Job(db.Model):
         
         for job in jobs:
             print(f"Running {job}")
-
-            try:
-                job_module = importlib.import_module(job.module_path)
-                job_class = getattr(job_module, job.class_name)
-
-                job_instance = job_class()
-                job_instance.run()
-            except ModuleNotFoundError:
-                raise ValueError(f"Module {job.module_path} not found.")
-            except AttributeError:
-                raise ValueError(f"Class {job.class_name} not found in module {job.module_path}.")
-            
-            job.mark_as_complete()
+            job.run()
