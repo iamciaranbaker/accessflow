@@ -1,6 +1,16 @@
 from accessflow.models.service import Service
-from accessflow import db
+from accessflow import db, gitlab_handler
 
+"""
+This job iterates through all Services and checks their GitLab Project Access Tokens.
+If the token has changed (i.e. rotated through the GitLab UI) or revoked, it will get updated in the database.
+"""
 class CheckGLProjectAccessTokens:
     def run(self):
-        services = Service.get_all()
+        services = Service.get_all_with_active_project_access_tokens()
+        for service in services:
+            token = gitlab_handler.get_project_access_token(service.gl_project_access_token)
+            if not token or not token["active"]:
+                service.gl_project_access_token_active = False
+                db.session.commit()
+                break # Project Access Token is no longer valid so don't check anything else

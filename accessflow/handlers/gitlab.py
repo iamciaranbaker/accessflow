@@ -116,7 +116,7 @@ class GitLabHandler:
         personal_access_tokens_endpoint_response = self.make_api_request(self.make_api_url("personal_access_tokens"), project_access_token)
         # If a 200 status code isn't reported, then the provided PAT isn't valid
         if personal_access_tokens_endpoint_response.status_code != 200:
-            return False
+            return None
         
         personal_access_tokens_endpoint_response_json = personal_access_tokens_endpoint_response.json()
 
