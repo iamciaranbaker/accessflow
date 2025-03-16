@@ -62,7 +62,7 @@ class User(db.Model):
         return any(permission.name == permission_name for permission in self.permissions)
     
     def add_permission(self, permission_name):
-        permission = Permission.query.filter_by(name = permission_name).first()
+        permission = Permission.query.filter(Permission.name == permission_name).first()
         if not permission:
             raise ValueError(f"Permission with name '{permission_name}' does not exist.")
         if permission not in self.permissions:
@@ -70,7 +70,7 @@ class User(db.Model):
             db.session.commit()
 
     def remove_permission(self, permission_name):
-        permission = Permission.query.filter_by(name = permission_name).first()
+        permission = Permission.query.filter(Permission.name == permission_name).first()
         if not permission:
             raise ValueError(f"Permission with name '{permission_name}' does not exist.")
         if permission in self.permissions:
@@ -116,4 +116,4 @@ class User(db.Model):
     
 @login_manager.user_loader
 def load_user(id):
-    return User.query.filter_by(id = id).first()
+    return User.query.filter(User.id == id).first()

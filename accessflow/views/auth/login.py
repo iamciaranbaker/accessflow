@@ -20,7 +20,7 @@ class LoginView(View):
             # If the login form passes the validation
             if form.validate_on_submit():
                 # Try and obtain the user from the database using the username provided
-                user = User.query.filter_by(email_address = form.email_address.data).first()
+                user = User.query.filter(User.email_address == form.email_address.data).first()
                 
                 # Check if a user is returned and the password matches what the user has entered
                 if user and user.verify_password(form.password.data):

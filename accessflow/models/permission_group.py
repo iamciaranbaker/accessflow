@@ -31,7 +31,7 @@ class PermissionGroup(db.Model):
         ]
 
         for permission_group in permission_groups:
-            existing_permission_group = PermissionGroup.query.filter_by(name = permission_group.name).first()
+            existing_permission_group = PermissionGroup.query.filter(PermissionGroup.name == permission_group.name).first()
             if existing_permission_group:
                 existing_permission_group.friendly_name = permission_group.friendly_name
                 existing_permission_group.description = permission_group.description

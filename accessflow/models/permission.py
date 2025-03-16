@@ -45,7 +45,7 @@ class Permission(db.Model):
         ]
 
         for permission in permissions:
-            existing_permission = Permission.query.filter_by(name = permission.name).first()
+            existing_permission = Permission.query.filter(Permission.name == permission.name).first()
             if existing_permission:
                 existing_permission.friendly_name = permission.friendly_name
                 existing_permission.description = permission.description

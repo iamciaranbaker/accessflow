@@ -7,7 +7,7 @@ from accessflow.models.permission import Permission
 
 def email_address_validator(form, field):
     # Check if user already exists with given email address
-    user = User.query.filter_by(email_address = field.data).first()
+    user = User.query.filter(User.email_address == field.data).first()
     if user:
         raise ValidationError("Email address is already in use.")
 

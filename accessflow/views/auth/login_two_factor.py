@@ -18,7 +18,7 @@ class LoginTwoFactorView(View):
 
         if request.method == "POST":
             if form.validate_on_submit():
-                user = User.query.filter_by(email_address = session["email_address"]).first()
+                user = User.query.filter(User.email_address == session["email_address"]).first()
 
                 if user and user.verify_two_factor(form.code.data):
                     session.pop("email_address")
