@@ -37,7 +37,3 @@ class Service(db.Model):
     @staticmethod
     def get_all():
         return Service.query.all()
-    
-    @staticmethod
-    def get_all_with_active_project_access_tokens():
-        return Service.query.filter(Service.gl_project_access_token_active == True).all()

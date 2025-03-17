@@ -6,7 +6,7 @@ class GitLabHandler:
     def make_api_url(self, path):
         return f"{Config.GITLAB_URL}/api/v4/{path}"
     
-    def make_api_request(self, api_url, project_access_token, type = "GET", data = {}):
+    def make_api_request(self, api_url, project_access_token, type = "GET", data = None):
         # If configured, use a proxy for any requests to GitLab
         proxies = None
         if Config.GITLAB_PROXY:
@@ -126,3 +126,16 @@ class GitLabHandler:
                 return token
             
         return None
+    
+    def rotate_project_access_token(self, project_access_token):
+        # Check the existing PAT is valid before attempting to rotate
+        token = self.get_project_access_token(project_access_token)
+        if not token or not token["active"] or not "self_rotate" in token["scopes"]:
+            return None
+        
+        personal_access_tokens_rotate_endpoint_response = self.make_api_request(self.make_api_url("personal_access_tokens/self/rotate"), project_access_token, type = "POST")
+        # If a 200 status code isn't reported, then something went wrong whilst rotating the PAT
+        if personal_access_tokens_rotate_endpoint_response.status_code != 200:
+            return None
+        
+        return personal_access_tokens_rotate_endpoint_response.json()

@@ -46,7 +46,8 @@ class Job(db.Model):
     @staticmethod
     def seed_all():
         jobs = [
-            Job("check_gl_project_access_tokens", "accessflow.jobs.check_gl_project_access_tokens", "CheckGLProjectAccessTokens", 1)
+            Job("check_gl_project_access_tokens", "accessflow.jobs.check_gl_project_access_tokens", "CheckGLProjectAccessTokens", 1),
+            Job("rotate_gl_project_access_tokens", "accessflow.jobs.rotate_gl_project_access_tokens", "RotateGLProjectAccessTokens", 5)
         ]
 
         for job in jobs:
