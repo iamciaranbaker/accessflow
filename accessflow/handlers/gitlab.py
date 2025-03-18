@@ -1,45 +1,10 @@
-import requests
-import urllib.parse
 import yaml
-from accessflow.config import Config
+from accessflow.handlers.gitlab_utils import make_api_request, sanitize_project_url
 
 class GitLabHandler:
-    def make_api_url(self, path):
-        return f"{Config.GITLAB_URL}/api/v4/{path}"
-    
-    def make_api_request(self, api_url, project_access_token, type = "GET", data = None):
-        # If configured, use a proxy for any requests to GitLab
-        proxies = None
-        if Config.GITLAB_PROXY:
-            proxies = {
-                "http": Config.GITLAB_PROXY,
-                "https": Config.GITLAB_PROXY
-            }
-        # GitLab requires authentication via a header
-        headers = {
-            "Private-Token": project_access_token
-        }
-
-        if type == "GET":
-            return requests.get(api_url, headers = headers, proxies = proxies)
-        elif type == "POST":
-            return requests.post(api_url, headers = headers, proxies = proxies, data = data)
-    
-    def sanitize_project_url(self, project_url, url_encode = True):
-        # If the GitLab URL is present, remove it
-        if Config.GITLAB_URL in project_url:
-            project_url = project_url.replace(Config.GITLAB_URL, "")
-        # If the project URL starts with a slash, remove it
-        if project_url.startswith("/"):
-            project_url = project_url[1:]
-        # Convert the project URL to a URL encoded string
-        if url_encode:
-            project_url = urllib.parse.quote_plus(project_url)
-        return project_url
-
     def validate_project_access_token(self, project_url, project_access_token, scopes = []):
         # First, make a request to the user endpoint to gather information about the PAT
-        user_endpoint_response = self.make_api_request(self.make_api_url("user"), project_access_token)
+        user_endpoint_response = make_api_request(self.make_api_url("user"), project_access_token)
         # If a 200 status code isn't reported, then the provided PAT isn't valid
         if user_endpoint_response.status_code != 200:
             return False
@@ -57,10 +22,10 @@ class GitLabHandler:
         pat_user_id = user_endpoint_response_json["id"]
 
         # Sanitize the project URL before use
-        project_url = self.sanitize_project_url(project_url)
+        project_url = sanitize_project_url(project_url)
         
         # Second, make a request to the project access tokens endpoint
-        project_access_tokens_endpoint_response = self.make_api_request(self.make_api_url(f"projects/{project_url}/access_tokens"), project_access_token)
+        project_access_tokens_endpoint_response = make_api_request(self.make_api_url(f"projects/{project_url}/access_tokens"), project_access_token)
         # If a 200 status code isn't reported, then the provided PAT isn't valid
         if project_access_tokens_endpoint_response.status_code != 200:
             return False
@@ -84,7 +49,7 @@ class GitLabHandler:
             return False
         
         # Last but not least, for a final verification, make a request to the personal access tokens endpoint
-        personal_access_tokens_endpoint_response = self.make_api_request(self.make_api_url("personal_access_tokens"), project_access_token)
+        personal_access_tokens_endpoint_response = make_api_request(self.make_api_url("personal_access_tokens"), project_access_token)
         # If a 200 status code isn't reported, then the provided PAT isn't valid
         if personal_access_tokens_endpoint_response.status_code != 200:
             return False
@@ -114,7 +79,7 @@ class GitLabHandler:
         return True
     
     def get_project_access_token(self, project_access_token):
-        personal_access_tokens_endpoint_response = self.make_api_request(self.make_api_url("personal_access_tokens"), project_access_token)
+        personal_access_tokens_endpoint_response = make_api_request(self.make_api_url("personal_access_tokens"), project_access_token)
         # If a 200 status code isn't reported, then the provided PAT isn't valid
         if personal_access_tokens_endpoint_response.status_code != 200:
             return None
@@ -134,7 +99,7 @@ class GitLabHandler:
         if not token or not token["active"] or not "self_rotate" in token["scopes"]:
             return None
         
-        personal_access_tokens_rotate_endpoint_response = self.make_api_request(self.make_api_url("personal_access_tokens/self/rotate"), project_access_token, type = "POST")
+        personal_access_tokens_rotate_endpoint_response = make_api_request(self.make_api_url("personal_access_tokens/self/rotate"), project_access_token, type = "POST")
         # If a 200 status code isn't reported, then something went wrong whilst rotating the PAT
         if personal_access_tokens_rotate_endpoint_response.status_code != 200:
             return None
@@ -148,9 +113,9 @@ class GitLabHandler:
             return None
         
         # Sanitize the project URL before use
-        project_url = self.sanitize_project_url(project_url)
+        project_url = sanitize_project_url(project_url)
 
-        project_repository_endpoint_response = self.make_api_request(self.make_api_url(f"projects/{project_url}/repository/files/.gitlab-ci.yml/raw?ref=main"), project_access_token)
+        project_repository_endpoint_response = make_api_request(self.make_api_url(f"projects/{project_url}/repository/files/.gitlab-ci.yml/raw?ref=main"), project_access_token)
         # If a 200 status code isn't reported then something has gone wrong
         if project_repository_endpoint_response.status_code != 200:
             return None
