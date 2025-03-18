@@ -1,5 +1,6 @@
 import requests
 import urllib.parse
+import yaml
 from accessflow.config import Config
 
 class GitLabHandler:
@@ -37,9 +38,6 @@ class GitLabHandler:
         return project_url
 
     def validate_project_access_token(self, project_url, project_access_token, scopes = []):
-        # Sanitize the project URL before use
-        project_url = self.sanitize_project_url(project_url)
-
         # First, make a request to the user endpoint to gather information about the PAT
         user_endpoint_response = self.make_api_request(self.make_api_url("user"), project_access_token)
         # If a 200 status code isn't reported, then the provided PAT isn't valid
@@ -57,6 +55,9 @@ class GitLabHandler:
         
         # Get the ID of the user created by the PAT
         pat_user_id = user_endpoint_response_json["id"]
+
+        # Sanitize the project URL before use
+        project_url = self.sanitize_project_url(project_url)
         
         # Second, make a request to the project access tokens endpoint
         project_access_tokens_endpoint_response = self.make_api_request(self.make_api_url(f"projects/{project_url}/access_tokens"), project_access_token)
@@ -139,3 +140,23 @@ class GitLabHandler:
             return None
         
         return personal_access_tokens_rotate_endpoint_response.json()
+    
+    def get_project_pipeline_variables(self, project_url, project_access_token):
+        # Check the provided PAT is valid and has the required scope
+        token = self.get_project_access_token(project_access_token)
+        if not token or not token["active"] or not "read_repository" in token["scopes"]:
+            return None
+        
+        # Sanitize the project URL before use
+        project_url = self.sanitize_project_url(project_url)
+
+        project_repository_endpoint_response = self.make_api_request(self.make_api_url(f"projects/{project_url}/repository/files/.gitlab-ci.yml/raw?ref=main"), project_access_token)
+        # If a 200 status code isn't reported then something has gone wrong
+        if project_repository_endpoint_response.status_code != 200:
+            return None
+        
+        gitlab_ci_file = yaml.safe_load(project_repository_endpoint_response.text)
+        if not "variables" in gitlab_ci_file:
+            return None
+        
+        return gitlab_ci_file["variables"]
