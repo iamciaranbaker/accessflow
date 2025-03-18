@@ -6,7 +6,7 @@ from accessflow.models.user import User
 
 class UserListView(View):
     methods = ["GET"]
-    decorators = [login_required, permission_required("list_users")]
+    decorators = [permission_required("list_users"), login_required]
 
     def dispatch_request(self):
         return render_template("pages/admin/users/list.html", users = User.get_all())

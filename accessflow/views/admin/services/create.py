@@ -9,7 +9,7 @@ from accessflow import db, gitlab_handler
 
 class ServiceCreateView(View):
     methods = ["GET", "POST"]
-    decorators = [login_required, permission_required("create_services")]
+    decorators = [permission_required("create_services"), login_required]
 
     def dispatch_request(self):
         form = CreateServiceForm(request.form)

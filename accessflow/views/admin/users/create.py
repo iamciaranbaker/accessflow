@@ -8,7 +8,7 @@ from accessflow import db
 
 class UserCreateView(View):
     methods = ["GET", "POST"]
-    decorators = [login_required, permission_required("create_users")]
+    decorators = [permission_required("create_users"), login_required]
 
     def dispatch_request(self):
         form = CreateUserForm(request.form)

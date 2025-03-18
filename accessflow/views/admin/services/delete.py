@@ -7,7 +7,7 @@ from accessflow import db
 
 class ServiceDeleteView(View):
     methods = ["GET"]
-    decorators = [login_required, permission_required("delete_services")]
+    decorators = [permission_required("delete_services"), login_required]
 
     def dispatch_request(self, service_id):
         # Delete all records across all tables associated with the specified service

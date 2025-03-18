@@ -8,7 +8,7 @@ from accessflow import db
 
 class UserDeleteView(View):
     methods = ["GET"]
-    decorators = [login_required, permission_required("delete_users")]
+    decorators = [permission_required("delete_users"), login_required]
 
     def dispatch_request(self, user_id):
         # The user shouldn't be able to delete themselves.

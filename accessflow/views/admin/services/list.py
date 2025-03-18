@@ -6,7 +6,7 @@ from accessflow.models.service import Service
 
 class ServiceListView(View):
     methods = ["GET"]
-    decorators = [login_required, permission_required("list_services")]
+    decorators = [permission_required("list_services"), login_required]
 
     def dispatch_request(self):
         return render_template("pages/admin/services/list.html", services = Service.get_all())
