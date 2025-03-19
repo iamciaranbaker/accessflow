@@ -2,8 +2,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
-from accessflow.config import Config
 from accessflow.handlers.gitlab import GitLabHandler
+from accessflow.config import Config
+from accessflow.logger import logger
 
 app = Flask(__name__, template_folder = "templates", static_folder = "static")
 app.config.from_object(Config)
