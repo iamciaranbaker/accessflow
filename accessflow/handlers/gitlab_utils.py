@@ -25,7 +25,7 @@ def make_api_request(api_url, project_access_token, type = "GET", data = None, p
     elif type == "POST":
         return requests.post(api_url, headers = headers, proxies = proxies, data = data, params = params)
 
-def sanitize_project_url(self, project_url, url_encode = True):
+def sanitize_project_url(project_url, url_encode = True):
     # If the GitLab URL is present, remove it
     if Config.GITLAB_URL in project_url:
         project_url = project_url.replace(Config.GITLAB_URL, "")
