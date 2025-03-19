@@ -5,7 +5,7 @@ from accessflow.config import Config
 def make_api_url(path):
     return f"{Config.GITLAB_URL}/api/v4/{path}"
 
-def make_api_request(api_url, project_access_token, type = "GET", data = None):
+def make_api_request(api_url, project_access_token, type = "GET", data = None, params = None):
     # If configured, use a proxy for any requests to GitLab
     proxies = None
     if Config.GITLAB_PROXY:
@@ -21,9 +21,9 @@ def make_api_request(api_url, project_access_token, type = "GET", data = None):
     api_url = make_api_url(api_url)
 
     if type == "GET":
-        return requests.get(api_url, headers = headers, proxies = proxies)
+        return requests.get(api_url, headers = headers, proxies = proxies, params = params)
     elif type == "POST":
-        return requests.post(api_url, headers = headers, proxies = proxies, data = data)
+        return requests.post(api_url, headers = headers, proxies = proxies, data = data, params = params)
 
 def sanitize_project_url(self, project_url, url_encode = True):
     # If the GitLab URL is present, remove it

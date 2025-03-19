@@ -106,21 +106,28 @@ class GitLabHandler:
         
         return personal_access_tokens_rotate_endpoint_response.json()
     
-    def get_project_pipeline_variables(self, project_url, project_access_token):
+    def get_project_repository_file(self, project_url, project_access_token, file_path, branch = "main"):
         # Check the provided PAT is valid and has the required scope
         token = self.get_project_access_token(project_access_token)
-        if not token or not token["active"] or not "read_repository" in token["scopes"]:
+        if not token or not token["active"] or not "api" in token["scopes"] or not "read_repository" in token["scopes"]:
             return None
         
         # Sanitize the project URL before use
         project_url = sanitize_project_url(project_url)
 
-        project_repository_endpoint_response = make_api_request(f"projects/{project_url}/repository/files/.gitlab-ci.yml/raw?ref=main", project_access_token)
+        project_repository_endpoint_response = make_api_request(f"projects/{project_url}/repository/files/{file_path}/raw", project_access_token, params = {"ref": branch})
         # If a 200 status code isn't reported then something has gone wrong
         if project_repository_endpoint_response.status_code != 200:
             return None
         
-        gitlab_ci_file = yaml.safe_load(project_repository_endpoint_response.text)
+        return project_repository_endpoint_response.text
+    
+    def get_project_pipeline_variables(self, project_url, project_access_token):
+        gitlab_ci_file = self.get_project_repository_file(project_url, project_access_token, ".gitlab-ci.yml")
+        if not gitlab_ci_file:
+            return None
+        
+        gitlab_ci_file = yaml.safe_load(gitlab_ci_file)
         if not "variables" in gitlab_ci_file:
             return None
         
