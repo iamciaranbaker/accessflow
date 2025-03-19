@@ -5,7 +5,9 @@ from accessflow import db, gitlab_handler
 
 class FetchTeamsFromGL:
     def run(self):
+        # Get teams from database
         teams = Team.query.all()
+        # Keep track of teams from GitLab
         teams_from_gl = [team["name"] for team in gitlab_handler.get_project_repository_tree(Config.SUPPORT_USERS_PROJECT_URL, Config.SUPPORT_USERS_PROJECT_ACCESS_TOKEN, "teams")]
 
         # First, check if any teams in the database no longer appear in GitLab
@@ -16,7 +18,7 @@ class FetchTeamsFromGL:
         for team_name in teams_from_gl:
             if not next((team for team in teams if team.name == team_name), None):
                 team = Team(
-                    team_name
+                    name = team_name
                 )
                 db.session.add(team)
                 logger.info(f"Creating {team}")

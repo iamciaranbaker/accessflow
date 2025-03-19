@@ -1,5 +1,5 @@
-import yaml
 from accessflow.handlers.gitlab_utils import make_api_request, sanitize_project_url
+import yaml
 
 class GitLabHandler:
     def validate_project_access_token(self, project_url, project_access_token, scopes = []):
