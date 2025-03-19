@@ -12,7 +12,9 @@ class Request(db.Model):
 
     # Columns
     id = db.Column(db.Integer, autoincrement = True, primary_key = True, unique = True, nullable = False)
-    name = db.Column(db.String(50), nullable = False)
+    justification = db.Column(db.Text, nullable = False)
+    pid = db.Column(db.Integer)
+    service_id = db.Column(db.Integer, db.ForeignKey("services.id"))
     status = db.Column(db.Enum(RequestStatus))
     created_at = db.Column(db.DateTime, default = db.func.now())
     updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
