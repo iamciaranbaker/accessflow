@@ -1,4 +1,5 @@
 from accessflow.models.permission_group import PermissionGroup
+from accessflow.logger import logger
 from accessflow import db
 
 class Permission(db.Model):
@@ -50,10 +51,10 @@ class Permission(db.Model):
                 existing_permission.friendly_name = permission.friendly_name
                 existing_permission.description = permission.description
                 existing_permission.display_order = permission.display_order
-                print(f"Updated {existing_permission}")
+                logger.info(f"Updating {existing_permission}")
             else:
                 db.session.add(permission)
-                print(f"Created {permission}")
+                logger.info(f"Creating {permission}")
 
         db.session.commit()
 

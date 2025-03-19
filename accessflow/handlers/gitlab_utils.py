@@ -18,6 +18,8 @@ def make_api_request(api_url, project_access_token, type = "GET", data = None):
         "Private-Token": project_access_token
     }
 
+    api_url = make_api_url(api_url)
+
     if type == "GET":
         return requests.get(api_url, headers = headers, proxies = proxies)
     elif type == "POST":

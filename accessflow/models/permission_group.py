@@ -1,4 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
+from accessflow.logger import logger
 from accessflow import db
 
 class PermissionGroup(db.Model):
@@ -36,9 +36,9 @@ class PermissionGroup(db.Model):
                 existing_permission_group.friendly_name = permission_group.friendly_name
                 existing_permission_group.description = permission_group.description
                 existing_permission_group.display_order = permission_group.display_order
-                print(f"Updated {existing_permission_group}")
+                logger.info(f"Updating {existing_permission_group}")
             else:
                 db.session.add(permission_group)
-                print(f"Created {permission_group}")
+                logger.info(f"Creating {permission_group}")
 
         db.session.commit()

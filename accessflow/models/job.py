@@ -1,4 +1,5 @@
 from datetime import timedelta
+from accessflow.logger import logger
 from accessflow import db
 import importlib
 
@@ -56,10 +57,10 @@ class Job(db.Model):
                 existing_job.module_path = job.module_path
                 existing_job.class_name = job.class_name
                 existing_job.run_interval = job.run_interval
-                print(f"Updated {existing_job}")
+                logger.success(f"Updated {existing_job}")
             else:
                 db.session.add(job)
-                print(f"Created {job}")
+                logger.success(f"Created {job}")
 
         db.session.commit()
 
@@ -68,5 +69,5 @@ class Job(db.Model):
         jobs = Job.query.filter(Job.next_run_at < db.func.now()).all()
         
         for job in jobs:
-            print(f"Running {job}")
+            logger.info(f"Running {job}")
             job.run()
