@@ -19,6 +19,9 @@ class Request(db.Model):
     created_at = db.Column(db.DateTime, default = db.func.now())
     updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
 
+    # Relationships
+    service = db.relationship("Service", lazy = "joined")
+
     def __init__(self, name):
         self.name = name
 
