@@ -131,7 +131,7 @@ class GitLabHandler:
         # Sanitize the project URL before use
         project_url = sanitize_project_url(project_url)
 
-        project_repository_endpoint_response = make_api_request(f"projects/{project_url}/repository/tree", project_access_token, params = {"ref": branch, "per_page": 100})
+        project_repository_endpoint_response = make_api_request(f"projects/{project_url}/repository/tree", project_access_token, params = {"ref": branch, "path": path, "per_page": 100})
         # If a 200 status code isn't reported then something has gone wrong
         if project_repository_endpoint_response.status_code != 200:
             return None

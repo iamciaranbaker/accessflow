@@ -48,7 +48,8 @@ class Job(db.Model):
     def seed_all():
         jobs = [
             Job("check_gl_project_access_tokens", "accessflow.jobs.check_gl_project_access_tokens", "CheckGLProjectAccessTokens", 1),
-            Job("rotate_gl_project_access_tokens", "accessflow.jobs.rotate_gl_project_access_tokens", "RotateGLProjectAccessTokens", 5)
+            Job("rotate_gl_project_access_tokens", "accessflow.jobs.rotate_gl_project_access_tokens", "RotateGLProjectAccessTokens", 1),
+            Job("fetch_teams_from_gl", "accessflow.jobs.fetch_teams_from_gl", "FetchTeamsFromGL", 1)
         ]
 
         for job in jobs:
@@ -57,10 +58,10 @@ class Job(db.Model):
                 existing_job.module_path = job.module_path
                 existing_job.class_name = job.class_name
                 existing_job.run_interval = job.run_interval
-                logger.success(f"Updated {existing_job}")
+                logger.info(f"Updating {existing_job}")
             else:
                 db.session.add(job)
-                logger.success(f"Created {job}")
+                logger.info(f"Creating {job}")
 
         db.session.commit()
 

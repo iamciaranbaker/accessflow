@@ -19,10 +19,15 @@ login_manager.login_message_category = "danger"
 
 gitlab_handler = GitLabHandler()
 
-from accessflow.models.permission_group import PermissionGroup
 from accessflow.models.permission import Permission
+from accessflow.models.permission_group import PermissionGroup
 from accessflow.models.user import User
+from accessflow.models.user_permission import UserPermission
 from accessflow.models.job import Job
+from accessflow.models.request import Request
+from accessflow.models.service import Service
+from accessflow.models.pid import PID
+from accessflow.models.team import Team
 
 migrate = Migrate(app, db, compare_type = True)
 
@@ -71,6 +76,7 @@ def seed_database():
 @app.cli.command("recreate-db")
 def recreate_database():
     db.drop_all()
+    db.session.commit()
     db.create_all()
     db.session.commit()
 

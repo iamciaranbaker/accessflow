@@ -10,6 +10,10 @@ class Config:
     GITLAB_URL = os.getenv("GITLAB_URL")
     GITLAB_PROXY = os.getenv("GITLAB_PROXY")
 
+    # Details of Support Users project, temporary for now
+    SUPPORT_USERS_PROJECT_URL = os.getenv("SUPPORT_USERS_PROJECT_URL")
+    SUPPORT_USERS_PROJECT_ACCESS_TOKEN = os.getenv("SUPPORT_USERS_PROJECT_ACCESS_TOKEN")
+
     # MySQL database credentials
     MYSQL_USER = os.getenv("MYSQL_USER")
     MYSQL_PASS = os.getenv("MYSQL_PASS")
