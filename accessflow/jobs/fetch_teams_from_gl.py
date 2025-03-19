@@ -1,6 +1,24 @@
+from accessflow.models.team import Team
 from accessflow.config import Config
+from accessflow.logger import logger
 from accessflow import db, gitlab_handler
 
 class FetchTeamsFromGL:
     def run(self):
-        teams = gitlab_handler.get_project_repository_tree(Config.SUPPORT_USERS_PROJECT_URL, Config.SUPPORT_USERS_PROJECT_ACCESS_TOKEN, "teams/")
+        teams = Team.query.all()
+        teams_from_gl = [team["name"] for team in gitlab_handler.get_project_repository_tree(Config.SUPPORT_USERS_PROJECT_URL, Config.SUPPORT_USERS_PROJECT_ACCESS_TOKEN, "teams")]
+
+        # First, check if any teams in the database no longer appear in GitLab
+        for team in teams:
+            team.exists_in_gl = team.name in teams_from_gl
+
+        # Second, iterate through the teams from GitLab and create them if they don't exist in the database
+        for team_name in teams_from_gl:
+            if not next((team for team in teams if team.name == team_name), None):
+                team = Team(
+                    team_name
+                )
+                db.session.add(team)
+                logger.info(f"Creating {team}")
+
+        db.session.commit()
