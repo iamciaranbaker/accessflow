@@ -103,3 +103,24 @@ code {
     padding-top: 0.2rem; /* Adjust this if the first line is too close to the top */
     margin-top: 0.2rem; /* Optionally add some margin to avoid it being too close to the above element */
 }
+
+.job-logs {
+    font-family: "Courier New", monospace;
+    line-height: 0.8;
+    white-space: nowrap;
+}
+
+.log-success {
+    color: #248e47;
+    font-weight: bold;
+}
+.log-warning {
+    color: #856404;
+}
+.log-error {
+    color: #c51022;
+}
+.log-critical {
+    color: #920513;
+    font-weight: bold;
+}

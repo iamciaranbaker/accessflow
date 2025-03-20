@@ -53,6 +53,8 @@ class Job(db.Model):
         job_logger = logging.getLogger(f"job_{job_run.id}")
         job_logger.setLevel(logging.INFO)
         job_logger.addHandler(JobLogHandler(job_run.id))
+        setattr(job_logger, "success", lambda message, *args: job_logger._log(logging.SUCCESS, message, args))
+        job_logger.info("Starting job")
 
         try:
             # Find the job's module
@@ -64,10 +66,12 @@ class Job(db.Model):
             # Run the job
             job_instance.run()
             # Mark the job as successful
+            job_logger.success("Job successful")
             job_run.mark_as_done(JobRunStatus.SUCCESSFUL)
         except Exception as exception:
             job_logger.critical(f"An exception occured: {exception}")
             # Mark the job as failed
+            job_logger.error("Job failed")
             job_run.mark_as_done(JobRunStatus.FAILED)
     
     @staticmethod
