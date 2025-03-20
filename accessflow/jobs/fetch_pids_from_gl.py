@@ -21,8 +21,6 @@ class FetchPIDsFromGL:
         # Keep track of the PIDs and map them to the user's name
         pid_name_mapping = {}
 
-        return
-
         for team in teams:
             for environment_type in ["nonprod", "prod"]:
                 environment_file = gitlab_handler.get_project_repository_file(Config.SUPPORT_USERS_PROJECT_URL, Config.SUPPORT_USERS_PROJECT_ACCESS_TOKEN, urllib.parse.quote_plus(f"teams/{team.name}/{environment_type}.yml"))
@@ -56,7 +54,7 @@ class FetchPIDsFromGL:
                         uid = uid,
                         name = pid_name_mapping[uid],
                         team_id = pids_from_gl[environment_type][uid],
-                        environment_type = PIDEnvironmentType.NONPROD if environment_type == "nonprod" else PIDEnvironmentType.PROD
+                        environment_type = PIDEnvironmentType.NONPROD_ONLY if environment_type == "nonprod" else PIDEnvironmentType.PROD_ONLY
                     )
                     db.session.add(pid)
                     self.logger.info(f"Creating {pid}")

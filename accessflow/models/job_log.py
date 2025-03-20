@@ -24,7 +24,7 @@ class JobLog(db.Model):
     job_run_id = db.Column(db.Integer, db.ForeignKey("job_runs.id"))
     level = db.Column(db.String(10))
     message = db.Column(db.Text)
-    created_at = db.Column(TIMESTAMP(fsp = 3), default = db.func.now(3))
+    created_at = db.Column(TIMESTAMP(fsp = 6), default = db.func.now(6))
 
     def __init__(self, job_run_id, level, message):
         self.job_run_id = job_run_id
