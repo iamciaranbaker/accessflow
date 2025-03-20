@@ -4,6 +4,7 @@ certifi==2025.1.31
 cffi==1.17.1
 charset-normalizer==3.4.1
 click==8.1.8
+croniter==6.0.0
 cryptography==44.0.0
 dnspython==2.3.0
 email-validator==2.0.0.post2
@@ -24,7 +25,9 @@ onetimepass==1.0.1
 pycparser==2.22
 PyMySQL==1.1.1
 PySocks==1.7.1
+python-dateutil==2.9.0.post0
 python-dotenv==0.21.1
+pytz==2025.1
 PyYAML==6.0.2
 requests==2.32.3
 six==1.17.0

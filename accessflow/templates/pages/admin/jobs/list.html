@@ -1,0 +1,77 @@
+{% extends 'layout/base.html' %}
+
+{% set title = 'Jobs' %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h1>Jobs</h1>
+                <span class="text-muted">A list of all system jobs.</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header" style="border-bottom: none">
+                        <h3 class="card-title">Job List</h3>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-head-fixed">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Cron</th>
+                                    <th>Last Run</th>
+                                    <th>Last Run Status</th>
+                                    <th>Next Run</th>
+                                    <th class="row-actions"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for job in jobs %}
+                                    <tr>
+                                        <td class="align-middle">
+                                            <code>{{ job.name }}</code>
+                                        </td>
+                                        <td class="align-middle">
+                                            <code>{{ job.cron_expression }}</code>
+                                        </td>
+                                        <td class="align-middle">
+                                            {% if job.last_run_at %}
+                                            {{ job.last_run_at.strftime('%d %b %Y at %H:%M') }}
+                                            {% else %}
+                                            Never
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">
+                                            {% if job.last_run_status.value == 'Successful' %}
+                                            <span class="text-success"><i class="fas fa-check-circle"></i> Successful</span>
+                                            {% elif job.last_run_status.value == 'Failed' %}
+                                            <span class="text-danger"><i class="fas fa-times-circle"></i> Failed</span>
+                                            {% elif job.last_run_status.value == 'Running' %}
+                                            <span class="text-info"><i class="fas fa-play-circle"></i> Running</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ job.next_run_at.strftime('%d %b %Y at %H:%M') }}
+                                        </td>
+                                        <td class="align-middle text-right">
+                                            
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

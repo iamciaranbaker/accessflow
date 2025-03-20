@@ -1,7 +1,14 @@
-from datetime import timedelta
+from enum import Enum
+from datetime import datetime
+from croniter import croniter
 from accessflow.logger import logger
 from accessflow import db
 import importlib
+
+class JobLastRunStatus(Enum):
+    SUCCESSFUL = "Successful"
+    FAILED = "Failed"
+    RUNNING = "Running"
 
 class Job(db.Model):
     # Table Name
@@ -12,23 +19,29 @@ class Job(db.Model):
     name = db.Column(db.String(100), unique = True, nullable = False)
     module_path = db.Column(db.String(100), nullable = False)
     class_name = db.Column(db.String(100), nullable = False)
-    run_interval = db.Column(db.Integer, nullable = False)
-    last_run_at = db.Column(db.DateTime, default = db.func.now())
-    next_run_at = db.Column(db.DateTime, default = db.func.now())
+    cron_expression = db.Column(db.String(30), nullable = False)
+    last_run_at = db.Column(db.DateTime)
+    last_run_status = db.Column(db.Enum(JobLastRunStatus))
+    next_run_at = db.Column(db.DateTime)
 
-    def __init__(self, name, module_path, class_name, run_interval):
+    def __init__(self, name, module_path, class_name, cron_expression):
         self.name = name
         self.module_path = module_path
         self.class_name = class_name
-        self.run_interval = run_interval
+        self.cron_expression = cron_expression
+        self.next_run_at = self.get_next_run_at()
 
     def __repr__(self):
         return f"<Job(id=\"{self.id}\", name=\"{self.name}\", module_path=\"{self.module_path}\", class_name=\"{self.class_name}\")"
     
     def mark_as_complete(self):
         self.last_run_at = db.func.now()
-        self.next_run_at = db.session.query(db.func.now()).scalar() + timedelta(seconds = self.run_interval)
+        self.last_run_status = JobLastRunStatus.SUCCESSFUL
+        self.next_run_at = self.get_next_run_at()
         db.session.commit()
+
+    def get_next_run_at(self):
+        return croniter(self.cron_expression, db.session.query(db.func.now()).scalar()).get_next(datetime)
 
     def run(self):
         try:
@@ -47,10 +60,10 @@ class Job(db.Model):
     @staticmethod
     def seed_all():
         jobs = [
-            Job("check_gl_project_access_tokens", "accessflow.jobs.check_gl_project_access_tokens", "CheckGLProjectAccessTokens", 1),
-            Job("rotate_gl_project_access_tokens", "accessflow.jobs.rotate_gl_project_access_tokens", "RotateGLProjectAccessTokens", 1),
-            Job("fetch_teams_from_gl", "accessflow.jobs.fetch_teams_from_gl", "FetchTeamsFromGL", 1),
-            Job("fetch_pids_from_gl", "accessflow.jobs.fetch_pids_from_gl", "FetchPIDsFromGL", 1)
+            Job("check_gl_project_access_tokens", "accessflow.jobs.check_gl_project_access_tokens", "CheckGLProjectAccessTokens", "* * * * *"),
+            Job("rotate_gl_project_access_tokens", "accessflow.jobs.rotate_gl_project_access_tokens", "RotateGLProjectAccessTokens", "* * * * *"),
+            Job("fetch_teams_from_gl", "accessflow.jobs.fetch_teams_from_gl", "FetchTeamsFromGL", "* * * * *"),
+            Job("fetch_pids_from_gl", "accessflow.jobs.fetch_pids_from_gl", "FetchPIDsFromGL", "* * * * *")
         ]
 
         for job in jobs:
@@ -58,13 +71,17 @@ class Job(db.Model):
             if existing_job:
                 existing_job.module_path = job.module_path
                 existing_job.class_name = job.class_name
-                existing_job.run_interval = job.run_interval
+                existing_job.cron_expression = job.cron_expression
                 logger.info(f"Updating {existing_job}")
             else:
                 db.session.add(job)
                 logger.info(f"Creating {job}")
 
         db.session.commit()
+
+    @staticmethod
+    def get_all():
+        return Job.query.all()
 
     @staticmethod
     def run_all():

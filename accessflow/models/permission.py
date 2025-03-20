@@ -42,7 +42,8 @@ class Permission(db.Model):
             Permission("list_services", "List Services", 2, description = "The ability to list services.", display_order = 6),
             Permission("create_services", "Create Services", 2, description = "The ability to create services.", display_order = 7),
             Permission("edit_services", "Edit Services", 2, description = "The ability to edit services.", display_order = 8),
-            Permission("delete_services", "Delete Services", 2, description = "The ability to delete services.", display_order = 9)
+            Permission("delete_services", "Delete Services", 2, description = "The ability to delete services.", display_order = 9),
+            Permission("list_jobs", "List Jobs", 2, description = "The ability to list jobs.", display_order = 10)
         ]
 
         for permission in permissions:
