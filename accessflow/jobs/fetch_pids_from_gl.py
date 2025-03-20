@@ -21,6 +21,8 @@ class FetchPIDsFromGL:
         # Keep track of the PIDs and map them to the user's name
         pid_name_mapping = {}
 
+        return
+
         for team in teams:
             for environment_type in ["nonprod", "prod"]:
                 environment_file = gitlab_handler.get_project_repository_file(Config.SUPPORT_USERS_PROJECT_URL, Config.SUPPORT_USERS_PROJECT_ACCESS_TOKEN, urllib.parse.quote_plus(f"teams/{team.name}/{environment_type}.yml"))

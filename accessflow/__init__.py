@@ -49,7 +49,6 @@ from accessflow.views.admin.services.create import ServiceCreateView
 from accessflow.views.admin.services.delete import ServiceDeleteView
 from accessflow.views.admin.jobs.list import JobListView
 from accessflow.views.admin.jobs.logs import JobLogsView
-from accessflow.views.admin.logs.list import LogListView
 from accessflow.views.auth.login import LoginView
 from accessflow.views.auth.login_two_factor import LoginTwoFactorView
 from accessflow.views.auth.logout import LogoutView
@@ -67,7 +66,6 @@ app.add_url_rule("/admin/services/create", view_func = ServiceCreateView.as_view
 app.add_url_rule("/admin/services/<int:service_id>/delete", view_func = ServiceDeleteView.as_view("admin/services/delete"))
 app.add_url_rule("/admin/jobs", view_func = JobListView.as_view("admin/jobs"))
 app.add_url_rule("/admin/jobs/logs", view_func = JobLogsView.as_view("admin/jobs/logs"))
-app.add_url_rule("/admin/logs", view_func = LogListView.as_view("admin/logs"))
 # Auth Routes
 app.add_url_rule("/login", view_func = LoginView.as_view("login"))
 app.add_url_rule("/login/two-factor", view_func = LoginTwoFactorView.as_view("login/two-factor"))
