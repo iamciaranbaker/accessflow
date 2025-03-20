@@ -62,7 +62,20 @@
                                             {{ job.next_run_at.strftime('%d %b %Y at %H:%M') }}
                                         </td>
                                         <td class="align-middle text-right">
-                                            
+                                            {% if current_user.has_permission('run_jobs') %}
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-actions" type="button" data-toggle="dropdown">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        {% if current_user.has_permission('run_jobs') %}
+                                                            <li>
+                                                                <a class="dropdown-item">Run</a>
+                                                            </li>
+                                                        {% endif %}
+                                                    </ul>
+                                                </div>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}
