@@ -43,19 +43,21 @@
                                             <code>{{ job.cron_expression }}</code>
                                         </td>
                                         <td class="align-middle">
-                                            {% if job.last_run_at %}
-                                            {{ job.last_run_at.strftime('%d %b %Y at %H:%M') }}
+                                            {% if job.last_run.started_at %}
+                                            {{ job.last_run.started_at.strftime('%d %b %Y at %H:%M') }}
                                             {% else %}
                                             Never
                                             {% endif %}
                                         </td>
                                         <td class="align-middle">
-                                            {% if job.last_run_status.value == 'Successful' %}
-                                            <span class="text-success"><i class="fas fa-check-circle"></i> Successful</span>
-                                            {% elif job.last_run_status.value == 'Failed' %}
-                                            <span class="text-danger"><i class="fas fa-times-circle"></i> Failed</span>
-                                            {% elif job.last_run_status.value == 'Running' %}
-                                            <span class="text-info"><i class="fas fa-play-circle"></i> Running</span>
+                                            {% if job.last_run.status %}
+                                                {% if job.last_run.status.value == 'Successful' %}
+                                                <span class="text-success"><i class="fas fa-check-circle"></i> Successful</span>
+                                                {% elif job.last_run.status.value == 'Failed' %}
+                                                <span class="text-danger"><i class="fas fa-times-circle"></i> Failed</span>
+                                                {% elif job.last_run.status.value == 'Running' %}
+                                                <span class="text-info"><i class="fas fa-play-circle"></i> Running</span>
+                                                {% endif %}
                                             {% endif %}
                                         </td>
                                         <td class="align-middle">

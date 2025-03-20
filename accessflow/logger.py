@@ -27,12 +27,16 @@ class CustomLogFormatter(logging.Formatter):
         formatter = logging.Formatter(log_format)
         return formatter.format(record)
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-setattr(logger, "success", lambda message, *args: logger._log(logging.SUCCESS, message, args))
+def get_logger():
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
 
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.DEBUG)
-console_handler.setFormatter(CustomLogFormatter())
+    setattr(logger, "success", lambda message, *args: logger._log(logging.SUCCESS, message, args))
 
-logger.addHandler(console_handler)
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.DEBUG)
+    console_handler.setFormatter(CustomLogFormatter())
+
+    logger.addHandler(console_handler)
+
+    return logger

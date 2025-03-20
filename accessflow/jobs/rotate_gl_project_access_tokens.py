@@ -6,6 +6,9 @@ from accessflow import db, gitlab_handler
 This job iterates through all Services, checks if their GitLab Project Access Tokens are due to expire, and rotates them if Auto Rotation is turned on.
 """
 class RotateGLProjectAccessTokens:
+    def __init__(self, logger):
+        self.logger = logger
+        
     def run(self):
         # Return all Services which have an active PAT, have auto rotate turned on, and have PAT's that expire in a day or less
         services = Service.query.filter(

@@ -1,9 +1,11 @@
 from accessflow.models.team import Team
 from accessflow.config import Config
-from accessflow.logger import logger
 from accessflow import db, gitlab_handler
 
 class FetchTeamsFromGL:
+    def __init__(self, logger):
+        self.logger = logger
+
     def run(self):
         # Get teams from database
         teams = Team.query.all()
@@ -21,6 +23,6 @@ class FetchTeamsFromGL:
                     name = team_name
                 )
                 db.session.add(team)
-                logger.info(f"Creating {team}")
+                self.logger.info(f"Creating {team}")
 
         db.session.commit()

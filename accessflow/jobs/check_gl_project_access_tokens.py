@@ -6,6 +6,9 @@ This job iterates through all Services and checks their GitLab Project Access To
 If the token has changed (i.e. rotated through the GitLab UI) or revoked, it will get updated in the database.
 """
 class CheckGLProjectAccessTokens:
+    def __init__(self, logger):
+        self.logger = logger
+        
     def run(self):
         services = Service.query.filter(Service.gl_project_access_token_active == True).all()
         for service in services:

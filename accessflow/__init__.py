@@ -4,7 +4,9 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from accessflow.handlers.gitlab import GitLabHandler
 from accessflow.config import Config
-from accessflow.logger import logger
+from accessflow.logger import get_logger
+
+logger = get_logger()
 
 app = Flask(__name__, template_folder = "templates", static_folder = "static")
 app.config.from_object(Config)
@@ -24,6 +26,8 @@ from accessflow.models.permission_group import PermissionGroup
 from accessflow.models.user import User
 from accessflow.models.user_permission import UserPermission
 from accessflow.models.job import Job
+from accessflow.models.job_run import JobRun
+from accessflow.models.job_log import JobLog
 from accessflow.models.request import Request
 from accessflow.models.service import Service
 from accessflow.models.pid import PID
@@ -97,4 +101,13 @@ def create_request():
         justification = "I am part of the CIS Live Support team."
     )
     db.session.add(request)
+    db.session.commit()
+
+@app.cli.command("create-job-run")
+def create_job_run():
+    job_run = JobRun(1)
+    db.session.add(job_run)
+    db.session.commit()
+    job_log = JobLog(1, "Hello world")
+    db.session.add(job_log)
     db.session.commit()

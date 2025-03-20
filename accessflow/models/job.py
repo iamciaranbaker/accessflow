@@ -1,14 +1,10 @@
-from enum import Enum
 from datetime import datetime
 from croniter import croniter
-from accessflow.logger import logger
-from accessflow import db
+from accessflow.models.job_run import JobRun, JobRunStatus
+from accessflow.models.job_log import JobLogHandler
+from accessflow import logger, db
 import importlib
-
-class JobLastRunStatus(Enum):
-    SUCCESSFUL = "Successful"
-    FAILED = "Failed"
-    RUNNING = "Running"
+import logging
 
 class Job(db.Model):
     # Table Name
@@ -20,42 +16,59 @@ class Job(db.Model):
     module_path = db.Column(db.String(100), nullable = False)
     class_name = db.Column(db.String(100), nullable = False)
     cron_expression = db.Column(db.String(30), nullable = False)
-    last_run_at = db.Column(db.DateTime)
-    last_run_status = db.Column(db.Enum(JobLastRunStatus))
-    next_run_at = db.Column(db.DateTime)
+    next_run_at = db.Column(db.DateTime, default = db.func.now())
+
+    # Relationships
+    runs = db.relationship("JobRun", lazy = "joined")
 
     def __init__(self, name, module_path, class_name, cron_expression):
         self.name = name
         self.module_path = module_path
         self.class_name = class_name
         self.cron_expression = cron_expression
-        self.next_run_at = self.get_next_run_at()
+        #self.next_run_at = self.calculate_next_run()
 
     def __repr__(self):
         return f"<Job(id=\"{self.id}\", name=\"{self.name}\", module_path=\"{self.module_path}\", class_name=\"{self.class_name}\")"
     
-    def mark_as_complete(self):
-        self.last_run_at = db.func.now()
-        self.last_run_status = JobLastRunStatus.SUCCESSFUL
-        self.next_run_at = self.get_next_run_at()
-        db.session.commit()
+    @property
+    def last_run(self):
+        latest_run = JobRun.query.filter(JobRun.job_id == self.id).order_by(JobRun.started_at.desc()).first()
+        return latest_run
 
-    def get_next_run_at(self):
+    def calculate_next_run(self):
         return croniter(self.cron_expression, db.session.query(db.func.now()).scalar()).get_next(datetime)
 
     def run(self):
-        try:
-            job_module = importlib.import_module(self.module_path)
-            job_class = getattr(job_module, self.class_name)
+        # Set the job's next run time
+        self.next_run_at = self.calculate_next_run()
+        db.session.commit()
 
-            job_instance = job_class()
+        # Create a new job run
+        job_run = JobRun(job_id = self.id)
+        db.session.add(job_run)
+        db.session.commit()
+
+        # Create a new logger for the job
+        job_logger = logging.getLogger(f"job_{job_run.id}")
+        job_logger.setLevel(logging.INFO)
+        job_logger.addHandler(JobLogHandler(job_run.id))
+
+        try:
+            # Find the job's module
+            job_module = importlib.import_module(self.module_path)
+            # Find the job's class within the module
+            job_class = getattr(job_module, self.class_name)
+            # Create an instance of the job's class
+            job_instance = job_class(job_logger)
+            # Run the job
             job_instance.run()
-        except ModuleNotFoundError:
-            raise ValueError(f"Module {self.module_path} not found.")
-        except AttributeError:
-            raise ValueError(f"Class {self.class_name} not found in module {self.module_path}.")
-        
-        self.mark_as_complete()
+            # Mark the job as successful
+            job_run.mark_as_done(JobRunStatus.SUCCESSFUL)
+        except Exception as exception:
+            job_logger.critical(f"An exception occured: {exception}")
+            # Mark the job as failed
+            job_run.mark_as_done(JobRunStatus.FAILED)
     
     @staticmethod
     def seed_all():

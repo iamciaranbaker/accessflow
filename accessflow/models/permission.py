@@ -1,6 +1,5 @@
 from accessflow.models.permission_group import PermissionGroup
-from accessflow.logger import logger
-from accessflow import db
+from accessflow import logger, db
 
 class Permission(db.Model):
     # Table Name

@@ -1,12 +1,14 @@
 from accessflow.models.team import Team
 from accessflow.models.pid import PID, PIDEnvironmentType
 from accessflow.config import Config
-from accessflow.logger import logger
 from accessflow import db, gitlab_handler
 import urllib.parse
 import yaml
 
 class FetchPIDsFromGL:
+    def __init__(self, logger):
+        self.logger = logger
+
     def run(self):
         # Get teams and PIDs from database
         teams = Team.query.all()
@@ -19,26 +21,24 @@ class FetchPIDsFromGL:
         # Keep track of the PIDs and map them to the user's name
         pid_name_mapping = {}
 
-        return
-
         for team in teams:
             for environment_type in ["nonprod", "prod"]:
                 environment_file = gitlab_handler.get_project_repository_file(Config.SUPPORT_USERS_PROJECT_URL, Config.SUPPORT_USERS_PROJECT_ACCESS_TOKEN, urllib.parse.quote_plus(f"teams/{team.name}/{environment_type}.yml"))
                 # If for some reason the file does not exist, skip
                 if not environment_file:
-                    logger.error(f"{environment_type}.yml not found in {team.name}")
+                    self.logger.error(f"{environment_type}.yml not found in {team.name}")
                     continue
                 user_list = yaml.safe_load(environment_file)[team.name]["user_list"]
                 # If for some reason 'user_list' does not exist or is invalid, skip this file
                 if not user_list:
-                    logger.error(f"'user_list' not found in {team.name}/{environment_type}.yml")
+                    self.logger.error(f"'user_list' not found in {team.name}/{environment_type}.yml")
                     continue
                 # Iterate through each PID in the user_list
                 for pid in user_list:
                     pids_from_gl[environment_type][pid["uid"]] = team.id
                     if pid["uid"] in pid_name_mapping:
                         if pid_name_mapping[pid["uid"]] != pid["comment"]:
-                            logger.error(f"{pid['uid']} has a name inconsistency: '{pid_name_mapping[pid['uid']]}' vs '{pid['comment']}'")
+                            self.logger.error(f"{pid['uid']} has a name inconsistency: '{pid_name_mapping[pid['uid']]}' vs '{pid['comment']}'")
                     else:
                         pid_name_mapping[pid["uid"]] = pid["comment"]
         
@@ -57,7 +57,7 @@ class FetchPIDsFromGL:
                         environment_type = PIDEnvironmentType.NONPROD if environment_type == "nonprod" else PIDEnvironmentType.PROD
                     )
                     db.session.add(pid)
-                    logger.info(f"Creating {pid}")
+                    self.logger.info(f"Creating {pid}")
 
         # Save all changes to the database
         db.session.commit()
