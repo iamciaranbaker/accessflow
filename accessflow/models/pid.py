@@ -2,8 +2,9 @@ from enum import Enum
 from accessflow import db
 
 class PIDEnvironmentType(Enum):
-    NONPROD = "Non-Production"
-    PROD = "Production"
+    COMBINED = "combined"
+    NONPROD_ONLY = "nonprod_only"
+    PROD_ONLY = "prod_only"
 
 class PID(db.Model):
     # Table Name
