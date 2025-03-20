@@ -71,7 +71,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                         <li>
-                                                            <a class="dropdown-item">View Logs</a>
+                                                            <a href="{{ url_for('admin/jobs/logs', job_id = job.id) }}" class="dropdown-item">View Logs</a>
                                                         </li>
                                                         {% if current_user.has_permission('run_jobs') %}
                                                             <li>

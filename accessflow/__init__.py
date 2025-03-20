@@ -66,7 +66,7 @@ app.add_url_rule("/admin/services", view_func = ServiceListView.as_view("admin/s
 app.add_url_rule("/admin/services/create", view_func = ServiceCreateView.as_view("admin/services/create"))
 app.add_url_rule("/admin/services/<int:service_id>/delete", view_func = ServiceDeleteView.as_view("admin/services/delete"))
 app.add_url_rule("/admin/jobs", view_func = JobListView.as_view("admin/jobs"))
-app.add_url_rule("/admin/jobs/<int:job_id>/logs", view_func = JobLogsView.as_view("admin/jobs/logs"))
+app.add_url_rule("/admin/jobs/logs", view_func = JobLogsView.as_view("admin/jobs/logs"))
 app.add_url_rule("/admin/logs", view_func = LogListView.as_view("admin/logs"))
 # Auth Routes
 app.add_url_rule("/login", view_func = LoginView.as_view("login"))
@@ -103,13 +103,4 @@ def create_request():
         justification = "I am part of the CIS Live Support team."
     )
     db.session.add(request)
-    db.session.commit()
-
-@app.cli.command("create-job-run")
-def create_job_run():
-    job_run = JobRun(1)
-    db.session.add(job_run)
-    db.session.commit()
-    job_log = JobLog(1, "Hello world")
-    db.session.add(job_log)
     db.session.commit()

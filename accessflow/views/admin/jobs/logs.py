@@ -1,4 +1,4 @@
-from flask import render_template, abort
+from flask import request, render_template, abort
 from flask.views import View
 from flask_login import login_required
 from accessflow.decorators import permission_required
@@ -10,11 +10,30 @@ class JobLogsView(View):
     methods = ["GET"]
     decorators = [permission_required("list_jobs"), login_required]
 
-    def dispatch_request(self, job_id):
+    def dispatch_request(self):
+        # Fetch the job_id query parameter
+        job_id = request.args.get("job_id")
+        # Fetch the job_run_id query parameter - if not set, default to the latest run
+        job_run_id = request.args.get("job_run_id")
+
+        # Fetch the job based on the ID
         job = Job.query.filter(Job.id == job_id).first()
+        # If no job was found with the given ID, return a 404 error
         if not job:
             abort(404)
 
-        previous_runs = JobRun.query.filter(JobRun.job_id == job_id, JobRun.status != JobRunStatus.RUNNING).order_by(JobRun.started_at.desc()).limit(5).all()
+        if job_run_id:
+            # Fetch the job run based on the ID
+            job_run = JobRun.query.filter(JobRun.id == job_run_id, JobRun.job_id == job_id, JobRun.status != JobRunStatus.RUNNING).order_by(JobRun.started_at.desc()).first()
+        else:
+            # Fetch the latest job run for the given job ID that isn't still running
+            job_run = JobRun.query.filter(JobRun.job_id == job_id, JobRun.status != JobRunStatus.RUNNING).order_by(JobRun.started_at.desc()).first()
+        
+        # If no job run was found with the given ID, return a 404 error
+        if not job_run:
+            abort(404)
 
-        return render_template("pages/admin/jobs/logs.html", job = job, previous_runs = previous_runs)
+        # Get 5 of the previous completed runs
+        previous_runs = JobRun.query.filter(JobRun.job_id == job.id, JobRun.status != JobRunStatus.RUNNING).order_by(JobRun.started_at.desc()).limit(5).all()
+
+        return render_template("pages/admin/jobs/logs.html", job_run = job_run, previous_runs = previous_runs)

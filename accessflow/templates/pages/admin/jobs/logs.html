@@ -24,7 +24,7 @@
                     <div class="card-body p-0 pt-1" style="overflow-x: auto">
                         <table class="table table-sm table-borderless job-logs">
                             <tbody>
-                                {% for log in job.last_run.logs %}
+                                {% for log in job_run.logs %}
                                 <tr>
                                     <td class="align-middle text-right text-muted" style="width: 5%">{{ loop.index }}</td>
                                     <td class="align-middle pl-2 log-{{ log.level|lower }}">
@@ -42,14 +42,14 @@
                     <span class="info-box-icon bg-primary"><i class="fas fa-hourglass-start"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Started</span>
-                        <span class="info-box-number">{{ job.last_run.started_at.strftime('%d %b %Y at %H:%M') }}</span>
+                        <span class="info-box-number">{{ job_run.started_at.strftime('%d %b %Y at %H:%M') }}</span>
                     </div>
                 </div>
                 <div class="info-box">
                     <span class="info-box-icon bg-primary"><i class="fas fa-hourglass-end"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Ended</span>
-                        <span class="info-box-number">{{ job.last_run.ended_at.strftime('%d %b %Y at %H:%M') }}</span>
+                        <span class="info-box-number">{{ job_run.ended_at.strftime('%d %b %Y at %H:%M') }}</span>
                     </div>
                 </div>
                 <div class="card">

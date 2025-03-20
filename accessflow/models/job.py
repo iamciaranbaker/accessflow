@@ -33,8 +33,7 @@ class Job(db.Model):
     
     @property
     def last_run(self):
-        latest_run = JobRun.query.filter(JobRun.job_id == self.id).order_by(JobRun.started_at.desc()).first()
-        return latest_run
+        return JobRun.query.filter(JobRun.job_id == self.id).order_by(JobRun.started_at.desc()).first()
 
     def calculate_next_run(self):
         return croniter(self.cron_expression, db.session.query(db.func.now()).scalar()).get_next(datetime)
