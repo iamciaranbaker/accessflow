@@ -5,6 +5,7 @@ from datetime import datetime
 from accessflow.decorators import permission_required
 from accessflow.forms.service import CreateServiceForm
 from accessflow.models.service import Service
+from accessflow.handlers.gitlab_utils import sanitize_project_url
 from accessflow import db, gitlab_handler
 
 class ServiceCreateView(View):
@@ -19,7 +20,7 @@ class ServiceCreateView(View):
                 token = gitlab_handler.get_project_access_token(form.project_access_token.data)
                 service = Service(
                     name = form.name.data,
-                    gl_project_url = gitlab_handler.sanitize_project_url(form.project_url.data, url_encode = False),
+                    gl_project_url = sanitize_project_url(form.project_url.data, url_encode = False),
                     gl_project_access_token = form.project_access_token.data,
                     gl_project_access_token_auto_rotate = form.auto_rotate_pat.data
                 )

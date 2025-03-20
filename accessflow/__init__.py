@@ -83,3 +83,16 @@ def recreate_database():
 @app.cli.command("run-jobs")
 def run_jobs():
     Job.run_all()
+
+"""
+Temporarily method to create a dummy request whilst testing request system.
+"""
+@app.cli.command("create-request")
+def create_request():
+    request = Request(
+        pid = 8904064,
+        service_id = 1,
+        justification = "I am part of the CIS Live Support team."
+    )
+    db.session.add(request)
+    db.session.commit()

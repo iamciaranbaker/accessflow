@@ -10,6 +10,60 @@
 </div>
 <div class="content">
     <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header" style="border-bottom: none">
+                        <h3 class="card-title">Request List</h3>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-head-fixed">
+                            <thead>
+                                <tr>
+                                    <th>PID</th>
+                                    <th>Service</th>
+                                    <th>Justification</th>
+                                    <th>Status</th>
+                                    <th class="row-actions"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for request in requests %}
+                                    <tr data-pid="{{ request.pid }}">
+                                        <td class="align-middle">
+                                            <div class="d-flex align-items-center">
+                                                <div style="line-height: 1.2">
+                                                    <span class="d-block">Ciaran Baker</span>
+                                                    <span class="small text-muted">{{ request.pid }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ request.service.name }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ request.justification }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {% if request.status.value == 'pending' %}
+                                            <span class="badge bg-warning">Pending</span>
+                                            {% elif request.status.value == 'approved' %}
+                                            <span class="badge bg-success">Approved</span>
+                                            {% else %}
+                                            <span class="badge bg-danger">Declined</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle text-right">
+                                            
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock content %}
