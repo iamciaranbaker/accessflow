@@ -89,16 +89,16 @@ class Job(db.Model):
                     job_logger.success("Job succeeded")
                     # Fetch a new instance of the job run object due to previous one expiring
                     job_run = session.query(JobRun).filter(JobRun.id == job_run_id).first()
+                    # Mark the job as done
                     job_run.mark_as_done(JobRunStatus.SUCCEEDED, session = session)
-                    session.commit()
                 except Exception as exception:
                     job_logger.critical(f"An exception occurred: {exception}")
                     # Mark the job as failed
                     job_logger.error("Job failed")
                     # Fetch a new instance of the job run object due to previous one expiring
                     job_run = session.query(JobRun).filter(JobRun.id == job_run_id).first()
+                    # Mark the job as done
                     job_run.mark_as_done(JobRunStatus.FAILED, session = session)
-                    session.commit()
                 finally:
                     # Remove the session instance
                     Session.remove()
