@@ -12,51 +12,110 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card card-info card-outline card-outline-tabs">
+                    <div class="card-header p-0 border-bottom-0">
+                        <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="requests-open-tab" data-toggle="pill" href="#requests-open" role="tab" aria-controls="requests-open" aria-selected="true">Open Requests</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="requests-closed-tab" data-toggle="pill" href="#requests-closed" role="tab" aria-controls="requests-closed" aria-selected="false">Closed Requests</a>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="card-body table-responsive p-0">
-                        <table class="table table-head-fixed">
-                            <thead>
-                                <tr>
-                                    <th>PID</th>
-                                    <th>Service</th>
-                                    <th>Justification</th>
-                                    <th>Status</th>
-                                    <th class="row-actions"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for request in requests %}
-                                    <tr data-pid="{{ request.pid }}">
-                                        <td class="align-middle">
-                                            <div class="d-flex align-items-center">
-                                                <div style="line-height: 1.2">
-                                                    <span class="d-block">Ciaran Baker</span>
-                                                    <span class="small text-muted">{{ request.pid }}</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="align-middle">
-                                            {{ request.service.name }}
-                                        </td>
-                                        <td class="align-middle">
-                                            {{ request.justification }}
-                                        </td>
-                                        <td class="align-middle">
-                                            {% if request.status.value == 'pending' %}
-                                            <span class="badge bg-warning">Pending</span>
-                                            {% elif request.status.value == 'approved' %}
-                                            <span class="badge bg-success">Approved</span>
-                                            {% else %}
-                                            <span class="badge bg-danger">Declined</span>
-                                            {% endif %}
-                                        </td>
-                                        <td class="align-middle text-right">
-                                            
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                        <div class="tab-content" id="custom-tabs-four-tabContent">
+                            <div class="tab-pane fade show active" id="requests-open" role="tabpanel" aria-labelledby="requests-open-tab">
+                                <table class="table table-head-fixed">
+                                    <thead>
+                                        <tr>
+                                            <th>PID</th>
+                                            <th>Service</th>
+                                            <th>Justification</th>
+                                            <th>Status</th>
+                                            <th class="row-actions"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for request in requests %}
+                                            <tr data-pid="{{ request.pid }}">
+                                                <td class="align-middle">
+                                                    <div class="d-flex align-items-center">
+                                                        <div style="line-height: 1.2">
+                                                            <span class="d-block">Ciaran Baker</span>
+                                                            <span class="small text-muted">{{ request.pid }}</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ request.service.name }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ request.justification }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {% if request.status.value == 'pending' %}
+                                                    <span class="badge bg-warning">Pending</span>
+                                                    {% elif request.status.value == 'approved' %}
+                                                    <span class="badge bg-success">Approved</span>
+                                                    {% else %}
+                                                    <span class="badge bg-danger">Declined</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="align-middle text-right">
+                                                    
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="requests-closed" role="tabpanel" aria-labelledby="requests-closed-tab">
+                                <table class="table table-head-fixed">
+                                    <thead>
+                                        <tr>
+                                            <th>PID</th>
+                                            <th>Service</th>
+                                            <th>Justification</th>
+                                            <th>Status</th>
+                                            <th class="row-actions"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for request in requests %}
+                                            <tr data-pid="{{ request.pid }}">
+                                                <td class="align-middle">
+                                                    <div class="d-flex align-items-center">
+                                                        <div style="line-height: 1.2">
+                                                            <span class="d-block">Ciaran Baker</span>
+                                                            <span class="small text-muted">{{ request.pid }}</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ request.service.name }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ request.justification }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {% if request.status.value == 'pending' %}
+                                                    <span class="badge bg-warning">Pending</span>
+                                                    {% elif request.status.value == 'approved' %}
+                                                    <span class="badge bg-success">Approved</span>
+                                                    {% else %}
+                                                    <span class="badge bg-danger">Declined</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="align-middle text-right">
+                                                    
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
