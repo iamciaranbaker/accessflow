@@ -13,7 +13,7 @@ class JobLogsView(View):
     def dispatch_request(self):
         # Fetch the job_id query parameter
         job_id = request.args.get("job_id")
-        # Fetch the job_run_id query parameter - if not set, default to the latest run
+        # Fetch the job_run_id query parameter - if not set, it will default to the latest run
         job_run_id = request.args.get("job_run_id")
 
         # Fetch the job based on the ID
@@ -28,12 +28,15 @@ class JobLogsView(View):
         else:
             # Fetch the latest job run for the given job ID that isn't still running
             job_run = JobRun.query.filter(JobRun.job_id == job_id, JobRun.status != JobRunStatus.RUNNING).order_by(JobRun.started_at.desc()).first()
+
+        # Get the actual job run ID from the returned object
+        job_run_id = job_run.id
         
         # If no job run was found with the given ID, return a 404 error
         if not job_run:
             abort(404)
 
         # Get 5 of the previous completed runs
-        previous_runs = JobRun.query.filter(JobRun.job_id == job.id, JobRun.status != JobRunStatus.RUNNING).order_by(JobRun.started_at.desc()).limit(5).all()
+        previous_runs = JobRun.query.filter(JobRun.job_id == job.id, JobRun.status != JobRunStatus.RUNNING, JobRun.id != job_run_id).order_by(JobRun.started_at.desc()).limit(5).all()
 
         return render_template("pages/admin/jobs/logs.html", job_run = job_run, previous_runs = previous_runs)

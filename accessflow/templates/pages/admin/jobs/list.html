@@ -51,8 +51,8 @@
                                         </td>
                                         <td class="align-middle">
                                             {% if job.last_run.status %}
-                                                {% if job.last_run.status.value == 'Successful' %}
-                                                <span class="text-success"><i class="fas fa-check-circle"></i> Successful</span>
+                                                {% if job.last_run.status.value == 'Succeeded' %}
+                                                <span class="text-success"><i class="fas fa-check-circle"></i> Succeeded</span>
                                                 {% elif job.last_run.status.value == 'Failed' %}
                                                 <span class="text-danger"><i class="fas fa-times-circle"></i> Failed</span>
                                                 {% elif job.last_run.status.value == 'Running' %}
@@ -71,11 +71,11 @@
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                         <li>
-                                                            <a href="{{ url_for('admin/jobs/logs', job_id = job.id) }}" class="dropdown-item">View Logs</a>
+                                                            <a href="{{ url_for('admin/jobs/logs', job_id = job.id) }}" class="dropdown-item">Logs</a>
                                                         </li>
                                                         {% if current_user.has_permission('run_jobs') %}
                                                             <li>
-                                                                <a class="dropdown-item">Run</a>
+                                                                <a href="{{ url_for('admin/jobs/run', job_id = job.id) }}" class="dropdown-item">Run</a>
                                                             </li>
                                                         {% endif %}
                                                     </ul>

@@ -2,7 +2,7 @@ from enum import Enum
 from accessflow import db
 
 class JobRunStatus(Enum):
-    SUCCESSFUL = "Successful"
+    SUCCEEDED = "Succeeded"
     FAILED = "Failed"
     RUNNING = "Running"
 
@@ -20,14 +20,16 @@ class JobRun(db.Model):
 
     # Relationships
     logs = db.relationship("JobLog", lazy = "joined")
+    triggerer = db.relationship("User", lazy = "joined")
 
-    def __init__(self, job_id):
+    def __init__(self, job_id, triggered_by = None):
         self.job_id = job_id
+        self.triggered_by = triggered_by
 
     def __repr__(self):
         return f"<JobRun(id=\"{self.id}\")"
     
-    def mark_as_done(self, status):
+    def mark_as_done(self, status, session):
         self.status = status
-        self.ended_at = db.session.query(db.func.now()).scalar()
-        db.session.commit()
+        self.ended_at = session.query(db.func.now()).scalar()
+        session.commit()

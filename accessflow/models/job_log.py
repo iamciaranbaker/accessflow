@@ -3,17 +3,22 @@ from accessflow import db
 import logging
 
 class JobLogHandler(logging.Handler):
-    def __init__(self, job_run_id):
+    def __init__(self, job_run_id, session):
         super().__init__()
         self.job_run_id = job_run_id
+        self.session = session
 
     def emit(self, record):
-        db.session.add(JobLog(
-            job_run_id = self.job_run_id,
-            level = record.levelname,
-            message = self.format(record)
-        ))
-        db.session.commit()
+        log_message = self.format(record)
+        try:
+            self.session.add(JobLog(
+                job_run_id = self.job_run_id,
+                level = record.levelname,
+                message = log_message
+            ))
+            self.session.commit()
+        except Exception:
+            return
 
 class JobLog(db.Model):
     # Table Name

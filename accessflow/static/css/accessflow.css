@@ -102,9 +102,9 @@ code {
 
 .field-description {
     display: inline-block;
-    line-height: 1.2; /* Adjust this to control the line spacing */
-    padding-top: 0.2rem; /* Adjust this if the first line is too close to the top */
-    margin-top: 0.2rem; /* Optionally add some margin to avoid it being too close to the above element */
+    line-height: 1.2;
+    padding-top: 0.2rem;
+    margin-top: 0.2rem;
 }
 
 .job-logs {
@@ -117,13 +117,20 @@ code {
     color: #248e47;
     font-weight: bold;
 }
+
 .log-warning {
     color: #856404;
 }
+
 .log-error {
     color: #c51022;
 }
+
 .log-critical {
     color: #920513;
     font-weight: bold;
 }
+
+/* .job-previous-run {
+    cursor: pointer;
+} */

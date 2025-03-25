@@ -1,18 +1,19 @@
 from accessflow.models.team import Team
 from accessflow.models.pid import PID, PIDEnvironmentType
 from accessflow.config import Config
-from accessflow import db, gitlab_handler
+from accessflow import gitlab_handler
 import urllib.parse
 import yaml
 
 class FetchPIDsFromGL:
-    def __init__(self, logger):
+    def __init__(self, logger, session):
         self.logger = logger
+        self.session = session
 
     def run(self):
         # Get teams and PIDs from database
-        teams = Team.query.all()
-        pids = PID.query.all()
+        teams = self.session.query(Team).all()
+        pids = self.session.query(PID).all()
         # Keep track of all PIDs from GitLab and map them to their respective team
         pids_from_gl = {
             "nonprod": {},
@@ -56,8 +57,8 @@ class FetchPIDsFromGL:
                         team_id = pids_from_gl[environment_type][uid],
                         environment_type = PIDEnvironmentType.NONPROD_ONLY if environment_type == "nonprod" else PIDEnvironmentType.PROD_ONLY
                     )
-                    db.session.add(pid)
+                    self.session.add(pid)
                     self.logger.info(f"Creating {pid}")
 
         # Save all changes to the database
-        db.session.commit()
+        self.session.commit()

@@ -5,6 +5,7 @@ from flask_login import LoginManager
 from accessflow.handlers.gitlab import GitLabHandler
 from accessflow.config import Config
 from accessflow.logger import get_logger
+from accessflow.filters import format_time
 
 logger = get_logger()
 
@@ -37,6 +38,7 @@ migrate = Migrate(app, db, compare_type = True)
 
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
+app.jinja_env.filters["format_time"] = format_time
 
 from accessflow.views.index import IndexView
 from accessflow.views.dashboard import DashboardView
@@ -49,6 +51,7 @@ from accessflow.views.admin.services.create import ServiceCreateView
 from accessflow.views.admin.services.delete import ServiceDeleteView
 from accessflow.views.admin.jobs.list import JobListView
 from accessflow.views.admin.jobs.logs import JobLogsView
+from accessflow.views.admin.jobs.run import JobRunView
 from accessflow.views.auth.login import LoginView
 from accessflow.views.auth.login_two_factor import LoginTwoFactorView
 from accessflow.views.auth.logout import LogoutView
@@ -66,6 +69,7 @@ app.add_url_rule("/admin/services/create", view_func = ServiceCreateView.as_view
 app.add_url_rule("/admin/services/<int:service_id>/delete", view_func = ServiceDeleteView.as_view("admin/services/delete"))
 app.add_url_rule("/admin/jobs", view_func = JobListView.as_view("admin/jobs"))
 app.add_url_rule("/admin/jobs/logs", view_func = JobLogsView.as_view("admin/jobs/logs"))
+app.add_url_rule("/admin/jobs/run", view_func = JobRunView.as_view("admin/jobs/run"))
 # Auth Routes
 app.add_url_rule("/login", view_func = LoginView.as_view("login"))
 app.add_url_rule("/login/two-factor", view_func = LoginTwoFactorView.as_view("login/two-factor"))

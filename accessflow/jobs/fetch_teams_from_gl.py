@@ -1,14 +1,15 @@
 from accessflow.models.team import Team
 from accessflow.config import Config
-from accessflow import db, gitlab_handler
+from accessflow import gitlab_handler
 
 class FetchTeamsFromGL:
-    def __init__(self, logger):
+    def __init__(self, logger, session):
         self.logger = logger
+        self.session = session
 
     def run(self):
         # Get teams from database
-        teams = Team.query.all()
+        teams = self.session.query(Team).all()
         # Keep track of teams from GitLab
         teams_from_gl = [team["name"] for team in gitlab_handler.get_project_repository_tree(Config.SUPPORT_USERS_PROJECT_URL, Config.SUPPORT_USERS_PROJECT_ACCESS_TOKEN, "teams")]
 
@@ -22,7 +23,7 @@ class FetchTeamsFromGL:
                 team = Team(
                     name = team_name
                 )
-                db.session.add(team)
+                self.session.add(team)
                 self.logger.info(f"Creating {team}")
 
-        db.session.commit()
+        self.session.commit()
