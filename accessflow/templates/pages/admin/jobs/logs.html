@@ -18,16 +18,16 @@
         <div class="row">
             <div class="col-9">
                 <div class="card">
-                    <div class="card-body p-0 pt-1" style="overflow-x: auto">
-                        <table class="table table-sm table-borderless job-logs">
+                    <div class="card-body p-0 pt-1 job-logs">
+                        <table class="table table-sm table-borderless">
                             <tbody>
                                 {% for log in job_run.logs %}
-                                <tr>
-                                    <td class="align-middle text-right text-muted" style="width: 5%">{{ loop.index }}</td>
-                                    <td class="align-middle pl-2 log-{{ log.level|lower }}">
-                                        {{ log.created_at }} - [ {{ log.level }} ] - {{ log.message }}
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td class="align-middle text-right text-muted" style="width: 5%">{{ loop.index }}</td>
+                                        <td class="align-middle pl-2 log-{{ log.level|lower }}">
+                                            {{ log.created_at }} - [ {{ log.level }} ] - {{ log.message }}
+                                        </td>
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -67,14 +67,14 @@
                                     </td>
                                 </tr>
                                 {% if job_run.triggered_by %}
-                                <tr>
-                                    <td class="align-middle font-weight-bold">
-                                        Triggered By
-                                    </td>
-                                    <td class="align-middle text-right">
-                                        {{ job_run.triggerer.first_name }} {{ job_run.triggerer.last_name }}
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td class="align-middle font-weight-bold">
+                                            Triggered By
+                                        </td>
+                                        <td class="align-middle text-right">
+                                            {{ job_run.triggerer.first_name }} {{ job_run.triggerer.last_name }}
+                                        </td>
+                                    </tr>
                                 {% endif %}
                                 <tr>
                                     <td class="align-middle font-weight-bold">
@@ -92,35 +92,37 @@
                         </table>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Last 5 Runs</h3>
+                {% if previous_runs | length != 0 %}
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Last 5 Runs</h3>
+                        </div>
+                        <div class="card-body table-hover p-0">
+                            <table class="table table-head-fixed">
+                                <tbody>
+                                    {% for run in previous_runs %}
+                                        <tr>
+                                            <td class="align-middle text-left p-0">
+                                                <a href="{{ url_for('admin/jobs/logs', job_id = run.job_id, job_run_id = run.id) }}" class="d-block w-100 py-2 px-3 text-decoration-none text-body">
+                                                    {{ run.started_at.strftime('%d %b %Y at %H:%M') }}
+                                                </a>
+                                            </td>
+                                            <td class="align-middle text-right p-0">
+                                                <a href="{{ url_for('admin/jobs/logs', job_id = run.job_id, job_run_id = run.id) }}" class="d-block w-100 py-2 px-3 text-decoration-none text-body">
+                                                    {% if run.status.value == 'Succeeded' %}
+                                                        <span class="text-success"><i class="fas fa-check-circle"></i></span>
+                                                    {% elif run.status.value == 'Failed' %}
+                                                        <span class="text-danger"><i class="fas fa-times-circle"></i></span>
+                                                    {% endif %}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="card-body table-hover p-0">
-                        <table class="table table-head-fixed">
-                            <tbody>
-                                {% for run in previous_runs %}
-                                    <tr>
-                                        <td class="align-middle text-left p-0">
-                                            <a href="{{ url_for('admin/jobs/logs', job_id = run.job_id, job_run_id = run.id) }}" class="d-block w-100 py-2 px-3 text-decoration-none text-body">
-                                                {{ run.started_at.strftime('%d %b %Y at %H:%M') }}
-                                            </a>
-                                        </td>
-                                        <td class="align-middle text-right p-0">
-                                            <a href="{{ url_for('admin/jobs/logs', job_id = run.job_id, job_run_id = run.id) }}" class="d-block w-100 py-2 px-3 text-decoration-none text-body">
-                                                {% if run.status.value == 'Succeeded' %}
-                                                    <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                                {% elif run.status.value == 'Failed' %}
-                                                    <span class="text-danger"><i class="fas fa-times-circle"></i></span>
-                                                {% endif %}
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>

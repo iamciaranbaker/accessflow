@@ -81,7 +81,7 @@ tr.disabled {
 
 code {
     display: inline-block;
-    font-family: "Courier New", monospace;
+    font-family: "JetBrains Mono", "Menlo", "DejaVu Sans Mono", "Liberation Mono", "Consolas", "Ubuntu Mono", "Courier New", "andale mono", "lucida console", monospace;
     background-color: #f4f4f4;
     border-radius: 4px;
     border: 1px solid #dcdcdc;
@@ -105,9 +105,11 @@ code {
 }
 
 .job-logs {
-    font-family: "Courier New", monospace;
+    font-family: "JetBrains Mono", "Menlo", "DejaVu Sans Mono", "Liberation Mono", "Consolas", "Ubuntu Mono", "Courier New", "andale mono", "lucida console", monospace; /* Literally copied from GitLab's pipeline run stylesheet */
+    font-size: 14px;
     line-height: 0.8;
     white-space: nowrap;
+    overflow: auto;
 }
 
 .log-success {
@@ -125,5 +127,5 @@ code {
 
 .log-critical {
     color: #920513;
-    font-weight: bold;
+    font-weight: bold; /* The critical error is probably quite important, so make it bold I guess? */
 }
