@@ -1,0 +1,53 @@
+{% extends 'layout/base.html' %}
+
+{% set title = 'PIDs' %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <h1>PIDs</h1>
+        <span class="text-muted">A list of all PIDs.</span>
+    </div>
+</div>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-head-fixed">
+                            <thead>
+                                <tr>
+                                    <th>Identity</th>
+                                    <th>Environment</th>
+                                    <th>Team</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pid in pids %}
+                                    <tr>
+                                        <td class="align-middle">
+                                            <div class="d-flex align-items-center">
+                                                <div style="line-height: 1.2">
+                                                    <span class="d-block">{{ pid.name }}</span>
+                                                    <span class="small text-muted">{{ pid.uid }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ pid.environment_type.value }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ pid.team.name }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
