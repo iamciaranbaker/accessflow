@@ -45,6 +45,25 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="card-footer">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                            {% if pids.has_prev %}
+                                <a class="page-link mr-2" href="{{ url_for('pids', page = pids.prev_num if pids.prev_num != 1 else None) }}">Previous</a>
+                            {% endif %}
+                            {% for page in pids.iter_pages(left_edge = 1, right_edge = 1, left_current = 2, right_current = 2) %}
+                                <li class="page-item {% if page == pids.page %}active{% endif %}">
+                                    {% if page %}
+                                        <a class="page-link" href="{{ url_for('pids', page = page if page != 1 else None) }}">{{ page }}</a>
+                                    {% else %}
+                                        <a class="page-link">...</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                            {% if pids.has_next %}
+                                <a class="page-link ml-2" href="{{ url_for('pids', page = pids.next_num) }}">Next</a>
+                            {% endif %}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

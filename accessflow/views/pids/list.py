@@ -1,12 +1,14 @@
-from flask import render_template
+from flask import request, render_template
 from flask.views import View
 from flask_login import login_required
 from accessflow.decorators import permission_required
 from accessflow.models.pid import PID
+from accessflow import db
 
 class PIDListView(View):
     methods = ["GET"]
     decorators = [login_required]
 
     def dispatch_request(self):
-        return render_template("pages/pids/list.html", pids = PID.get_all())
+        pids = PID.query.paginate(per_page = None if request.args.get("per_page") else 10, max_per_page = 30)
+        return render_template("pages/pids/list.html", pids = pids)
