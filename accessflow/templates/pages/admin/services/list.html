@@ -50,7 +50,7 @@
                                                 {% endif %}
                                             </td>
                                             <td class="align-middle">
-                                                {{ service.gl_project_access_token_expires_at.strftime('%d %B %Y') }}
+                                                {{ service.gl_project_access_token_expires_at | format_date }}
                                             </td>
                                             <td class="align-middle text-right">
                                                 {% if current_user.has_permission('edit_services') or current_user.has_permission('delete_services') %}

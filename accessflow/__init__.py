@@ -5,7 +5,7 @@ from flask_login import LoginManager
 from accessflow.handlers.gitlab import GitLabHandler
 from accessflow.config import Config
 from accessflow.logger import get_logger
-from accessflow.filters import format_time
+from accessflow.filters import format_time, format_date, format_datetime
 
 logger = get_logger()
 
@@ -39,6 +39,8 @@ migrate = Migrate(app, db, compare_type = True)
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 app.jinja_env.filters["format_time"] = format_time
+app.jinja_env.filters["format_date"] = format_date
+app.jinja_env.filters["format_datetime"] = format_datetime
 
 from accessflow.views.index import IndexView
 from accessflow.views.dashboard import DashboardView
