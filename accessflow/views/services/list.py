@@ -9,4 +9,4 @@ class ServiceListView(View):
     decorators = [permission_required("list_services"), login_required]
 
     def dispatch_request(self):
-        return render_template("pages/admin/services/list.html", services = Service.get_all())
+        return render_template("pages/services/list.html", services = Service.get_all())

@@ -32,10 +32,10 @@ class ServiceCreateView(View):
 
                 flash("Service has been created successfully.", "success")
 
-                return redirect(url_for("admin/services"))
+                return redirect(url_for("services"))
             else:
                 for field in form.errors:
                     for error in form.errors[field]:
                         flash(error, "danger")
 
-        return render_template("pages/admin/services/create.html", form = form)
+        return render_template("pages/services/create.html", form = form)

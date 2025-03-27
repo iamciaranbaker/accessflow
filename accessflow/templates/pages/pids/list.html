@@ -38,41 +38,18 @@
                                             {{ pid.environment_type.value }}
                                         </td>
                                         <td class="align-middle">
-                                            {{ pid.team.name }}
+                                            <code>{{ pid.team.name }}</code>
                                         </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
-                    <div class="card-footer">
-                        <ul class="pagination pagination-sm m-0 float-right">
-                            {% if pids.has_prev %}
-                                <a class="page-link mr-2" href="{{ url_for('pids', page = pids.prev_num if pids.prev_num != 1 else None) }}">Previous</a>
-                            {% endif %}
-                            {% set last_was_none = False %}
-                            {% for page in pids.iter_pages(left_edge = 1, left_current = 2, right_current = 2, right_edge = 1) %}
-                                <li class="page-item {% if page == pids.page %}active{% endif %}">
-                                    {% if page %}
-                                        <a class="page-link" href="{{ url_for('pids', page = page if page != 1 else None) }}">{{ page }}</a>
-                                        {% set last_was_none = False %}
-                                    {% else %}
-                                        {% if not last_was_none %}
-                                            {% if loop.index0 < loop.length / 2 %}
-                                                <a class="page-link paginate-goto" role="button" data-page="{{ pids.page - 3 }}" data-page-max="{{ pids.pages }}">&hellip;</a>
-                                            {% else %}
-                                                <a class="page-link paginate-goto" role="button" data-page="{{ pids.page + 3 }}" data-page-max="{{ pids.pages }}">&hellip;</a>
-                                            {% endif %}
-                                            {% set last_was_none = True %}
-                                        {% endif %}
-                                    {% endif %}
-                                </li>
-                            {% endfor %}
-                            {% if pids.has_next %}
-                                <a class="page-link ml-2" href="{{ url_for('pids', page = pids.next_num) }}">Next</a>
-                            {% endif %}
-                        </ul>
-                    </div>
+                    {% if pids.pages != 1 %}
+                        <div class="card-footer">
+                            {{ render_pagination(pids, 'pids') }}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

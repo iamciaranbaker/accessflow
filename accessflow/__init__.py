@@ -47,12 +47,12 @@ from accessflow.views.dashboard import DashboardView
 from accessflow.views.requests.list import RequestListView
 from accessflow.views.pids.list import PIDListView
 from accessflow.views.teams.list import TeamListView
+from accessflow.views.services.list import ServiceListView
+from accessflow.views.services.create import ServiceCreateView
+from accessflow.views.services.delete import ServiceDeleteView
 from accessflow.views.admin.users.list import UserListView
 from accessflow.views.admin.users.create import UserCreateView
 from accessflow.views.admin.users.delete import UserDeleteView
-from accessflow.views.admin.services.list import ServiceListView
-from accessflow.views.admin.services.create import ServiceCreateView
-from accessflow.views.admin.services.delete import ServiceDeleteView
 from accessflow.views.admin.jobs.list import JobListView
 from accessflow.views.admin.jobs.logs import JobLogsView
 from accessflow.views.admin.jobs.run import JobRunView
@@ -66,13 +66,13 @@ app.add_url_rule("/dashboard", view_func = DashboardView.as_view("dashboard"))
 app.add_url_rule("/requests", view_func = RequestListView.as_view("requests"))
 app.add_url_rule("/pids", view_func = PIDListView.as_view("pids"))
 app.add_url_rule("/teams", view_func = TeamListView.as_view("teams"))
+app.add_url_rule("/services", view_func = ServiceListView.as_view("services"))
+app.add_url_rule("/services/create", view_func = ServiceCreateView.as_view("services/create"))
+app.add_url_rule("/services/<int:service_id>/delete", view_func = ServiceDeleteView.as_view("services/delete"))
 # Admin Routes
 app.add_url_rule("/admin/users", view_func = UserListView.as_view("admin/users"))
 app.add_url_rule("/admin/users/create", view_func = UserCreateView.as_view("admin/users/create"))
 app.add_url_rule("/admin/users/<int:user_id>/delete", view_func = UserDeleteView.as_view("admin/users/delete"))
-app.add_url_rule("/admin/services", view_func = ServiceListView.as_view("admin/services"))
-app.add_url_rule("/admin/services/create", view_func = ServiceCreateView.as_view("admin/services/create"))
-app.add_url_rule("/admin/services/<int:service_id>/delete", view_func = ServiceDeleteView.as_view("admin/services/delete"))
 app.add_url_rule("/admin/jobs", view_func = JobListView.as_view("admin/jobs"))
 app.add_url_rule("/admin/jobs/logs", view_func = JobLogsView.as_view("admin/jobs/logs"))
 app.add_url_rule("/admin/jobs/run", view_func = JobRunView.as_view("admin/jobs/run"))

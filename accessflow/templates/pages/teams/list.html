@@ -19,23 +19,32 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Associated PIDs</th>
+                                    <th>Associated Non-Prod PIDs</th>
+                                    <th>Associated Prod PIDs</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for team in teams %}
                                     <tr>
                                         <td class="align-middle">
-                                            {{ team.name }}
+                                            <code>{{ team.name }}</code>
                                         </td>
                                         <td class="align-middle">
-                                            1
+                                            {{ team.nonprod_pid_count }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ team.prod_pid_count }}
                                         </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
+                    {% if teams.pages != 1 %}
+                        <div class="card-footer">
+                            {{ render_pagination(teams, 'teams') }}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

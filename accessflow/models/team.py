@@ -1,3 +1,4 @@
+from accessflow.models.pid import PID, PIDEnvironmentType
 from accessflow import db
 
 class Team(db.Model):
@@ -16,3 +17,11 @@ class Team(db.Model):
 
     def __repr__(self):
         return f"<Team(id=\"{self.id}\", name=\"{self.name}\")"
+    
+    @property
+    def nonprod_pid_count(self):
+        return PID.query.filter(PID.team_id == self.id, PID.environment_type == PIDEnvironmentType.NONPROD_ONLY).count()
+    
+    @property
+    def prod_pid_count(self):
+        return PID.query.filter(PID.team_id == self.id, PID.environment_type == PIDEnvironmentType.PROD_ONLY).count()

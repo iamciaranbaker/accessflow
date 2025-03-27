@@ -21,4 +21,4 @@ class ServiceDeleteView(View):
 
         flash("Service has been deleted successfully.", "success")
 
-        return redirect(url_for("admin/services"))
+        return redirect(url_for("services"))
