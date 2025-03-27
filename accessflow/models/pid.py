@@ -30,7 +30,3 @@ class PID(db.Model):
 
     def __repr__(self):
         return f"<PID(uid=\"{self.uid}\", name=\"{self.name}\")"
-    
-    @staticmethod
-    def get_all():
-        return PID.query.all()

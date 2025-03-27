@@ -23,6 +23,12 @@
                         <p>PIDs</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('teams') }}" class="nav-link {% if request.endpoint == 'teams' %}active{% endif %}" data-tooltip="Teams">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>Teams</p>
+                    </a>
+                </li>
                 <li class="nav-item {% if 'admin' in request.endpoint %}menu-open{% endif %}">
                     <a href="#" class="nav-link {% if 'admin' in request.endpoint %}active{% endif %}" data-tooltip="Administration">
                         <i class="nav-icon fas fa-cog"></i>
