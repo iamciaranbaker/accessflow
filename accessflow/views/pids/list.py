@@ -3,7 +3,6 @@ from flask.views import View
 from flask_login import login_required
 from accessflow.decorators import permission_required
 from accessflow.models.pid import PID
-from accessflow import db
 
 class PIDListView(View):
     methods = ["GET"]
