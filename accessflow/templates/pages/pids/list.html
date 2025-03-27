@@ -53,7 +53,7 @@
                             </tbody>
                         </table>
                     </div>
-                    {% if pids.pages != 1 %}
+                    {% if pids.pages > 1 %}
                         <div class="card-footer">
                             {{ render_pagination(pids, 'pids') }}
                         </div>

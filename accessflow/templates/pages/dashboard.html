@@ -15,52 +15,53 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>4</h3>
+                        <h3>{{ counts['requests'] }}</h3>
                         <p>Open Requests</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-tasks"></i>
                     </div>
-                    <a href="#" class="small-box-footer">View All</a>
+                    <a href="{{ url_for('requests') }}" class="small-box-footer">View All</a>
                 </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>128</h3>
+                        <h3>{{ counts['pids'] }}</h3>
                         <p>Total PIDs</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-user"></i>
                     </div>
-                    <a href="#" class="small-box-footer">View All</a>
+                    <a href="{{ url_for('pids') }}" class="small-box-footer">View All</a>
                 </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>9</h3>
+                        <h3>{{ counts['teams'] }}</h3>
                         <p>Total Teams</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <a href="#" class="small-box-footer">View All</a>
+                    <a href="{{ url_for('teams') }}" class="small-box-footer">View All</a>
                 </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>6</h3>
+                        <h3>{{ counts['services'] }}</h3>
                         <p>Total Services</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-server"></i>
                     </div>
-                    <a href="#" class="small-box-footer">View All</a>
+                    <a href="{{ url_for('services') }}" class="small-box-footer">View All</a>
                 </div>
             </div>
         </div>
+        <!--
         <div class="row">
             <div class="col-12">
                 <div class="timeline">
@@ -94,6 +95,7 @@
                 </div>
             </div>
         </div>
+        -->
     </div>
 </div>
 {% endblock content %}

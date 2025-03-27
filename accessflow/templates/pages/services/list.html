@@ -32,50 +32,44 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% if services|length == 0 %}
-                                    <tr>
-                                        <td colspan="4" class="text-center">You have no services yet.</td>
+                                {% for service in services %}
+                                    <tr data-service-id="{{ service.id }}" data-service-name="{{ service.name }}">
+                                        <td class="align-middle">
+                                            {{ service.name }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {% if service.gl_project_access_token_active %}
+                                            <span style="color: green"><i class="fas fa-check-circle"></i> Active</span>
+                                            {% else %}
+                                            <span style="color: red"><i class="fas fa-times-circle"></i> Expired</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ service.gl_project_access_token_expires_at | format_date }}
+                                        </td>
+                                        <td class="align-middle text-right">
+                                            {% if current_user.has_permission('edit_services') or current_user.has_permission('delete_services') %}
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-actions" type="button" data-toggle="dropdown">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        {% if current_user.has_permission('edit_services') %}
+                                                            <li>
+                                                                <a class="dropdown-item">Edit</a>
+                                                            </li>
+                                                        {% endif %}
+                                                        {% if current_user.has_permission('delete_services') %}
+                                                            <li>
+                                                                <a class="dropdown-item text-danger service-delete">Delete</a>
+                                                            </li>
+                                                        {% endif %}
+                                                    </ul>
+                                                </div>
+                                            {% endif %}
+                                        </td>
                                     </tr>
-                                {% else %}
-                                    {% for service in services %}
-                                        <tr data-service-id="{{ service.id }}" data-service-name="{{ service.name }}">
-                                            <td class="align-middle">
-                                                {{ service.name }}
-                                            </td>
-                                            <td class="align-middle">
-                                                {% if service.gl_project_access_token_active %}
-                                                <span style="color: green"><i class="fas fa-check-circle"></i> Active</span>
-                                                {% else %}
-                                                <span style="color: red"><i class="fas fa-times-circle"></i> Expired</span>
-                                                {% endif %}
-                                            </td>
-                                            <td class="align-middle">
-                                                {{ service.gl_project_access_token_expires_at | format_date }}
-                                            </td>
-                                            <td class="align-middle text-right">
-                                                {% if current_user.has_permission('edit_services') or current_user.has_permission('delete_services') %}
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-sm btn-actions" type="button" data-toggle="dropdown">
-                                                            <i class="fas fa-ellipsis-v"></i>
-                                                        </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right">
-                                                            {% if current_user.has_permission('edit_services') %}
-                                                                <li>
-                                                                    <a class="dropdown-item">Edit</a>
-                                                                </li>
-                                                            {% endif %}
-                                                            {% if current_user.has_permission('delete_services') %}
-                                                                <li>
-                                                                    <a class="dropdown-item text-danger service-delete">Delete</a>
-                                                                </li>
-                                                            {% endif %}
-                                                        </ul>
-                                                    </div>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% endif %}
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>

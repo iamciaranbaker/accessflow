@@ -40,7 +40,7 @@
                             </tbody>
                         </table>
                     </div>
-                    {% if teams.pages != 1 %}
+                    {% if teams.pages > 1 %}
                         <div class="card-footer">
                             {{ render_pagination(teams, 'teams') }}
                         </div>
