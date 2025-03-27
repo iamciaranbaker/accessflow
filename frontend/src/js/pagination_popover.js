@@ -9,8 +9,12 @@ function openGoToPagePopover(element) {
         <div class="input-group">
             <input type="number" class="form-control" id="pageNumberInput" min="1" max="${pageMax}" value="${page}" step="1">
             <div class="input-group-append">
-                <button class="btn btn-default" type="button" id="paginate-page-plus">+</button>
-                <button class="btn btn-default" type="button" id="paginate-page-minus">-</button>
+                <button class="btn btn-default" type="button" id="paginate-page-plus">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button class="btn btn-default" type="button" id="paginate-page-minus">
+                    <i class="fas fa-minus"></i>
+                </button>
             </div>
         </div>
         <button class="btn btn-primary btn-sm mt-2" id="paginate-page-go">Go</button>
