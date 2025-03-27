@@ -20,8 +20,8 @@ class Team(db.Model):
     
     @property
     def nonprod_pid_count(self):
-        return PID.query.filter(PID.team_id == self.id, PID.environment_type == PIDEnvironmentType.NONPROD_ONLY).count()
+        return PID.query.filter(PID.team_id == self.id, PID.environment_type == PIDEnvironmentType.NONPROD).count()
     
     @property
     def prod_pid_count(self):
-        return PID.query.filter(PID.team_id == self.id, PID.environment_type == PIDEnvironmentType.PROD_ONLY).count()
+        return PID.query.filter(PID.team_id == self.id, PID.environment_type == PIDEnvironmentType.PROD).count()

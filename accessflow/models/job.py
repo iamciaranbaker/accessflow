@@ -8,6 +8,7 @@ from accessflow import logger, db
 import importlib
 import logging
 import threading
+import traceback
 
 class Job(db.Model):
     # Table Name
@@ -99,6 +100,8 @@ class Job(db.Model):
                     job_run = session.query(JobRun).filter(JobRun.id == job_run_id).first()
                     # Mark the job as done
                     job_run.mark_as_done(JobRunStatus.FAILED, session = session)
+                    # Log stacktrace for internal debugging
+                    logger.error(traceback.format_exc())
                 finally:
                     # Remove the session instance
                     Session.remove()

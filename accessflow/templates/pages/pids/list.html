@@ -19,6 +19,7 @@
                             <thead>
                                 <tr>
                                     <th>Identity</th>
+                                    <th>UID</th>
                                     <th>Environment</th>
                                     <th>Team</th>
                                 </tr>
@@ -29,13 +30,20 @@
                                         <td class="align-middle">
                                             <div class="d-flex align-items-center">
                                                 <div style="line-height: 1.2">
-                                                    <span class="d-block">{{ pid.name }}</span>
-                                                    <span class="small text-muted">{{ pid.uid }}</span>
+                                                    <span class="d-block">{{ pid.comment }}</span>
+                                                    <span class="small text-muted">{{ pid.name }}</span>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="align-middle">
-                                            {{ pid.environment_type.value }}
+                                            <code>{{ pid.uid }}</code>
+                                        </td>
+                                        <td class="align-middle">
+                                            {% if pid.environment_type.value == 'nonprod' %}
+                                                <span class="badge bg-success">Non-Production</span>
+                                            {% elif pid.environment_type.value == 'prod' %}
+                                                <span class="badge bg-danger">Production</span>
+                                            {% endif %}
                                         </td>
                                         <td class="align-middle">
                                             <code>{{ pid.team.name }}</code>
