@@ -1,11 +1,13 @@
-from flask import Flask
+from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from werkzeug.exceptions import HTTPException
 from accessflow.handlers.gitlab import GitLabHandler
 from accessflow.config import Config
 from accessflow.logger import get_logger
 from accessflow.filters import format_time, format_date, format_datetime
+import traceback
 
 logger = get_logger()
 
@@ -80,6 +82,24 @@ app.add_url_rule("/admin/jobs/run", view_func = JobRunView.as_view("admin/jobs/r
 app.add_url_rule("/login", view_func = LoginView.as_view("login"))
 app.add_url_rule("/login/two-factor", view_func = LoginTwoFactorView.as_view("login/two-factor"))
 app.add_url_rule("/logout", view_func = LogoutView.as_view("logout"))
+
+@app.errorhandler(Exception)
+def handle_exception(exception):
+    try:
+        code = exception.code
+    except:
+        code = 500
+
+    if not isinstance(exception, HTTPException):
+        traceback.print_tb(exception.__traceback__)
+
+    match code:
+        case 401:
+            return {"success": False, "error": "You are not authenticated."}, code
+        case 404:
+            return {"success": False, "error": f"The route {request.path} does not exist."}, code
+        case _:
+            return {"success": False, "error": "There was an unexpected server error."}, code
 
 @app.cli.command("seed-db")
 def seed_database():
