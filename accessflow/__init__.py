@@ -96,6 +96,8 @@ def handle_exception(exception):
     match code:
         case 401:
             return {"success": False, "error": "You are not authenticated."}, code
+        case 403:
+            return {"success": False, "error": "You do not have the required permission."}, code
         case 404:
             return {"success": False, "error": f"The route {request.path} does not exist."}, code
         case _:
