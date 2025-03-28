@@ -60,11 +60,27 @@ function openGoToPagePopover(element) {
     // Go button handler
     goButton.addEventListener("click", () => {
         const page = parseInt(pageInput.value) || 1;
-        if (page === 1) {
-            window.location.href = "/pids";
-        } else {
-            window.location.href = `/pids?page=${page}`;
+        
+        // Parse current URL query params
+        const url = new URL(window.location.href);
+        const originalParams = new URLSearchParams(url.search);
+
+        // Build new params
+        const newParams = new URLSearchParams();
+
+        if (page !== 1) {
+            newParams.set("page", page);
         }
+
+        // Append all other params except 'page'
+        for (const [key, value] of originalParams.entries()) {
+            if (key !== "page") {
+                newParams.append(key, value);
+            }
+        }
+
+        // Rebuild and navigate
+        window.location.href = `${url.pathname}?${newParams.toString()}`;
     });
 
     // Close popover if clicking outside
