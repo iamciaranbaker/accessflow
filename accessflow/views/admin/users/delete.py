@@ -10,7 +10,10 @@ class AdminUserDeleteView(View):
     methods = ["GET"]
     decorators = [permission_required("delete_users"), login_required]
 
-    def dispatch_request(self, user_id):
+    def dispatch_request(self):
+        # Fetch the job_id query parameter
+        user_id = request.args.get("user_id")
+
         # The user shouldn't be able to delete themselves.
         # The UI should prevent this from happening, but return a 500 error just in case
         if current_user.id == user_id:

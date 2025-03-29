@@ -10,7 +10,7 @@ if (userDeleteButtons) {
             var userEmailAddress = userRow.getAttribute("data-user-email-address");
             
             // Open the confirmation modal for user deletion
-            openDeleteConfirmationModal("User", `/admin/users/${userId}/delete`, userEmailAddress);
+            openDeleteConfirmationModal("User", `/admin/users/delete?user_id=${userId}`, userEmailAddress);
         });
     });
 }

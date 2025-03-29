@@ -9,7 +9,13 @@ class AdminServiceDeleteView(View):
     methods = ["GET"]
     decorators = [permission_required("delete_services"), login_required]
 
-    def dispatch_request(self, service_id):
+    def dispatch_request(self):
+        # Fetch the service_id query parameter
+        try:
+            service_id = int(request.args.get("service_id"))
+        except:
+            abort(404)
+
         # Delete all records across all tables associated with the specified service
         service = Service.query.filter(Service.id == service_id).delete()
 

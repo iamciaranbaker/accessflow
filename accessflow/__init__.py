@@ -76,11 +76,11 @@ app.add_url_rule("/admin/teams", view_func = AdminTeamListView.as_view("admin/te
 # Services
 app.add_url_rule("/admin/services", view_func = AdminServiceListView.as_view("admin/services"))
 app.add_url_rule("/admin/services/create", view_func = AdminServiceCreateView.as_view("admin/services/create"))
-app.add_url_rule("/admin/services/<int:service_id>/delete", view_func = AdminServiceDeleteView.as_view("admin/services/delete"))
+app.add_url_rule("/admin/services/delete", view_func = AdminServiceDeleteView.as_view("admin/services/delete"))
 # Users
 app.add_url_rule("/admin/users", view_func = AdminUserListView.as_view("admin/users"))
 app.add_url_rule("/admin/users/create", view_func = AdminUserCreateView.as_view("admin/users/create"))
-app.add_url_rule("/admin/users/<int:user_id>/delete", view_func = AdminUserDeleteView.as_view("admin/users/delete"))
+app.add_url_rule("/admin/users/delete", view_func = AdminUserDeleteView.as_view("admin/users/delete"))
 # Jobs
 app.add_url_rule("/admin/jobs", view_func = AdminJobListView.as_view("admin/jobs"))
 app.add_url_rule("/admin/jobs/logs", view_func = AdminJobLogsView.as_view("admin/jobs/logs"))
