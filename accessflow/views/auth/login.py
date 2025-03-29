@@ -30,14 +30,14 @@ class LoginView(View):
                         session["email_address"] = user.email_address
 
                         # Redirect the user to the two-factor authentication page
-                        return redirect(url_for("login/two-factor"))
+                        return redirect(url_for("login/two-factor", next = request.args.get("next")))
                     
                     # If the user doesn't have two-factor authentication enabled, log them in
                     login_user(user)
 
                     # Check if the user needs to be redirected anywhere after login
                     try:
-                        destination = url_for(request.args.get("next"))
+                        destination = url_for(f"{request.args.get("next").strip("/")}")
                     except:
                         destination = url_for("dashboard")
 

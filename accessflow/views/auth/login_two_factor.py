@@ -25,8 +25,9 @@ class LoginTwoFactorView(View):
 
                     login_user(user)
 
+                    # Check if the user needs to be redirected anywhere after login
                     try:
-                        destination = url_for(request.args.get("next"))
+                        destination = url_for(f"{request.args.get("next").strip("/")}")
                     except:
                         destination = url_for("dashboard")
 
