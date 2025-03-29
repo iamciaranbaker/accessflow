@@ -41,6 +41,6 @@ class PIDListView(View):
             pids = pids.filter(PID.environment_type.in_(filtered_environments))
         
         # Paginate the returned PIDs
-        pids = pids.paginate(per_page = None if request.args.get("per_page") else 10, max_per_page = 30)
+        pids = pids.paginate(per_page = None if request.args.get("per_page") else 8, max_per_page = 30)
         
         return render_template("pages/pids/list.html", pids = pids)
