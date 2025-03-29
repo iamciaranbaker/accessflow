@@ -6,7 +6,7 @@ from accessflow.models.user_permission import UserPermission
 from accessflow.models.user import User
 from accessflow import db
 
-class UserDeleteView(View):
+class AdminUserDeleteView(View):
     methods = ["GET"]
     decorators = [permission_required("delete_users"), login_required]
 

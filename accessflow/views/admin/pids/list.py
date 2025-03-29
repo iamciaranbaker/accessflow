@@ -6,7 +6,7 @@ from accessflow.decorators import permission_required
 from accessflow.models.pid import PID
 from accessflow.models.team import Team
 
-class PIDListView(View):
+class AdminPIDListView(View):
     methods = ["GET"]
     decorators = [login_required]
 
@@ -18,7 +18,7 @@ class PIDListView(View):
         # Check if search query parameter is empty, i.e. empty search field submitted
         if search is not None and not search.strip():
             # Redirect to base PIDs page for cleaner URL
-            return redirect(url_for("pids"))
+            return redirect(url_for("admin/pids"))
         if search:
             # Allow the query to search for anything containing the search term
             search = f"%{search}%"
@@ -43,4 +43,4 @@ class PIDListView(View):
         # Paginate the returned PIDs
         pids = pids.paginate(per_page = None if request.args.get("per_page") else 8, max_per_page = 30)
         
-        return render_template("pages/pids/list.html", pids = pids)
+        return render_template("pages/admin/pids/list.html", pids = pids)

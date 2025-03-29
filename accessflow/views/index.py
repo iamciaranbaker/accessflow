@@ -5,4 +5,4 @@ class IndexView(View):
     methods = ["GET"]
 
     def dispatch_request(self):
-        return redirect(url_for("dashboard"))
+        return "Hello"

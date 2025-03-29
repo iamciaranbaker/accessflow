@@ -44,11 +44,11 @@
                                         </td>
                                         <td class="align-middle">
                                             {% if request.status.value == 'pending' %}
-                                            <span class="badge bg-warning">Pending</span>
+                                                <span class="badge bg-warning">Pending</span>
                                             {% elif request.status.value == 'approved' %}
-                                            <span class="badge bg-success">Approved</span>
+                                                <span class="badge bg-success">Approved</span>
                                             {% else %}
-                                            <span class="badge bg-danger">Declined</span>
+                                                <span class="badge bg-danger">Declined</span>
                                             {% endif %}
                                         </td>
                                         <td class="align-middle text-right">

@@ -30,10 +30,10 @@
                                             <code>{{ team.name }}</code>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="{{ url_for('pids', **{'filter[team]': team.name, 'filter[environment]': 'nonprod'}) }}">{{ team.nonprod_pid_count }}</a>
+                                            <a href="{{ url_for('admin/pids', **{'filter[team]': team.name, 'filter[environment]': 'nonprod'}) }}">{{ team.nonprod_pid_count }}</a>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="{{ url_for('pids', **{'filter[team]': team.name, 'filter[environment]': 'prod'}) }}">{{ team.prod_pid_count }}</a>
+                                            <a href="{{ url_for('admin/pids', **{'filter[team]': team.name, 'filter[environment]': 'prod'}) }}">{{ team.prod_pid_count }}</a>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -42,7 +42,7 @@
                     </div>
                     {% if teams.pages > 1 %}
                         <div class="card-footer">
-                            {{ render_pagination(teams, 'teams') }}
+                            {{ render_pagination(teams, 'admin/teams') }}
                         </div>
                     {% endif %}
                 </div>

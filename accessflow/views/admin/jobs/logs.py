@@ -6,7 +6,7 @@ from accessflow.models.job import Job
 from accessflow.models.job_run import JobRun, JobRunStatus
 from accessflow.models.job_log import JobLog
 
-class JobLogsView(View):
+class AdminJobLogsView(View):
     methods = ["GET"]
     decorators = [permission_required("list_jobs"), login_required]
 

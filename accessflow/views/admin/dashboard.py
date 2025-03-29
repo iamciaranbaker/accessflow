@@ -6,7 +6,7 @@ from accessflow.models.pid import PID
 from accessflow.models.team import Team
 from accessflow.models.service import Service
 
-class DashboardView(View):
+class AdminIndexView(View):
     methods = ["GET"]
     decorators = [login_required]
 
@@ -17,4 +17,4 @@ class DashboardView(View):
             "teams": Team.query.count(),
             "services": Service.query.count()
         }
-        return render_template("pages/dashboard.html", counts = counts)
+        return render_template("pages/admin/dashboard.html", counts = counts)

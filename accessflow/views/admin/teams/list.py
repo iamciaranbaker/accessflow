@@ -3,12 +3,11 @@ from flask.views import View
 from flask_login import login_required
 from accessflow.decorators import permission_required
 from accessflow.models.team import Team
-from accessflow.models.pid import PIDEnvironmentType
 
-class TeamListView(View):
+class AdminTeamListView(View):
     methods = ["GET"]
     decorators = [login_required]
 
     def dispatch_request(self):
         teams = Team.query.paginate(per_page = None if request.args.get("per_page") else 10, max_per_page = 30)
-        return render_template("pages/teams/list.html", teams = teams)
+        return render_template("pages/admin/teams/list.html", teams = teams)

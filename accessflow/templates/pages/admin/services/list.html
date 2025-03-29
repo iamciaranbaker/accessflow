@@ -11,7 +11,7 @@
                 <span class="text-muted">A list of all registered services.</span>
             </div>
             <div class="col-2 text-right align-self-center">
-                <a class="btn btn-primary" href="{{ url_for('services/create') }}">Create Service</a>
+                <a class="btn btn-primary" href="{{ url_for('admin/services/create') }}">Create Service</a>
             </div>
         </div>
     </div>
@@ -39,9 +39,13 @@
                                         </td>
                                         <td class="align-middle">
                                             {% if service.gl_project_access_token_active %}
-                                            <span style="color: green"><i class="fas fa-check-circle"></i> Active</span>
+                                            <span class="text-success">
+                                                <i class="fas fa-check-circle"></i> Active
+                                            </span>
                                             {% else %}
-                                            <span style="color: red"><i class="fas fa-times-circle"></i> Expired</span>
+                                            <span class="text-danger">
+                                                <i class="fas fa-times-circle"></i> Expired
+                                            </span>
                                             {% endif %}
                                         </td>
                                         <td class="align-middle">

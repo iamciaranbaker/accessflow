@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from accessflow.decorators import permission_required
 from accessflow.models.job import Job
 
-class JobRunView(View):
+class AdminJobRunView(View):
     methods = ["GET"]
     decorators = [permission_required("run_jobs"), login_required]
 

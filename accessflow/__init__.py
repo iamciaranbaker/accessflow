@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -45,40 +45,49 @@ app.jinja_env.filters["format_date"] = format_date
 app.jinja_env.filters["format_datetime"] = format_datetime
 
 from accessflow.views.index import IndexView
-from accessflow.views.dashboard import DashboardView
-from accessflow.views.requests.list import RequestListView
-from accessflow.views.pids.list import PIDListView
-from accessflow.views.teams.list import TeamListView
-from accessflow.views.services.list import ServiceListView
-from accessflow.views.services.create import ServiceCreateView
-from accessflow.views.services.delete import ServiceDeleteView
-from accessflow.views.admin.users.list import UserListView
-from accessflow.views.admin.users.create import UserCreateView
-from accessflow.views.admin.users.delete import UserDeleteView
-from accessflow.views.admin.jobs.list import JobListView
-from accessflow.views.admin.jobs.logs import JobLogsView
-from accessflow.views.admin.jobs.run import JobRunView
+from accessflow.views.admin.dashboard import AdminIndexView
+from accessflow.views.admin.requests.list import AdminRequestListView
+from accessflow.views.admin.pids.list import AdminPIDListView
+from accessflow.views.admin.teams.list import AdminTeamListView
+from accessflow.views.admin.services.list import AdminServiceListView
+from accessflow.views.admin.services.create import AdminServiceCreateView
+from accessflow.views.admin.services.delete import AdminServiceDeleteView
+from accessflow.views.admin.users.list import AdminUserListView
+from accessflow.views.admin.users.create import AdminUserCreateView
+from accessflow.views.admin.users.delete import AdminUserDeleteView
+from accessflow.views.admin.jobs.list import AdminJobListView
+from accessflow.views.admin.jobs.logs import AdminJobLogsView
+from accessflow.views.admin.jobs.run import AdminJobRunView
 from accessflow.views.auth.login import LoginView
 from accessflow.views.auth.login_two_factor import LoginTwoFactorView
 from accessflow.views.auth.logout import LogoutView
 
-# General Routes
 app.add_url_rule("/", view_func = IndexView.as_view("index"))
-app.add_url_rule("/dashboard", view_func = DashboardView.as_view("dashboard"))
-app.add_url_rule("/requests", view_func = RequestListView.as_view("requests"))
-app.add_url_rule("/pids", view_func = PIDListView.as_view("pids"))
-app.add_url_rule("/teams", view_func = TeamListView.as_view("teams"))
-app.add_url_rule("/services", view_func = ServiceListView.as_view("services"))
-app.add_url_rule("/services/create", view_func = ServiceCreateView.as_view("services/create"))
-app.add_url_rule("/services/<int:service_id>/delete", view_func = ServiceDeleteView.as_view("services/delete"))
-# Admin Routes
-app.add_url_rule("/admin/users", view_func = UserListView.as_view("admin/users"))
-app.add_url_rule("/admin/users/create", view_func = UserCreateView.as_view("admin/users/create"))
-app.add_url_rule("/admin/users/<int:user_id>/delete", view_func = UserDeleteView.as_view("admin/users/delete"))
-app.add_url_rule("/admin/jobs", view_func = JobListView.as_view("admin/jobs"))
-app.add_url_rule("/admin/jobs/logs", view_func = JobLogsView.as_view("admin/jobs/logs"))
-app.add_url_rule("/admin/jobs/run", view_func = JobRunView.as_view("admin/jobs/run"))
-# Auth Routes
+"""
+Admin Routes
+"""
+app.add_url_rule("/admin", view_func = AdminIndexView.as_view("admin/index"))
+# Requests
+app.add_url_rule("/admin/requests", view_func = AdminRequestListView.as_view("admin/requests"))
+# PIDs
+app.add_url_rule("/admin/pids", view_func = AdminPIDListView.as_view("admin/pids"))
+# Teams
+app.add_url_rule("/admin/teams", view_func = AdminTeamListView.as_view("admin/teams"))
+# Services
+app.add_url_rule("/admin/services", view_func = AdminServiceListView.as_view("admin/services"))
+app.add_url_rule("/admin/services/create", view_func = AdminServiceCreateView.as_view("admin/services/create"))
+app.add_url_rule("/admin/services/<int:service_id>/delete", view_func = AdminServiceDeleteView.as_view("admin/services/delete"))
+# Users
+app.add_url_rule("/admin/users", view_func = AdminUserListView.as_view("admin/users"))
+app.add_url_rule("/admin/users/create", view_func = AdminUserCreateView.as_view("admin/users/create"))
+app.add_url_rule("/admin/users/<int:user_id>/delete", view_func = AdminUserDeleteView.as_view("admin/users/delete"))
+# Jobs
+app.add_url_rule("/admin/jobs", view_func = AdminJobListView.as_view("admin/jobs"))
+app.add_url_rule("/admin/jobs/logs", view_func = AdminJobLogsView.as_view("admin/jobs/logs"))
+app.add_url_rule("/admin/jobs/run", view_func = AdminJobRunView.as_view("admin/jobs/run"))
+"""
+Auth Routes
+"""
 app.add_url_rule("/login", view_func = LoginView.as_view("login"))
 app.add_url_rule("/login/two-factor", view_func = LoginTwoFactorView.as_view("login/two-factor"))
 app.add_url_rule("/logout", view_func = LogoutView.as_view("logout"))

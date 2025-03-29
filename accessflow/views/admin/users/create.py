@@ -6,7 +6,7 @@ from accessflow.forms.user import CreateUserForm
 from accessflow.models.user import User
 from accessflow import db
 
-class UserCreateView(View):
+class AdminUserCreateView(View):
     methods = ["GET", "POST"]
     decorators = [permission_required("create_users"), login_required]
 

@@ -5,7 +5,7 @@ from accessflow.decorators import permission_required
 from accessflow.models.service import Service
 from accessflow import db
 
-class ServiceDeleteView(View):
+class AdminServiceDeleteView(View):
     methods = ["GET"]
     decorators = [permission_required("delete_services"), login_required]
 
@@ -21,4 +21,4 @@ class ServiceDeleteView(View):
 
         flash("Service has been deleted successfully.", "success")
 
-        return redirect(url_for("services"))
+        return redirect(url_for("admin/services"))

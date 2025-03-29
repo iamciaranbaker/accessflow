@@ -8,7 +8,7 @@ from accessflow.models.service import Service
 from accessflow.handlers.gitlab_utils import sanitize_project_url
 from accessflow import db, gitlab_handler
 
-class ServiceCreateView(View):
+class AdminServiceCreateView(View):
     methods = ["GET", "POST"]
     decorators = [permission_required("create_services"), login_required]
 
@@ -32,10 +32,10 @@ class ServiceCreateView(View):
 
                 flash("Service has been created successfully.", "success")
 
-                return redirect(url_for("services"))
+                return redirect(url_for("admin/services"))
             else:
                 for field in form.errors:
                     for error in form.errors[field]:
                         flash(error, "danger")
 
-        return render_template("pages/services/create.html", form = form)
+        return render_template("pages/admin/services/create.html", form = form)

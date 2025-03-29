@@ -4,7 +4,7 @@ from flask_login import login_required
 from accessflow.decorators import permission_required
 from accessflow.models.user import User
 
-class UserListView(View):
+class AdminUserListView(View):
     methods = ["GET"]
     decorators = [permission_required("list_users"), login_required]
 
