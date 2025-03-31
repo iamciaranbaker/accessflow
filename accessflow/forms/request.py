@@ -10,6 +10,6 @@ class CreateRequestForm(FlaskForm):
     environments = SelectMultipleField("Environments", choices = [("nonprod", "Non-Production"), ("prod", "Production")])
     nonprod_pid = StringField("Non-Production PID", [Length(min = 7, max = 9)]) # Accomodate CG and U. - e.g. cg19321, u.8904064
     prod_pid = StringField("Production PID", [Length(min = 9, max = 11)]) # Accomodate U. and LSS. - e.g. u.8904064, LSS.8904064
-    sc_clearance = BooleanField("Do you have SC clearance?")
+    sc_clearance = SelectField("Do you have active SC clearance?", choices = [("yes", "Yes"), ("no", "No")])
     justification = TextAreaField("Justification", [DataRequired()])
     submit = SubmitField("Create Request")
