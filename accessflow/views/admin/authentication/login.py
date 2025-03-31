@@ -4,12 +4,12 @@ from flask_login import current_user, login_user
 from accessflow.forms.user import LoginForm
 from accessflow.models.user import User
 
-class LoginView(View):
+class AdminLoginView(View):
     methods = ["GET", "POST"]
 
     def dispatch_request(self):
         if current_user.is_authenticated:
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("admin/index"))
         
         if session.get("email_address"):
             session.pop("email_address")
@@ -30,7 +30,7 @@ class LoginView(View):
                         session["email_address"] = user.email_address
 
                         # Redirect the user to the two-factor authentication page
-                        return redirect(url_for("login/two-factor", next = request.args.get("next")))
+                        return redirect(url_for("admin/login/two-factor", next = request.args.get("next")))
                     
                     # If the user doesn't have two-factor authentication enabled, log them in
                     login_user(user)
@@ -39,7 +39,7 @@ class LoginView(View):
                     try:
                         destination = url_for(f"{request.args.get("next").strip("/")}")
                     except:
-                        destination = url_for("dashboard")
+                        destination = url_for("admin/index")
 
                     return redirect(destination)
                 else:
@@ -52,4 +52,4 @@ class LoginView(View):
                     for error in form.errors[field]:
                         flash(error, "danger")
 
-        return render_template("pages/auth/login.html", form = form)
+        return render_template("pages/admin/authentication/login.html", form = form)

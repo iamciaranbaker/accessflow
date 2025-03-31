@@ -18,7 +18,7 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "login"
+login_manager.login_view = "admin/login"
 login_manager.login_message = "You must be logged in to access this page."
 login_manager.login_message_category = "danger"
 
@@ -45,6 +45,7 @@ app.jinja_env.filters["format_date"] = format_date
 app.jinja_env.filters["format_datetime"] = format_datetime
 
 from accessflow.views.index import IndexView
+from accessflow.views.requests.create import RequestCreateView
 from accessflow.views.admin.dashboard import AdminIndexView
 from accessflow.views.admin.requests.list import AdminRequestListView
 from accessflow.views.admin.pids.list import AdminPIDListView
@@ -58,11 +59,12 @@ from accessflow.views.admin.users.delete import AdminUserDeleteView
 from accessflow.views.admin.jobs.list import AdminJobListView
 from accessflow.views.admin.jobs.logs import AdminJobLogsView
 from accessflow.views.admin.jobs.run import AdminJobRunView
-from accessflow.views.auth.login import LoginView
-from accessflow.views.auth.login_two_factor import LoginTwoFactorView
-from accessflow.views.auth.logout import LogoutView
+from accessflow.views.admin.authentication.login import AdminLoginView
+from accessflow.views.admin.authentication.login_two_factor import AdminLoginTwoFactorView
+from accessflow.views.admin.authentication.logout import AdminLogoutView
 
 app.add_url_rule("/", view_func = IndexView.as_view("index"))
+app.add_url_rule("/requests/create", view_func = RequestCreateView.as_view("requests/create"))
 """
 Admin Routes
 """
@@ -85,12 +87,10 @@ app.add_url_rule("/admin/users/delete", view_func = AdminUserDeleteView.as_view(
 app.add_url_rule("/admin/jobs", view_func = AdminJobListView.as_view("admin/jobs"))
 app.add_url_rule("/admin/jobs/logs", view_func = AdminJobLogsView.as_view("admin/jobs/logs"))
 app.add_url_rule("/admin/jobs/run", view_func = AdminJobRunView.as_view("admin/jobs/run"))
-"""
-Auth Routes
-"""
-app.add_url_rule("/login", view_func = LoginView.as_view("login"))
-app.add_url_rule("/login/two-factor", view_func = LoginTwoFactorView.as_view("login/two-factor"))
-app.add_url_rule("/logout", view_func = LogoutView.as_view("logout"))
+# Authentication
+app.add_url_rule("/admin/login", view_func = AdminLoginView.as_view("admin/login"))
+app.add_url_rule("/admin/login/two-factor", view_func = AdminLoginTwoFactorView.as_view("admin/login/two-factor"))
+app.add_url_rule("/admin/logout", view_func = AdminLogoutView.as_view("admin/logout"))
 
 @app.errorhandler(Exception)
 def handle_exception(exception):

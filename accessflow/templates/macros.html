@@ -1,6 +1,6 @@
-{% macro render_field(field, placeholder = None, autofocus = False) %}
+{% macro render_field(field, class = 'form-control', placeholder = None, autofocus = False) %}
     {% set dynamic_placeholder = placeholder or field.label.text %}
-    {{ field(class = 'form-control' + (' is-invalid' if field.errors else ''), placeholder = dynamic_placeholder, autofocus = autofocus) }}
+    {{ field(class = class + (' is-invalid' if field.errors else ''), placeholder = dynamic_placeholder, autofocus = autofocus) }}
 {% endmacro %}
 
 {% macro render_pagination(pagination, endpoint) %}

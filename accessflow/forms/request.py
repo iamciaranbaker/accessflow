@@ -1,0 +1,15 @@
+from flask_wtf import FlaskForm
+from wtforms import StringField, SelectField, SelectMultipleField, BooleanField, TextAreaField, SubmitField
+from wtforms.widgets import ListWidget, CheckboxInput
+from wtforms.validators import DataRequired, Length, Regexp
+from accessflow import gitlab_handler
+from accessflow.config import Config
+
+class CreateRequestForm(FlaskForm):
+    name = StringField("Name", [DataRequired(), Length(min = 2, max = 50), Regexp(regex = r"/^[a-z ,.'-]+$/i", message = "Name is invalid.")])
+    environments = SelectMultipleField("Environments", choices = [("nonprod", "Non-Production"), ("prod", "Production")])
+    nonprod_pid = StringField("Non-Production PID", [Length(min = 7, max = 9)]) # Accomodate CG and U. - e.g. cg19321, u.8904064
+    prod_pid = StringField("Production PID", [Length(min = 9, max = 11)]) # Accomodate U. and LSS. - e.g. u.8904064, LSS.8904064
+    sc_clearance = BooleanField("Do you have SC clearance?")
+    justification = TextAreaField("Justification", [DataRequired()])
+    submit = SubmitField("Create Request")

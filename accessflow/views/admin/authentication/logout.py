@@ -2,7 +2,7 @@ from flask import flash, redirect, url_for
 from flask.views import View
 from flask_login import current_user, logout_user
 
-class LogoutView(View):
+class AdminLogoutView(View):
     methods = ["GET"]
 
     def dispatch_request(self):
@@ -10,4 +10,4 @@ class LogoutView(View):
             logout_user()
             flash("You have been logged out.", "success")
 
-        return redirect(url_for("login"))
+        return redirect(url_for("admin/login"))
