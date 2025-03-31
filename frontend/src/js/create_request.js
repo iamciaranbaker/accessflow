@@ -22,4 +22,7 @@ if (window.location.pathname.toLowerCase().startsWith("/requests/create")) {
     environmentCheckboxes.forEach(cb => {
         cb.addEventListener("change", updatePIDVisibility);
     });
+
+    // Activate Select2
+    $(".select2").select2();
 }
