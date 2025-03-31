@@ -1,0 +1,51 @@
+{% extends 'layout/base.html' %}
+
+{% set title = 'Create Request' %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container">
+        <h1>Create Request</h1>
+        <span class="text-muted">Choose the type of request you want to create.</span>
+    </div>
+</div>
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-outline card-primary h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Account Creation</h5>
+                        <p class="card-text text-muted flex-grow-1">
+                            Request a new account or update to an existing one.
+                        </p>
+                        <a href="/requests/create?type=account_creation" class="btn btn-primary mt-auto">Start Request</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-outline card-primary h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Service Access</h5>
+                        <p class="card-text text-muted flex-grow-1">
+                            Request access to specific services and environments.
+                        </p>
+                        <a href="/requests/create?type=service_access" class="btn btn-primary mt-auto">Start Request</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-outline card-primary h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">MFA Reset</h5>
+                        <p class="card-text text-muted flex-grow-1">
+                            Request your MFA to be reset for a specific service.
+                        </p>
+                        <a href="/requests/create?type=mfa_reset" class="btn btn-primary mt-auto">Start Request</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

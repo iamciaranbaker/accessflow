@@ -32,6 +32,7 @@ from accessflow.models.job import Job
 from accessflow.models.job_run import JobRun
 from accessflow.models.job_log import JobLog
 from accessflow.models.request import Request
+from accessflow.models.request_service import RequestService
 from accessflow.models.service import Service
 from accessflow.models.pid import PID
 from accessflow.models.team import Team

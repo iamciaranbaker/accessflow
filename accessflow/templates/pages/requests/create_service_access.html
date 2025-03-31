@@ -1,0 +1,95 @@
+{% extends 'layout/base.html' %}
+
+{% set title = 'Service Access Request' %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container">
+        <h1>Service Access Request</h1>
+        <span class="text-muted">Use this form to request access to specific services and environments.</span>
+    </div>
+</div>
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <form method="post">
+                        {{ form.csrf_token(id = False) }}
+                        <div class="card-body">
+                            <div class="form-group">
+                                {{ form.name.label() }}
+                                {{ render_field(form.name, placeholder = ' ', autofocus = True) }}
+                                <span class="small text-muted field-description">
+                                    What is your name? <b>e.g. John Doe</b>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                {{ form.services.label() }}
+                                <select name="services" multiple="multiple" class="form-control select2 {% if form.services.errors %}is-invalid{% endif %}" required>
+                                    {% for value, label in form.services.choices %}
+                                        <option value="{{ value }}" {% if value in form.services.data %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <span class="small text-muted field-description">
+                                    Which service(s) do you require access to? <b>e.g. RTI Core</b>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                {{ form.environments.label() }}
+                                <select name="environments" multiple="multiple" class="form-control select2 {% if form.environments.errors %}is-invalid{% endif %}" required>
+                                    {% for value, label in form.environments.choices %}
+                                        <option value="{{ value }}" {% if value in form.environments.data %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <span class="small text-muted field-description">
+                                    Which environment(s) do you require access to? <b>e.g. Non-Production and Production</b>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                {{ form.nonprod_pid.label() }}
+                                {{ render_field(form.nonprod_pid, placeholder = ' ', extras = {'minlength': 7, 'maxlength': 9}) }}
+                                <span class="small text-muted field-description">
+                                    What is your Non-Production PID? <b>e.g. u.1234567</b>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                {{ form.prod_pid.label() }}
+                                {{ render_field(form.prod_pid, placeholder = ' ', extras = {'minlength': 9, 'maxlength': 11}) }}
+                                <span class="small text-muted field-description">
+                                    What is your Production PID? <b>e.g. LSS.1234567</b>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                {{ form.sc_clearance.label() }}
+                                {% for value, label in form.sc_clearance.choices %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="{{ form.sc_clearance.name }}" value="{{ value }}" {% if form.sc_clearance.data == value %}checked{% endif %}>
+                                        <label class="form-check-label" for="{{ form.sc_clearance.name }}">
+                                            {{ label }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group mb-0">
+                                {{ form.justification.label() }}
+                                {{ render_field(form.justification, placeholder = ' ') }}
+                                <span class="small text-muted field-description">
+                                    Why do you require access to the above service(s) and environment(s)? <b>e.g. I work in the DDC live team supporting RTI Core and ITSD</b>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            {{ form.submit(class = 'btn btn-primary') }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

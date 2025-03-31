@@ -1,11 +1,19 @@
 {% extends 'layout/master.html' %}
 
-{% set body_class = 'hold-transition sidebar-mini' %}
+{% set is_admin = 'admin/' in request.endpoint %}
+
+{% if is_admin %}
+    {% set body_class = 'hold-transition sidebar-mini' %}
+{% else %}
+    {% set body_class = 'hold-transition layout-top-nav' %}
+{% endif %}
 
 {% block layout %}
 <div class="wrapper">
     {% include 'layout/partials/top_nav.html' %}
-    {% include 'layout/partials/side_nav.html' %}
+    {% if is_admin %}
+        {% include 'layout/partials/side_nav.html' %}
+    {% endif %}
     <div class="content-wrapper">
         {% block content %}
         {% endblock content %}

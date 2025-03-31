@@ -1,4 +1,6 @@
 from enum import Enum
+from accessflow.models.pid import PID, PIDEnvironmentType
+from accessflow.models.service import Service
 from accessflow import db
 
 class RequestStatus(Enum):
@@ -12,19 +14,32 @@ class Request(db.Model):
 
     # Columns
     id = db.Column(db.Integer, autoincrement = True, primary_key = True, unique = True, nullable = False)
-    pid = db.Column(db.Integer)
+    name = db.Column(db.String(100))
+    nonprod_pid_uid = db.Column(db.Integer)
+    prod_pid_uid = db.Column(db.Integer)
+    sc_clearance = db.Column(db.Boolean)
     justification = db.Column(db.Text, nullable = False)
     status = db.Column(db.Enum(RequestStatus), default = RequestStatus.PENDING)
     created_at = db.Column(db.DateTime, default = db.func.now())
     updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
 
-    def __init__(self, pid, justification):
-        self.pid = pid
+    # Relationships
+    services = db.relationship("Service", secondary = "request_services", lazy = "joined")
+
+    def __init__(self, name, sc_clearance, justification, nonprod_pid_uid = None, prod_pid_uid = None):
+        self.name = name
+        self.sc_clearance = sc_clearance
         self.justification = justification
+        self.nonprod_pid_uid = nonprod_pid_uid
+        self.prod_pid_uid = prod_pid_uid
 
     def __repr__(self):
-        return f"<Request(id=\"{self.id}\", pid=\"{self.pid}\")"
+        return f"<Request(id=\"{self.id}\", nonprod_pid=\"{self.nonprod_pid}\", prod_pid=\"{self.prod_pid}\")"
     
-    @staticmethod
-    def get_all():
-        return Request.query.all()
+    def add_service(self, service_id):
+        service = Service.query.filter(Service.id == service_id).first()
+        if not service:
+            raise ValueError(f"Service with ID '{service_id}' does not exist.")
+        if service not in self.services:
+            self.services.append(service)
+            db.session.commit()

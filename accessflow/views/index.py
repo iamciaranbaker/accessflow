@@ -1,8 +1,8 @@
-from flask import redirect, url_for
+from flask import render_template
 from flask.views import View
 
 class IndexView(View):
     methods = ["GET"]
 
     def dispatch_request(self):
-        return "Hello"
+        return render_template("pages/index.html")

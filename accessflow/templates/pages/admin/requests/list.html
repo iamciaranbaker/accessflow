@@ -19,7 +19,7 @@
                             <thead>
                                 <tr>
                                     <th>PID</th>
-                                    <th>Service</th>
+                                    <th>Service(s)</th>
                                     <th>Justification</th>
                                     <th>Status</th>
                                     <th class="row-actions"></th>
@@ -27,17 +27,17 @@
                             </thead>
                             <tbody>
                                 {% for request in requests %}
-                                    <tr data-pid="{{ request.pid }}">
+                                    <tr data-pid="{{ request.nonprod_pid_uid }}">
                                         <td class="align-middle">
                                             <div class="d-flex align-items-center">
                                                 <div style="line-height: 1.2">
-                                                    <span class="d-block">Ciaran Baker</span>
-                                                    <span class="small text-muted">{{ request.pid }}</span>
+                                                    <span class="d-block">{{ request.name }}</span>
+                                                    <span class="small text-muted">{{ request.nonprod_pid_uid }}</span>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="align-middle">
-                                            {{ request.service.name }}
+                                            {{ request.services }}
                                         </td>
                                         <td class="align-middle">
                                             {{ request.justification }}

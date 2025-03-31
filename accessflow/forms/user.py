@@ -1,9 +1,9 @@
-import re
 from flask_wtf import FlaskForm
 from wtforms import StringField, EmailField, PasswordField, BooleanField, RadioField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Length, Email, Regexp, EqualTo
 from accessflow.models.user import User
 from accessflow.models.permission import Permission
+import re
 
 def email_address_validator(form, field):
     # Check if user already exists with given email address

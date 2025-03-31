@@ -8,4 +8,4 @@ class AdminRequestListView(View):
     decorators = [login_required]
 
     def dispatch_request(self):
-        return render_template("pages/admin/requests/list.html", requests = Request.get_all())
+        return render_template("pages/admin/requests/list.html", requests = Request.query.all())
