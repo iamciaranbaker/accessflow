@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -103,15 +103,18 @@ def handle_exception(exception):
     if not isinstance(exception, HTTPException):
         traceback.print_tb(exception.__traceback__)
 
-    match code:
-        case 401:
-            return {"success": False, "error": "You are not authenticated."}, code
-        case 403:
-            return {"success": False, "error": "You do not have the required permission."}, code
-        case 404:
-            return {"success": False, "error": f"The route {request.path} does not exist."}, code
-        case _:
-            return {"success": False, "error": "There was an unexpected server error."}, code
+    if request.path.lower().startswith("/api"):
+        match code:
+            case 401:
+                return {"success": False, "error": "You are not authenticated."}, code
+            case 403:
+                return {"success": False, "error": "You do not have the required permission."}, code
+            case 404:
+                return {"success": False, "error": f"The route {request.path} does not exist."}, code
+            case _:
+                return {"success": False, "error": "There was an unexpected server error."}, code
+            
+    return render_template("pages/error.html", code = code), code
 
 @app.cli.command("seed-db")
 def seed_database():
