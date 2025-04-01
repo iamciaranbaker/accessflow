@@ -137,9 +137,15 @@ class Job(db.Model):
         return Job.query.all()
 
     @staticmethod
-    def run_all():
-        jobs = Job.query.filter(Job.next_run_at < db.func.now()).all()
-        
-        for job in jobs:
-            logger.info(f"Running {job}")
-            job.run()
+    def run_all(force = False):
+        jobs = Job.query
+        if not force:
+            jobs = jobs.filter(Job.next_run_at < db.func.now())
+        jobs = jobs.all()
+
+        if len(jobs) == 0:
+            logger.info("There are no jobs to run!")
+        else:
+            for job in jobs:
+                logger.info(f"Running {job}")
+                job.run()

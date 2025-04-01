@@ -8,6 +8,7 @@ from accessflow.config import Config
 from accessflow.logger import get_logger
 from accessflow.filters import format_time, format_date, format_datetime
 import traceback
+import click
 
 logger = get_logger()
 
@@ -134,8 +135,9 @@ def recreate_database():
     db.session.commit()
 
 @app.cli.command("run-jobs")
-def run_jobs():
-    Job.run_all()
+@click.option("--force", is_flag = True, help = "Force run all jobs regardless of if they are due.")
+def run_jobs(force):
+    Job.run_all(force = force)
 
 """
 Temporarily method to create a dummy request whilst testing request system.
