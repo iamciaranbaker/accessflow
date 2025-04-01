@@ -9,6 +9,9 @@ class RequestCreateView(View):
 
     def dispatch_request(self):
         request_type = request.args.get("type")
+        # Check if a request type has been passed through
+        if not request_type:
+            return render_template("pages/requests/create.html")
         # Check the request type exists
         if request_type not in RequestType:
             abort(404)
@@ -22,6 +25,7 @@ class RequestCreateView(View):
                     sc_clearance = form.sc_clearance.data == "true"
                     
                 req = Request(
+                    type = request_type,
                     name = form.name.data,
                     sc_clearance = sc_clearance,
                     justification = form.justification.data,
