@@ -1,13 +1,18 @@
-from flask import request, flash, render_template
+from flask import request, abort, flash, render_template
 from flask.views import View
 from accessflow.forms.request import CreateRequestForm
-from accessflow.models.request import Request
+from accessflow.models.request import Request, RequestType
 from accessflow import db
 
 class RequestCreateView(View):
     methods = ["GET", "POST"]
 
     def dispatch_request(self):
+        request_type = request.args.get("type")
+        # Check the request type exists
+        if request_type not in RequestType:
+            abort(404)
+
         form = CreateRequestForm(request.form)
 
         if request.method == "POST":

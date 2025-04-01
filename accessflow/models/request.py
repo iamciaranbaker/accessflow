@@ -3,6 +3,11 @@ from accessflow.models.pid import PID, PIDEnvironmentType
 from accessflow.models.service import Service
 from accessflow import db
 
+class RequestType(Enum):
+    ACCOUNT_CREATION = "account_creation"
+    SERVICE_ACCESS = "service_access"
+    MFA_RESET = "mfa_reset"
+
 class RequestStatus(Enum):
     PENDING = "pending"
     APPROVED = "approved"
@@ -14,6 +19,7 @@ class Request(db.Model):
 
     # Columns
     id = db.Column(db.Integer, autoincrement = True, primary_key = True, unique = True, nullable = False)
+    type = db.Column(db.Enum(RequestType))
     name = db.Column(db.String(100))
     nonprod_pid_uid = db.Column(db.Integer)
     prod_pid_uid = db.Column(db.Integer)
@@ -26,7 +32,8 @@ class Request(db.Model):
     # Relationships
     services = db.relationship("Service", secondary = "request_services", lazy = "joined")
 
-    def __init__(self, name, sc_clearance, justification, nonprod_pid_uid = None, prod_pid_uid = None):
+    def __init__(self, type, name, sc_clearance, justification, nonprod_pid_uid = None, prod_pid_uid = None):
+        self.type = type
         self.name = name
         self.sc_clearance = sc_clearance
         self.justification = justification
