@@ -1,0 +1,65 @@
+{% extends 'layout/base.html' %}
+
+{% set title = 'My Requests' %}
+
+{% block content %}
+<div class="content-header">
+  <div class="container">
+    <h1 class="mb-1">My Requests</h1>
+    <p class="text-muted">View the status and details of your previous access requests.</p>
+  </div>
+</div>
+
+<div class="content">
+  <div class="container">
+    {% if requests %}
+      <div class="card card-outline card-primary">
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover text-nowrap">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Submitted</th>
+                <th>Last Updated</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for request in requests %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ request.type.replace('_', ' ')|title }}</td>
+                <td>
+                  <span class="badge badge-{{ 
+                    'secondary' if request.status == 'PENDING' else
+                    'success' if request.status == 'APPROVED' else
+                    'danger' if request.status == 'DECLINED' else
+                    'light'
+                  }}">
+                    {{ request.status.title() }}
+                  </span>
+                </td>
+                <td>{{ request.created_at.strftime('%d %b %Y') }}</td>
+                <td>{{ request.updated_at.strftime('%d %b %Y') }}</td>
+                <td>
+                  <a href="" class="btn btn-sm btn-outline-primary">
+                    View
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% else %}
+      <div class="alert alert-info">
+        You haven’t submitted any requests yet.
+        <a href="{{ url_for('requests/create') }}" class="alert-link">Create your first request.</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

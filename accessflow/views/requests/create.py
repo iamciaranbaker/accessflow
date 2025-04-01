@@ -41,4 +41,4 @@ class RequestCreateView(View):
                     for error in form.errors[field]:
                         flash(error, "danger")
             
-        return render_template("pages/requests/create_service_access.html", form = form)
+        return render_template(f"pages/requests/create_{request_type}.html", form = form)

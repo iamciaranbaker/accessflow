@@ -16,6 +16,9 @@ if (window.location.pathname.toLowerCase().startsWith("/requests/create")) {
     const prodMin = prodPIDInput.getAttribute("minlength");
     const prodMax = prodPIDInput.getAttribute("maxlength");
 
+    // Activate Select2
+    $(".select2").select2();
+
     function updatePIDVisibility() {
         const selectedValues = Array.from(environmentSelect.selectedOptions).map(opt => opt.value);
 
@@ -57,7 +60,4 @@ if (window.location.pathname.toLowerCase().startsWith("/requests/create")) {
 
     // Attach change event to select element
     $(environmentSelect).on("change", updatePIDVisibility);
-
-    // Activate Select2
-    $(".select2").select2();
 }

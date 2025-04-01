@@ -26,7 +26,7 @@
                             </div>
                             <div class="form-group">
                                 {{ form.services.label() }}
-                                <select name="services" multiple="multiple" class="form-control select2 {% if form.services.errors %}is-invalid{% endif %}" required>
+                                <select name="services" multiple="multiple" class="form-control select2 {% if form.services.errors %}is-invalid{% endif %}" style="visibility: hidden" required>
                                     {% for value, label in form.services.choices %}
                                         <option value="{{ value }}" {% if value in form.services.data %}selected{% endif %}>
                                             {{ label }}
@@ -39,7 +39,7 @@
                             </div>
                             <div class="form-group">
                                 {{ form.environments.label() }}
-                                <select name="environments" multiple="multiple" class="form-control select2 {% if form.environments.errors %}is-invalid{% endif %}" required>
+                                <select name="environments" multiple="multiple" class="form-control select2 {% if form.environments.errors %}is-invalid{% endif %}" style="visibility: hidden" required>
                                     {% for value, label in form.environments.choices %}
                                         <option value="{{ value }}" {% if value in form.environments.data %}selected{% endif %}>
                                             {{ label }}
@@ -50,21 +50,21 @@
                                     Which environment(s) do you require access to? <b>e.g. Non-Production and Production</b>
                                 </span>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" {% if 'nonprod' not in form.environments.data %}style="display: none"{% endif %}>
                                 {{ form.nonprod_pid.label() }}
                                 {{ render_field(form.nonprod_pid, placeholder = ' ', extras = {'minlength': 7, 'maxlength': 9}) }}
                                 <span class="small text-muted field-description">
                                     What is your Non-Production PID? <b>e.g. u.1234567</b>
                                 </span>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" {% if 'prod' not in form.environments.data %}style="display: none"{% endif %}>
                                 {{ form.prod_pid.label() }}
                                 {{ render_field(form.prod_pid, placeholder = ' ', extras = {'minlength': 9, 'maxlength': 11}) }}
                                 <span class="small text-muted field-description">
                                     What is your Production PID? <b>e.g. LSS.1234567</b>
                                 </span>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" {% if 'prod' not in form.environments.data %}style="display: none"{% endif %}>
                                 {{ form.sc_clearance.label() }}
                                 {% for value, label in form.sc_clearance.choices %}
                                     <div class="form-check">

@@ -46,6 +46,7 @@ app.jinja_env.filters["format_date"] = format_date
 app.jinja_env.filters["format_datetime"] = format_datetime
 
 from accessflow.views.index import IndexView
+from accessflow.views.requests.list import RequestListView
 from accessflow.views.requests.create import RequestCreateView
 from accessflow.views.admin.dashboard import AdminIndexView
 from accessflow.views.admin.requests.list import AdminRequestListView
@@ -65,6 +66,7 @@ from accessflow.views.admin.authentication.login_two_factor import AdminLoginTwo
 from accessflow.views.admin.authentication.logout import AdminLogoutView
 
 app.add_url_rule("/", view_func = IndexView.as_view("index"))
+app.add_url_rule("/requests", view_func = RequestListView.as_view("requests"))
 app.add_url_rule("/requests/create", view_func = RequestCreateView.as_view("requests/create"))
 """
 Admin Routes
