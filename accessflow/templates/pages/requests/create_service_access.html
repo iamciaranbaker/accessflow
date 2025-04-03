@@ -54,14 +54,14 @@
                                 {{ form.nonprod_pid.label() }}
                                 {{ render_field(form.nonprod_pid, placeholder = ' ', extras = {'minlength': 7, 'maxlength': 9}) }}
                                 <span class="small text-muted field-description">
-                                    What is your Non-Production PID? <b>e.g. u.1234567</b>
+                                    What is your non-production PID? <b>e.g. u.1234567</b>
                                 </span>
                             </div>
                             <div class="form-group" {% if 'prod' not in form.environments.data %}style="display: none"{% endif %}>
                                 {{ form.prod_pid.label() }}
                                 {{ render_field(form.prod_pid, placeholder = ' ', extras = {'minlength': 9, 'maxlength': 11}) }}
                                 <span class="small text-muted field-description">
-                                    What is your Production PID? <b>e.g. LSS.1234567</b>
+                                    What is your production PID? <b>e.g. LSS.1234567</b>
                                 </span>
                             </div>
                             <div class="form-group" {% if 'prod' not in form.environments.data %}style="display: none"{% endif %}>
