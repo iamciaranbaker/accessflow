@@ -23,6 +23,7 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Type</th>
                                     <th>Cron</th>
                                     <th>Last Run</th>
                                     <th>Last Run Status</th>
@@ -37,7 +38,14 @@
                                             <code>{{ job.name }}</code>
                                         </td>
                                         <td class="align-middle">
-                                            <code>{{ job.cron_expression }}</code>
+                                            {{ job.type.value | title }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {% if job.type.value == 'schedule' %}
+                                                <code>{{ job.cron_expression }}</code>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
                                         </td>
                                         <td class="align-middle">
                                             {% if job.last_run.started_at %}
@@ -64,7 +72,11 @@
                                             {% endif %}
                                         </td>
                                         <td class="align-middle">
-                                            {{ job.next_run_at | format_datetime }}
+                                            {% if job.type.value == 'schedule' %}
+                                                {{ job.next_run_at | format_datetime }}
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
                                         </td>
                                         <td class="align-middle text-right">
                                             {% if current_user.has_permission('run_jobs') %}

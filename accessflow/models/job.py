@@ -2,6 +2,7 @@ from flask import current_app
 from sqlalchemy.orm import scoped_session, sessionmaker
 from datetime import datetime
 from croniter import croniter
+from enum import Enum
 from accessflow.models.job_run import JobRun, JobRunStatus
 from accessflow.models.job_log import JobLogHandler
 from accessflow import logger, db
@@ -10,6 +11,10 @@ import logging
 import threading
 import traceback
 
+class JobType(Enum):
+    SCHEDULE = "schedule"
+    TRIGGER = "trigger"
+
 class Job(db.Model):
     # Table Name
     __tablename__ = "jobs"
@@ -17,22 +22,26 @@ class Job(db.Model):
     # Columns
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(100), unique = True, nullable = False)
+    type = db.Column(db.Enum(JobType), nullable = False)
     module_path = db.Column(db.String(100), nullable = False)
     class_name = db.Column(db.String(100), nullable = False)
-    cron_expression = db.Column(db.String(30), nullable = False)
-    next_run_at = db.Column(db.DateTime, default = db.func.now())
+    cron_expression = db.Column(db.String(30))
+    next_run_at = db.Column(db.DateTime)
 
     # Relationships
     runs = db.relationship("JobRun", lazy = "joined")
 
-    def __init__(self, name, module_path, class_name, cron_expression):
+    def __init__(self, name, type, module_path, class_name, cron_expression = None):
         self.name = name
+        self.type = type
         self.module_path = module_path
         self.class_name = class_name
         self.cron_expression = cron_expression
+        if type == JobType.SCHEDULE:
+            self.next_run_at = self.calculate_next_run()
 
     def __repr__(self):
-        return f"<Job(id=\"{self.id}\", name=\"{self.name}\", module_path=\"{self.module_path}\", class_name=\"{self.class_name}\")"
+        return f"<Job(id=\"{self.id}\", name=\"{self.name}\", type=\"{self.type}\", module_path=\"{self.module_path}\", class_name=\"{self.class_name}\")"
     
     @property
     def last_run(self):
@@ -113,10 +122,34 @@ class Job(db.Model):
     @staticmethod
     def seed_all():
         jobs = [
-            Job("check_gl_project_access_tokens", "accessflow.jobs.check_gl_project_access_tokens", "CheckGLProjectAccessTokens", "* * * * *"),
-            Job("rotate_gl_project_access_tokens", "accessflow.jobs.rotate_gl_project_access_tokens", "RotateGLProjectAccessTokens", "* * * * *"),
-            Job("fetch_teams_from_gl", "accessflow.jobs.fetch_teams_from_gl", "FetchTeamsFromGL", "* * * * *"),
-            Job("fetch_pids_from_gl", "accessflow.jobs.fetch_pids_from_gl", "FetchPIDsFromGL", "* * * * *")
+            Job(
+                name = "check_gl_project_access_tokens",
+                type = JobType.SCHEDULE,
+                module_path = "accessflow.jobs.check_gl_project_access_tokens",
+                class_name = "CheckGLProjectAccessTokens",
+                cron_expression = "* * * * *"
+            ),
+            Job(
+                name = "rotate_gl_project_access_tokens",
+                type = JobType.SCHEDULE,
+                module_path = "accessflow.jobs.rotate_gl_project_access_tokens",
+                class_name = "RotateGLProjectAccessTokens",
+                cron_expression = "* * * * *"
+            ),
+            Job(
+                name = "fetch_teams_from_gl",
+                type = JobType.SCHEDULE,
+                module_path = "accessflow.jobs.fetch_teams_from_gl",
+                class_name = "FetchTeamsFromGL",
+                cron_expression = "* * * * *"
+            ),
+            Job(
+                name = "fetch_pids_from_gl",
+                type = JobType.SCHEDULE,
+                module_path = "accessflow.jobs.fetch_pids_from_gl",
+                class_name = "FetchPIDsFromGL",
+                cron_expression = "* * * * *"
+            )
         ]
 
         for job in jobs:
@@ -133,18 +166,14 @@ class Job(db.Model):
         db.session.commit()
 
     @staticmethod
-    def get_all():
-        return Job.query.all()
-
-    @staticmethod
     def run_all(force = False):
         jobs = Job.query
         if not force:
-            jobs = jobs.filter(Job.next_run_at < db.func.now())
+            jobs = jobs.filter(Job.type == JobType.SCHEDULE, Job.next_run_at < db.func.now())
         jobs = jobs.all()
 
         if len(jobs) == 0:
-            logger.info("There are no jobs to run!")
+            logger.info("There are no scheduled jobs to run!")
         else:
             for job in jobs:
                 logger.info(f"Running {job}")

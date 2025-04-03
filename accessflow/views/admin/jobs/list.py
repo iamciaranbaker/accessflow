@@ -9,4 +9,4 @@ class AdminJobListView(View):
     decorators = [permission_required("list_jobs"), login_required]
 
     def dispatch_request(self):
-        return render_template("pages/admin/jobs/list.html", jobs = Job.get_all())
+        return render_template("pages/admin/jobs/list.html", jobs = Job.query.all())
