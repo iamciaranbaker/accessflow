@@ -54,7 +54,7 @@
                                 {% endif %}
                                 <tr>
                                     <td class="align-middle font-weight-bold" width="30%">
-                                        Environments
+                                        Environment(s)
                                     </td>
                                     <td class="align-middle text-left">
                                         {% if req.nonprod_pid %}
@@ -103,7 +103,7 @@
                                             Justification
                                         </td>
                                         <td class="align-middle text-left">
-                                            "{{ req.justification }}"
+                                            {{ req.justification }}
                                         </td>
                                     </tr>
                                 {% endif %}
@@ -115,10 +115,52 @@
             <div class="col-6">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">PID Match</h3>
+                        <h3 class="card-title">PID Matches</h3>
                     </div>
                     <div class="card-body p-0">
-                        
+                        <table class="table table-head-fixed">
+                            <thead>
+                                <tr>
+                                    <th width="30%">Identity</th>
+                                    <th width="50%">Environment</th>
+                                    <th width="20%">Confidence</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for req_pid in req.pids %}
+                                    <tr>
+                                        <td class="align-middle">
+                                            <div class="d-flex align-items-center">
+                                                <div style="line-height: 1.2">
+                                                    <span class="d-block">{{ req_pid.pid.comment }}</span>
+                                                    <span class="small text-muted">{{ req_pid.pid.name }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            {% if req_pid.pid.environment_type.value == 'nonprod' %}
+                                                <span class="badge bg-success">Non-Production</span>
+                                            {% elif req_pid.pid.environment_type.value == 'prod' %}
+                                                <span class="badge bg-danger">Production</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">
+                                            <span class="
+                                                {% if req_pid.confidence >= 85 %}
+                                                    text-success
+                                                {% elif req_pid.confidence >= 60 %}
+                                                    text-warning
+                                                {% else %}
+                                                    text-danger
+                                                {% endif %}
+                                            ">
+                                                {{ req_pid.confidence }}%
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

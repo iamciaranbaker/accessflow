@@ -10,7 +10,8 @@ class PID(db.Model):
     __tablename__ = "pids"
 
     # Columns
-    uid = db.Column(db.Integer, primary_key = True, nullable = False)
+    id = db.Column(db.Integer, autoincrement = True, primary_key = True, unique = True, nullable = False)
+    uid = db.Column(db.Integer, nullable = False)
     name = db.Column(db.String(100), nullable = False)
     comment = db.Column(db.String(100), nullable = False)
     team_id = db.Column(db.Integer, db.ForeignKey("teams.id"))
@@ -30,4 +31,4 @@ class PID(db.Model):
         self.environment_type = environment_type
 
     def __repr__(self):
-        return f"<PID(uid=\"{self.uid}\", name=\"{self.name}\", comment=\"{self.comment}\")"
+        return f"<PID(id=\"{self.id}\", uid=\"{self.uid}\", name=\"{self.name}\", comment=\"{self.comment}\")"

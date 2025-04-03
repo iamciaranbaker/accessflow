@@ -1,5 +1,6 @@
 from difflib import SequenceMatcher
 from accessflow.models.pid import PID, PIDEnvironmentType
+from accessflow.models.request import Request
 
 class FuzzyMatchRequestToPIDs:
     def __init__(self, logger, session):
@@ -7,6 +8,11 @@ class FuzzyMatchRequestToPIDs:
         self.session = session
 
     def run(self, request_id, name, nonprod_pid = None, prod_pid = None):
+        request = Request.query.filter(Request.id == request_id).first()
+        if not request:
+            self.logger.error(f"Could not find request with ID '{request_id}'!")
+            raise Exception
+        
         matches = {
             "nonprod": {
                 "pid": None,
@@ -72,6 +78,9 @@ class FuzzyMatchRequestToPIDs:
                 matches["prod"]["confidence"] = best_p_score
 
         self.logger.info(matches)
+
+        request.add_pid(matches["nonprod"]["pid"].id, matches["nonprod"]["confidence"])
+        request.add_pid(matches["prod"]["pid"].id, matches["prod"]["confidence"])
     
     # Thank you ChatGPT for this one...
     def get_similarity(self, a, b):

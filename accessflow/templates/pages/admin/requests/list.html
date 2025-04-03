@@ -30,7 +30,7 @@
                                 {% for request in requests %}
                                     <tr>
                                         <td class="align-middle">
-                                            AF-{{ request.id }}
+                                            {{ request.id }}
                                         </td>
                                         <td class="align-middle">
                                             {{ request.name }}
@@ -51,7 +51,7 @@
                                             {{ request.created_at | format_datetime }}
                                         </td>
                                         <td class="align-middle text-right">
-                                            <a href="" class="btn btn-sm btn-outline-primary">View</a>
+                                            <a href="{{ url_for('admin/requests', id = request.id) }}" class="btn btn-sm btn-outline-primary">View</a>
                                         </td>
                                     </tr>
                                 {% endfor %}
