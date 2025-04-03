@@ -4,7 +4,7 @@ from flask_login import login_required
 from accessflow.decorators import permission_required
 from accessflow.models.job import Job
 from accessflow.models.job_run import JobRun, JobRunStatus
-from accessflow.models.job_log import JobLog
+import json
 
 class AdminJobLogsView(View):
     methods = ["GET"]
@@ -36,7 +36,9 @@ class AdminJobLogsView(View):
         if not job_run:
             abort(404)
 
+        parameters = json.loads(job_run.parameters)
+
         # Get 5 of the previous completed runs
         previous_runs = JobRun.query.filter(JobRun.job_id == job.id, JobRun.status != JobRunStatus.RUNNING, JobRun.id != job_run_id).order_by(JobRun.started_at.desc()).limit(5).all()
 
-        return render_template("pages/admin/jobs/logs.html", job_run = job_run, previous_runs = previous_runs)
+        return render_template("pages/admin/jobs/logs.html", job_run = job_run, parameters = parameters, previous_runs = previous_runs)

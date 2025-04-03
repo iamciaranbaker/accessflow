@@ -2,6 +2,7 @@ from flask import request, abort, flash, render_template, redirect, url_for
 from flask.views import View
 from accessflow.forms.request import AccountCreationRequestForm, ServiceAccessRequestForm
 from accessflow.models.request import Request, RequestType
+from accessflow.models.job import Job
 from accessflow import db
 
 class RequestCreateView(View):
@@ -34,8 +35,8 @@ class RequestCreateView(View):
                     name = form.name.data
                 )
                 req.sc_clearance = sc_clearance
-                req.nonprod_pid_uid = 8904064
-                req.prod_pid_uid = 8904064
+                req.nonprod_pid = form.nonprod_pid.data
+                req.prod_pid = form.prod_pid.data
 
                 if request_type == "account_creation":
                     req.team = form.team.data
@@ -48,6 +49,15 @@ class RequestCreateView(View):
 
                 db.session.add(req)
                 db.session.commit()
+
+                # Kick off background job to fuzzy match request input to actual PIDs.
+                # This might take a few seconds so do it in the background to prevent hang for the user
+                Job.query.filter(Job.name == "fuzzy_match_request_to_pids").first().run(
+                    request_id = req.id,
+                    name = req.name,
+                    nonprod_pid = req.nonprod_pid,
+                    prod_pid = req.prod_pid
+                )
 
                 flash("Request has been created successfully.", "success")
 

@@ -57,10 +57,10 @@
                                         Environments
                                     </td>
                                     <td class="align-middle text-left">
-                                        {% if req.nonprod_pid_uid %}
+                                        {% if req.nonprod_pid %}
                                             <span class="badge bg-success">Non-Production</span>
                                         {% endif %}
-                                        {% if req.prod_pid_uid %}
+                                        {% if req.prod_pid %}
                                             <span class="badge bg-danger">Production</span>
                                         {% endif %}
                                     </td>
@@ -77,23 +77,23 @@
                                         </td>
                                     </tr>
                                 {% endif %}
-                                {% if req.nonprod_pid_uid %}
+                                {% if req.nonprod_pid %}
                                     <tr>
                                         <td class="align-middle font-weight-bold" width="30%">
                                             Non-Production PID
                                         </td>
                                         <td class="align-middle text-left">
-                                            {{ req.nonprod_pid_uid }}
+                                            {{ req.nonprod_pid }}
                                         </td>
                                     </tr>
                                 {% endif %}
-                                {% if req.prod_pid_uid %}
+                                {% if req.prod_pid %}
                                     <tr>
                                         <td class="align-middle font-weight-bold" width="30%">
                                             Production PID
                                         </td>
                                         <td class="align-middle text-left">
-                                            {{ req.prod_pid_uid }}
+                                            {{ req.prod_pid }}
                                         </td>
                                     </tr>
                                 {% endif %}

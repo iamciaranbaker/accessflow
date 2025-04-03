@@ -14,6 +14,7 @@ class JobRun(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     job_id = db.Column(db.Integer, db.ForeignKey("jobs.id"))
     status = db.Column(db.Enum(JobRunStatus), default = JobRunStatus.RUNNING)
+    parameters = db.Column(db.Text)
     triggered_by = db.Column(db.Integer, db.ForeignKey("users.id"))
     started_at = db.Column(db.DateTime, default = db.func.now())
     ended_at = db.Column(db.DateTime)
@@ -22,8 +23,9 @@ class JobRun(db.Model):
     logs = db.relationship("JobLog", lazy = "joined")
     triggerer = db.relationship("User", lazy = "joined")
 
-    def __init__(self, job_id, triggered_by = None):
+    def __init__(self, job_id, parameters, triggered_by = None):
         self.job_id = job_id
+        self.parameters = parameters
         self.triggered_by = triggered_by
 
     def __repr__(self):
