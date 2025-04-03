@@ -5,7 +5,7 @@
 {% block content %}
 <div class="content-header">
     <div class="container-fluid">
-        <h1>Request #{{ req.id }}</h1>
+        <h1>Request #{{ requesto.id }}</h1>
         <span class="text-muted">Review the details of this request.</span>
     </div>
 </div>
@@ -24,31 +24,31 @@
                                     <td class="align-middle font-weight-bold" width="30%">
                                         Identity
                                     </td>
-                                    <td class="align-middle text-left">
-                                        {{ req.name }}
+                                    <td class="align-middle text-left" width="70%">
+                                        {{ requesto.name }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="align-middle font-weight-bold" width="30%">
                                         Type
                                     </td>
-                                    <td class="align-middle text-left">
-                                        {% if req.type.value == 'account_creation' %}
+                                    <td class="align-middle text-left" width="70%">
+                                        {% if requesto.type.value == 'account_creation' %}
                                             Account Creation
-                                        {% elif req.type.value == 'service_access' %}
+                                        {% elif requesto.type.value == 'service_access' %}
                                             Service Access
-                                        {% elif req.type.value == 'mfa_reset' %}
+                                        {% elif requesto.type.value == 'mfa_reset' %}
                                             MFA Reset
                                         {% endif %}
                                     </td>
                                 </tr>
-                                {% if req.team %}
+                                {% if requesto.team %}
                                     <tr>
                                         <td class="align-middle font-weight-bold" width="30%">
                                             Team
                                         </td>
-                                        <td class="align-middle text-left">
-                                            {{ req.team }}
+                                        <td class="align-middle text-left" width="70%">
+                                            {{ requesto.team }}
                                         </td>
                                     </tr>
                                 {% endif %}
@@ -56,54 +56,54 @@
                                     <td class="align-middle font-weight-bold" width="30%">
                                         Environment(s)
                                     </td>
-                                    <td class="align-middle text-left">
-                                        {% if req.nonprod_pid %}
+                                    <td class="align-middle text-left" width="70%">
+                                        {% if requesto.nonprod_pid %}
                                             <span class="badge bg-success">Non-Production</span>
                                         {% endif %}
-                                        {% if req.prod_pid %}
+                                        {% if requesto.prod_pid %}
                                             <span class="badge bg-danger">Production</span>
                                         {% endif %}
                                     </td>
                                 </tr>
-                                {% if req.services %}
+                                {% if requesto.services %}
                                     <tr>
                                         <td class="align-middle font-weight-bold" width="30%">
                                             Service(s)
                                         </td>
-                                        <td class="align-middle text-left">
-                                            {% for service in req.services %}
+                                        <td class="align-middle text-left" width="70%">
+                                            {% for service in requesto.services %}
                                                 <span class="badge bg-primary">{{ service.name }}</span>
                                             {% endfor %}
                                         </td>
                                     </tr>
                                 {% endif %}
-                                {% if req.nonprod_pid %}
+                                {% if requesto.nonprod_pid %}
                                     <tr>
                                         <td class="align-middle font-weight-bold" width="30%">
                                             Non-Production PID
                                         </td>
-                                        <td class="align-middle text-left">
-                                            {{ req.nonprod_pid }}
+                                        <td class="align-middle text-left" width="70%">
+                                            {{ requesto.nonprod_pid }}
                                         </td>
                                     </tr>
                                 {% endif %}
-                                {% if req.prod_pid %}
+                                {% if requesto.prod_pid %}
                                     <tr>
                                         <td class="align-middle font-weight-bold" width="30%">
                                             Production PID
                                         </td>
-                                        <td class="align-middle text-left">
-                                            {{ req.prod_pid }}
+                                        <td class="align-middle text-left" width="70%">
+                                            {{ requesto.prod_pid }}
                                         </td>
                                     </tr>
                                 {% endif %}
-                                {% if req.justification %}
+                                {% if requesto.justification %}
                                     <tr>
                                         <td class="align-middle font-weight-bold" width="30%">
                                             Justification
                                         </td>
-                                        <td class="align-middle text-left">
-                                            {{ req.justification }}
+                                        <td class="align-middle text-left" width="70%">
+                                            {{ requesto.justification }}
                                         </td>
                                     </tr>
                                 {% endif %}
@@ -127,7 +127,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for pid in req.nonprod_pids + req.prod_pids %}
+                                {% for pid in requesto.nonprod_pids + requesto.prod_pids %}
                                     <tr>
                                         <td class="align-middle">
                                             <div class="d-flex align-items-center">

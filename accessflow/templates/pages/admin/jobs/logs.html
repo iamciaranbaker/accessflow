@@ -43,44 +43,44 @@
                         <table class="table table-head-fixed">
                             <tbody>
                                 <tr>
-                                    <td class="align-middle font-weight-bold">
+                                    <td class="align-middle font-weight-bold" width="30%">
                                         Duration
                                     </td>
-                                    <td class="align-middle text-right">
+                                    <td class="align-middle text-right" width="70%">
                                         {{ (job_run.ended_at - job_run.started_at) | format_time }}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="align-middle font-weight-bold">
+                                    <td class="align-middle font-weight-bold" width="30%">
                                         Started At
                                     </td>
-                                    <td class="align-middle text-right">
+                                    <td class="align-middle text-right" width="70%">
                                         {{ job_run.started_at | format_datetime }}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="align-middle font-weight-bold">
+                                    <td class="align-middle font-weight-bold" width="30%">
                                         Finished At
                                     </td>
-                                    <td class="align-middle text-right">
+                                    <td class="align-middle text-right" width="70%">
                                         {{ job_run.ended_at | format_datetime }}
                                     </td>
                                 </tr>
                                 {% if job_run.triggered_by %}
                                     <tr>
-                                        <td class="align-middle font-weight-bold">
+                                        <td class="align-middle font-weight-bold" width="30%">
                                             Triggered By
                                         </td>
-                                        <td class="align-middle text-right">
+                                        <td class="align-middle text-right" width="70%">
                                             {{ job_run.triggerer.first_name }} {{ job_run.triggerer.last_name }}
                                         </td>
                                     </tr>
                                 {% endif %}
                                 <tr>
-                                    <td class="align-middle font-weight-bold">
+                                    <td class="align-middle font-weight-bold" width="30%">
                                         Status
                                     </td>
-                                    <td class="align-middle text-right">
+                                    <td class="align-middle text-right" width="70%">
                                         {% if job_run.status.value == 'Succeeded' %}
                                             <span class="text-success">
                                                 <i class="fas fa-check-circle"></i> Succeeded
