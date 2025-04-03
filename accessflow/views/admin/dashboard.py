@@ -1,7 +1,7 @@
 from flask import render_template
 from flask.views import View
 from flask_login import login_required
-from accessflow.models.request import Request
+from accessflow.models.request import Request, RequestStatus
 from accessflow.models.pid import PID
 from accessflow.models.team import Team
 from accessflow.models.service import Service
@@ -12,7 +12,7 @@ class AdminIndexView(View):
 
     def dispatch_request(self):
         counts = {
-            "requests": Request.query.count(),
+            "requests": Request.query.filter(Request.status == RequestStatus.PENDING).count(),
             "pids": PID.query.count(),
             "teams": Team.query.count(),
             "services": Service.query.count()
