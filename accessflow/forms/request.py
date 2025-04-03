@@ -1,9 +1,26 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, SelectMultipleField, TextAreaField, SubmitField
 from wtforms.validators import DataRequired, Length
+from accessflow.models.team import Team
 from accessflow.models.service import Service
 
-class CreateRequestForm(FlaskForm):
+class AccountCreationRequestForm(FlaskForm):
+    name = StringField("Name", [DataRequired(message = "You must enter a name."), Length(min = 2, max = 50, message = "Your name is invalid.")])
+    team = SelectField("Team")
+    environments = SelectMultipleField("Environments", choices = [("nonprod", "Non-Production"), ("prod", "Production")])
+    nonprod_pid = StringField("Non-Production PID") # Accomodate CG and U. - e.g. cg19321, u.8904064
+    nonprod_ssh_key = TextAreaField("Non-Production SSH Key")
+    prod_pid = StringField("Production PID") # Accomodate U. and LSS. - e.g. u.8904064, LSS.8904064
+    prod_ssh_key = TextAreaField("Production SSH Key")
+    sc_clearance = SelectField("Do you have active SC clearance?", choices = [("true", "Yes"), ("false", "No")], validate_choice = False)
+    submit = SubmitField("Create Request")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Dynamically populate teams from database
+        self.team.choices = [(str(team.id), team.name) for team in Team.query.all()]
+
+class ServiceAccessRequestForm(FlaskForm):
     name = StringField("Name", [DataRequired(message = "You must enter a name."), Length(min = 2, max = 50, message = "Your name is invalid.")])
     services = SelectMultipleField("Services")
     environments = SelectMultipleField("Environments", choices = [("nonprod", "Non-Production"), ("prod", "Production")])

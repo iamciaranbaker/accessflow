@@ -1,6 +1,6 @@
 from flask import request, abort, flash, render_template
 from flask.views import View
-from accessflow.forms.request import CreateRequestForm
+from accessflow.forms.request import AccountCreationRequestForm, ServiceAccessRequestForm
 from accessflow.models.request import Request, RequestType
 from accessflow import db
 
@@ -9,14 +9,19 @@ class RequestCreateView(View):
 
     def dispatch_request(self):
         request_type = request.args.get("type")
-        # Check if a request type has been passed through
+        # Check if a request type has been passed through.
+        # If it hasn't, then return the page listing the different request types
         if not request_type:
             return render_template("pages/requests/create.html")
-        # Check the request type exists
-        if request_type not in RequestType:
-            abort(404)
 
-        form = CreateRequestForm(request.form)
+        match request_type:
+            case "account_creation":
+                form = AccountCreationRequestForm(request.form)
+            case "service_access":
+                form = ServiceAccessRequestForm(request.form)
+            case _:
+                # Anything else (not a valid request type), return 404
+                abort(404)
 
         if request.method == "POST":
             if form.validate_on_submit():

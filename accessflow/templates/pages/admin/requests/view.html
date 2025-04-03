@@ -1,0 +1,67 @@
+{% extends 'layout/base.html' %}
+
+{% set title = 'View Request' %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <h1>Request #{{ req.id }}</h1>
+        <span class="text-muted">Review the details of this request.</span>
+    </div>
+</div>
+<div class="content">
+    <div class="container-fluid">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <h5 class="mb-0">Request Summary</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">Request Type</dt>
+                    <dd class="col-sm-9">{{ req.type.value.replace('_', ' ') | title }}</dd>
+                    <dt class="col-sm-3">Status</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge badge-light">
+                            {{ req.status.value | title }}
+                        </span>
+                    </dd>
+                    <dt class="col-sm-3">Created At</dt>
+                    <dd class="col-sm-9">{{ req.created_at.strftime('%d %b %Y, %H:%M') }}</dd>
+                    <dt class="col-sm-3">Last Updated</dt>
+                    <dd class="col-sm-9">{{ req.updated_at.strftime('%d %b %Y, %H:%M') }}</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="card card-outline card-info">
+            <div class="card-header">
+                <h5 class="mb-0">Environment Access</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-1"><strong>Requested Environments:</strong></p>
+                <ul class="list-inline">
+                    {% for env in ['nonprod', 'prod'] %}
+                        <li class="list-inline-item badge badge-info">{{ env | title }}</li>
+                    {% endfor %}
+                </ul>
+                {% if req.nonprod_pid %}
+                    <p><strong>Non-Production PID:</strong> {{ req.nonprod_pid }}</p>
+                {% endif %}
+                {% if req.prod_pid %}
+                    <p><strong>Production PID:</strong> {{ req.prod_pid }}</p>
+                {% endif %}
+                {% if req.sc_clearance is not none %}
+                    <p><strong>SC Clearance:</strong> {{ 'Yes' if req.sc_clearance else 'No' }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card card-outline card-secondary">
+            <div class="card-header">
+                <h5 class="mb-0">Justification</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-0">{{ req.justification }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
