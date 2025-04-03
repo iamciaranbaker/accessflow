@@ -121,40 +121,40 @@
                         <table class="table table-head-fixed">
                             <thead>
                                 <tr>
-                                    <th width="30%">Identity</th>
-                                    <th width="50%">Environment</th>
-                                    <th width="20%">Confidence</th>
+                                    <th width="45%">Identity</th>
+                                    <th width="45%">Environment</th>
+                                    <th width="10%">Confidence</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for req_pid in req.pids %}
+                                {% for pid in req.nonprod_pids + req.prod_pids %}
                                     <tr>
                                         <td class="align-middle">
                                             <div class="d-flex align-items-center">
                                                 <div style="line-height: 1.2">
-                                                    <span class="d-block">{{ req_pid.pid.comment }}</span>
-                                                    <span class="small text-muted">{{ req_pid.pid.name }}</span>
+                                                    <span class="d-block">{{ pid.pid.comment }}</span>
+                                                    <span class="small text-muted">{{ pid.pid.name }}</span>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="align-middle">
-                                            {% if req_pid.pid.environment_type.value == 'nonprod' %}
+                                            {% if pid.pid.environment_type.value == 'nonprod' %}
                                                 <span class="badge bg-success">Non-Production</span>
-                                            {% elif req_pid.pid.environment_type.value == 'prod' %}
+                                            {% elif pid.pid.environment_type.value == 'prod' %}
                                                 <span class="badge bg-danger">Production</span>
                                             {% endif %}
                                         </td>
                                         <td class="align-middle">
                                             <span class="
-                                                {% if req_pid.confidence >= 85 %}
+                                                {% if pid.confidence >= 85 %}
                                                     text-success
-                                                {% elif req_pid.confidence >= 60 %}
+                                                {% elif pid.confidence >= 60 %}
                                                     text-warning
                                                 {% else %}
                                                     text-danger
                                                 {% endif %}
                                             ">
-                                                {{ req_pid.confidence }}%
+                                                {{ pid.confidence }}%
                                             </span>
                                         </td>
                                     </tr>

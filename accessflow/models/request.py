@@ -1,6 +1,6 @@
 from enum import Enum
 from accessflow.models.service import Service
-from accessflow.models.pid import PID
+from accessflow.models.pid import PID, PIDEnvironmentType
 from accessflow.models.request_pid import RequestPID
 from accessflow import db
 
@@ -43,6 +43,22 @@ class Request(db.Model):
 
     def __repr__(self):
         return f"<Request(id=\"{self.id}\")"
+
+    @property
+    def nonprod_pids(self):
+        return sorted(
+            [pid for pid in self.pids if pid.pid.environment_type == PIDEnvironmentType.NONPROD],
+            key = lambda pid: pid.confidence or 0,
+            reverse = True
+        )
+    
+    @property
+    def prod_pids(self):
+        return sorted(
+            [pid for pid in self.pids if pid.pid.environment_type == PIDEnvironmentType.PROD],
+            key = lambda pid: pid.confidence or 0,
+            reverse = True
+        )
     
     def add_service(self, service_id):
         service = Service.query.filter(Service.id == service_id).first()

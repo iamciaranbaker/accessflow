@@ -61,7 +61,7 @@ class RequestCreateView(View):
 
                 flash("Request has been created successfully.", "success")
 
-                return redirect(url_for("requests"))
+                #return redirect(url_for("requests"))
             else:
                 for field in form.errors:
                     for error in form.errors[field]:
