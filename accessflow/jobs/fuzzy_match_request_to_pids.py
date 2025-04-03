@@ -66,20 +66,13 @@ class FuzzyMatchRequestToPIDs:
                         for alt in candidates[1:3]
                     ]
 
-        self.logger.info(matches)
-
         # Step 3: Add matches to database
-        if matches["nonprod"]["pid"]:
-            request.add_pid(matches["nonprod"]["pid"].id, matches["nonprod"]["confidence"])
-            if "alternatives" in matches["nonprod"] and len(matches["nonprod"]["alternatives"]) > 0:
-                for alternative in matches["nonprod"]["alternatives"]:
-                    request.add_pid(alternative["pid"].id, alternative["confidence"])
-
-        if matches["prod"]["pid"]:
-            request.add_pid(matches["prod"]["pid"].id, matches["prod"]["confidence"])
-            if "alternatives" in matches["prod"] and len(matches["prod"]["alternatives"]) > 0:
-                for alternative in matches["prod"]["alternatives"]:
-                    request.add_pid(alternative["pid"].id, alternative["confidence"])
+        for environment_type in ["nonprod", "prod"]:
+            if matches[environment_type]["pid"]:
+                request.add_pid(matches[environment_type]["pid"].id, matches[environment_type]["confidence"])
+                if "alternatives" in matches[environment_type] and len(matches[environment_type]["alternatives"]) > 0:
+                    for alternative in matches[environment_type]["alternatives"]:
+                        request.add_pid(alternative["pid"].id, alternative["confidence"])
 
         self.logger.info(matches)
 
