@@ -18,41 +18,40 @@
                         <table class="table table-head-fixed">
                             <thead>
                                 <tr>
-                                    <th>PID</th>
-                                    <th>Service(s)</th>
-                                    <th>Justification</th>
+                                    <th>#</th>
+                                    <th>Identity</th>
+                                    <th>Type</th>
                                     <th>Status</th>
+                                    <th>Created</th>
                                     <th class="row-actions"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for request in requests %}
-                                    <tr data-pid="{{ request.nonprod_pid_uid }}">
+                                    <tr>
                                         <td class="align-middle">
-                                            <div class="d-flex align-items-center">
-                                                <div style="line-height: 1.2">
-                                                    <span class="d-block">{{ request.name }}</span>
-                                                    <span class="small text-muted">{{ request.nonprod_pid_uid }}</span>
-                                                </div>
-                                            </div>
+                                            AF-{{ request.id }}
                                         </td>
                                         <td class="align-middle">
-                                            {{ request.services }}
+                                            {{ request.name }}
                                         </td>
                                         <td class="align-middle">
-                                            {{ request.justification }}
-                                        </td>
-                                        <td class="align-middle">
-                                            {% if request.status.value == 'pending' %}
-                                                <span class="badge bg-warning">Pending</span>
-                                            {% elif request.status.value == 'approved' %}
-                                                <span class="badge bg-success">Approved</span>
-                                            {% else %}
-                                                <span class="badge bg-danger">Declined</span>
+                                            {% if request.type.value == 'account_creation' %}
+                                                <span class="badge bg-indigo">Account Creation</span>
+                                            {% elif request.type.value == 'service_access' %}
+                                                <span class="badge bg-lightblue">Service Access</span>
+                                            {% elif request.type.value == 'mfa_reset' %}
+                                                <span class="badge bg-olive">MFA Reset</span>
                                             {% endif %}
                                         </td>
+                                        <td class="align-middle">
+                                            {{ request.status.value | title }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ request.created_at | format_datetime }}
+                                        </td>
                                         <td class="align-middle text-right">
-                                            
+                                            <a href="" class="btn btn-sm btn-outline-primary">View</a>
                                         </td>
                                     </tr>
                                 {% endfor %}

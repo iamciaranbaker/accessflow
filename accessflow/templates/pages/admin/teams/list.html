@@ -19,6 +19,7 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>GitLab Name</th>
                                     <th>Associated Non-Prod PIDs</th>
                                     <th>Associated Prod PIDs</th>
                                 </tr>
@@ -26,6 +27,9 @@
                             <tbody>
                                 {% for team in teams %}
                                     <tr>
+                                        <td class="align-middle">
+                                            {{ team.friendly_name }}
+                                        </td>
                                         <td class="align-middle">
                                             <code>{{ team.name }}</code>
                                         </td>

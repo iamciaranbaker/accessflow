@@ -38,6 +38,7 @@ class RequestCreateView(View):
                 req.prod_pid_uid = 8904064
 
                 if request_type == "account_creation":
+                    req.team = form.team.data
                     req.nonprod_ssh_key = form.nonprod_ssh_key.data
                     req.prod_ssh_key = form.prod_ssh_key.data
                 elif request_type == "service_access":

@@ -11,55 +11,116 @@
 </div>
 <div class="content">
     <div class="container-fluid">
-        <div class="card card-outline card-primary">
-            <div class="card-header">
-                <h5 class="mb-0">Request Summary</h5>
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Details</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-head-fixed">
+                            <tbody>
+                                <tr>
+                                    <td class="align-middle font-weight-bold" width="30%">
+                                        Identity
+                                    </td>
+                                    <td class="align-middle text-left">
+                                        {{ req.name }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="align-middle font-weight-bold" width="30%">
+                                        Type
+                                    </td>
+                                    <td class="align-middle text-left">
+                                        {% if req.type.value == 'account_creation' %}
+                                            Account Creation
+                                        {% elif req.type.value == 'service_access' %}
+                                            Service Access
+                                        {% elif req.type.value == 'mfa_reset' %}
+                                            MFA Reset
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% if req.team %}
+                                    <tr>
+                                        <td class="align-middle font-weight-bold" width="30%">
+                                            Team
+                                        </td>
+                                        <td class="align-middle text-left">
+                                            {{ req.team }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                <tr>
+                                    <td class="align-middle font-weight-bold" width="30%">
+                                        Environments
+                                    </td>
+                                    <td class="align-middle text-left">
+                                        {% if req.nonprod_pid_uid %}
+                                            <span class="badge bg-success">Non-Production</span>
+                                        {% endif %}
+                                        {% if req.prod_pid_uid %}
+                                            <span class="badge bg-danger">Production</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% if req.services %}
+                                    <tr>
+                                        <td class="align-middle font-weight-bold" width="30%">
+                                            Service(s)
+                                        </td>
+                                        <td class="align-middle text-left">
+                                            {% for service in req.services %}
+                                                <span class="badge bg-primary">{{ service.name }}</span>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if req.nonprod_pid_uid %}
+                                    <tr>
+                                        <td class="align-middle font-weight-bold" width="30%">
+                                            Non-Production PID
+                                        </td>
+                                        <td class="align-middle text-left">
+                                            {{ req.nonprod_pid_uid }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if req.prod_pid_uid %}
+                                    <tr>
+                                        <td class="align-middle font-weight-bold" width="30%">
+                                            Production PID
+                                        </td>
+                                        <td class="align-middle text-left">
+                                            {{ req.prod_pid_uid }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if req.justification %}
+                                    <tr>
+                                        <td class="align-middle font-weight-bold" width="30%">
+                                            Justification
+                                        </td>
+                                        <td class="align-middle text-left">
+                                            "{{ req.justification }}"
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <dl class="row mb-0">
-                    <dt class="col-sm-3">Request Type</dt>
-                    <dd class="col-sm-9">{{ req.type.value.replace('_', ' ') | title }}</dd>
-                    <dt class="col-sm-3">Status</dt>
-                    <dd class="col-sm-9">
-                        <span class="badge badge-light">
-                            {{ req.status.value | title }}
-                        </span>
-                    </dd>
-                    <dt class="col-sm-3">Created At</dt>
-                    <dd class="col-sm-9">{{ req.created_at.strftime('%d %b %Y, %H:%M') }}</dd>
-                    <dt class="col-sm-3">Last Updated</dt>
-                    <dd class="col-sm-9">{{ req.updated_at.strftime('%d %b %Y, %H:%M') }}</dd>
-                </dl>
-            </div>
-        </div>
-        <div class="card card-outline card-info">
-            <div class="card-header">
-                <h5 class="mb-0">Environment Access</h5>
-            </div>
-            <div class="card-body">
-                <p class="mb-1"><strong>Requested Environments:</strong></p>
-                <ul class="list-inline">
-                    {% for env in ['nonprod', 'prod'] %}
-                        <li class="list-inline-item badge badge-info">{{ env | title }}</li>
-                    {% endfor %}
-                </ul>
-                {% if req.nonprod_pid %}
-                    <p><strong>Non-Production PID:</strong> {{ req.nonprod_pid }}</p>
-                {% endif %}
-                {% if req.prod_pid %}
-                    <p><strong>Production PID:</strong> {{ req.prod_pid }}</p>
-                {% endif %}
-                {% if req.sc_clearance is not none %}
-                    <p><strong>SC Clearance:</strong> {{ 'Yes' if req.sc_clearance else 'No' }}</p>
-                {% endif %}
-            </div>
-        </div>
-        <div class="card card-outline card-secondary">
-            <div class="card-header">
-                <h5 class="mb-0">Justification</h5>
-            </div>
-            <div class="card-body">
-                <p class="mb-0">{{ req.justification }}</p>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">PID Match</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        
+                    </div>
+                </div>
             </div>
         </div>
     </div>
