@@ -109,10 +109,6 @@ class User(db.Model):
 
             db.session.add(user)
             db.session.commit()
-
-    @staticmethod
-    def get_all():
-        return User.query.all()
     
 @login_manager.user_loader
 def load_user(id):

@@ -33,7 +33,3 @@ class Service(db.Model):
 
     def __repr__(self):
         return f"<Service(id=\"{self.id}\", name=\"{self.name}\")"
-
-    @staticmethod
-    def get_all():
-        return Service.query.all()
