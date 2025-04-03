@@ -1,4 +1,4 @@
-from flask import request, abort, flash, render_template
+from flask import request, abort, flash, render_template, redirect, url_for
 from flask.views import View
 from accessflow.forms.request import AccountCreationRequestForm, ServiceAccessRequestForm
 from accessflow.models.request import Request, RequestType
@@ -31,20 +31,26 @@ class RequestCreateView(View):
                     
                 req = Request(
                     type = request_type,
-                    name = form.name.data,
-                    sc_clearance = sc_clearance,
-                    justification = form.justification.data,
-                    nonprod_pid_uid = 8904064,
-                    prod_pid_uid = 8904064
+                    name = form.name.data
                 )
+                req.sc_clearance = sc_clearance
+                req.nonprod_pid_uid = 8904064
+                req.prod_pid_uid = 8904064
 
-                for service_id in form.services.data:
-                    req.add_service(service_id)
+                if request_type == "account_creation":
+                    req.nonprod_ssh_key = form.nonprod_ssh_key.data
+                    req.prod_ssh_key = form.prod_ssh_key.data
+                elif request_type == "service_access":
+                    for service_id in form.services.data:
+                        req.add_service(service_id)
+                    req.justification = form.justification.data
 
                 db.session.add(req)
                 db.session.commit()
 
                 flash("Request has been created successfully.", "success")
+
+                return redirect(url_for("requests"))
             else:
                 for field in form.errors:
                     for error in form.errors[field]:
