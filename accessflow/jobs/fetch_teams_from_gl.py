@@ -21,9 +21,25 @@ class FetchTeamsFromGL:
         for team_name in teams_from_gl:
             if not next((team for team in teams if team.name == team_name), None):
                 team = Team(
-                    name = team_name
+                    name = team_name,
+                    friendly_name = self.get_friendly_name(team_name)
                 )
                 self.session.add(team)
                 self.logger.info(f"Creating {team}")
 
         self.session.commit()
+
+    def get_friendly_name(self, name):
+        # Define a list of words to exclude from acronym capitalisation
+        excluded_acronym_words = ["core"]
+        friendly_name = ""
+        for word in name.split("_"):
+            word = word.lower()
+            # If the word is 4 characters or less, it's probably an acronym.
+            # Unless it's in the excluded list, capitalise the word
+            if len(word) <= 4 and word not in excluded_acronym_words:
+                word = word.upper()
+            else:
+                word = word.title()
+            friendly_name += f"{word} "
+        return friendly_name.strip()

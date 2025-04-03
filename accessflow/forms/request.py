@@ -18,7 +18,7 @@ class AccountCreationRequestForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Dynamically populate teams from database
-        self.team.choices = [(str(team.id), team.name) for team in Team.query.all()]
+        self.team.choices = [(str(team.id), team.friendly_name) for team in Team.query.all()]
 
 class ServiceAccessRequestForm(FlaskForm):
     name = StringField("Name", [DataRequired(message = "You must enter a name."), Length(min = 2, max = 50, message = "Your name is invalid.")])
