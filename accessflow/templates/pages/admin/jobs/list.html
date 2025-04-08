@@ -22,6 +22,12 @@
                         <div class="card-tools">
                             <form>
                                 <div class="input-group input-group-sm" style="width: 250px">
+                                    <div class="input-group-prepend pr-2">
+                                        {% set has_filters = request.args.getlist('filter[type]') %}
+                                        <button type="button" class="btn {{ 'btn-primary' if has_filters else 'btn-default' }} filter">
+                                            <i class="fas fa-filter"></i>
+                                        </button>
+                                    </div>
                                     <input type="text" name="q" value="{{ request.args.get('q', '') }}" class="form-control float-right" placeholder="Search Jobs">
                                     <div class="input-group-append">
                                         <button type="submit" class="btn btn-default">
@@ -36,9 +42,9 @@
                         <table class="table table-head-fixed">
                             <thead>
                                 <tr>
-                                    <th width="25%">Name</th>
-                                    <th width="10%">Type</th>
-                                    <th width="15%">Cron</th>
+                                    <th width="28%">Name</th>
+                                    <th width="8%">Type</th>
+                                    <th width="14%">Cron</th>
                                     <th width="17%">Last Run</th>
                                     <th width="11%">Last Run Status</th>
                                     <th width="17%">Next Run</th>
@@ -127,3 +133,15 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block scripts %}
+<script>
+    var filterOptions = [
+        {
+            name: "type",
+            label: "Type",
+            options: {{ filter_options['types'] | tojson }}
+        }
+    ];
+</script>
+{% endblock scripts %}

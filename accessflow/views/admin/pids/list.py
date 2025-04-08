@@ -42,5 +42,20 @@ class AdminPIDListView(View):
         
         # Paginate the returned PIDs
         pids = pids.paginate(per_page = None if request.args.get("per_page") else 8, max_per_page = 30)
+
+        # Create map of filtering options
+        filter_options = {
+            "environments": [
+                {
+                    "value": "nonprod",
+                    "label": "Non-Production"
+                },
+                {
+                    "value": "prod",
+                    "label": "Production"
+                }
+            ],
+            "teams": [{"value": team.name, "label": team.friendly_name} for team in Team.query.all()]
+        }
         
-        return render_template("pages/admin/pids/list.html", pids = pids)
+        return render_template("pages/admin/pids/list.html", pids = pids, filter_options = filter_options)

@@ -33,4 +33,18 @@ class AdminJobListView(View):
         # Paginate the returned jobs
         jobs = jobs.paginate(per_page = None if request.args.get("per_page") else 8, max_per_page = 30)
 
-        return render_template("pages/admin/jobs/list.html", jobs = jobs)
+        # Create map of filtering options
+        filter_options = {
+            "types": [
+                {
+                    "value": "schedule",
+                    "label": "Schedule"
+                },
+                {
+                    "value": "trigger",
+                    "label": "Trigger"
+                }
+            ]
+        }
+
+        return render_template("pages/admin/jobs/list.html", jobs = jobs, filter_options = filter_options)

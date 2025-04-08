@@ -17,7 +17,7 @@ function openGoToPagePopover(element) {
                 </button>
             </div>
         </div>
-        <button class="btn btn-primary btn-sm mt-2" id="paginate-page-go">Go</button>
+        <button class="btn btn-primary btn-sm btn-block mt-2" id="paginate-page-go">Go To Page</button>
     `;
 
     // Initialize popover
@@ -98,7 +98,7 @@ function openGoToPagePopover(element) {
     }, 0);
 
     // Cleanup on hide
-    $(element).on("hidden.bs.popover", function () {
+    $(element).on("hidden.bs.popover", function() {
         $(element).popover("dispose");
     });
 }

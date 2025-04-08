@@ -1,7 +1,7 @@
 from flask import request, abort, redirect, url_for, render_template
 from flask.views import View
 from flask_login import login_required
-from accessflow.models.request import Request
+from accessflow.models.request import Request, RequestType, RequestStatus
 
 class AdminRequestListView(View):
     methods = ["GET"]
@@ -51,4 +51,36 @@ class AdminRequestListView(View):
         # Paginate the returned requests
         requests = requests.paginate(per_page = None if request.args.get("per_page") else 8, max_per_page = 30)
 
-        return render_template("pages/admin/requests/list.html", requests = requests)
+        # Create map of filtering options
+        filter_options = {
+            "types": [
+                {
+                    "value": "account_creation",
+                    "label": "Account Creation"
+                },
+                {
+                    "value": "service_access",
+                    "label": "Service Access"
+                },
+                {
+                    "value": "mfa_reset",
+                    "label": "MFA Reset"
+                }
+            ],
+            "statuses": [
+                {
+                    "value": "pending",
+                    "label": "Pending"
+                },
+                {
+                    "value": "approved",
+                    "label": "Approved"
+                },
+                {
+                    "value": "declined",
+                    "label": "Declined"
+                }
+            ]
+        }
+
+        return render_template("pages/admin/requests/list.html", requests = requests, filter_options = filter_options)
