@@ -1,4 +1,4 @@
-from accessflow.handlers.gitlab_utils import make_api_request, sanitize_project_url
+from accessflow.gitlab.gitlab_utils import make_api_request, sanitize_project_url
 import yaml
 
 class GitLabHandler:

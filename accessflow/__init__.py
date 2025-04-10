@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from werkzeug.exceptions import HTTPException
-from accessflow.handlers.gitlab import GitLabHandler
+from accessflow.gitlab.gitlab_handler import GitLabHandler
 from accessflow.config import Config
 from accessflow.logger import get_logger
 from accessflow.filters import format_time, format_date, format_datetime

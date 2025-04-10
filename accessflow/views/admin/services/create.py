@@ -1,12 +1,11 @@
 from flask import request, flash, redirect, url_for, render_template
 from flask.views import View
 from flask_login import login_required
-from datetime import datetime
 from accessflow.decorators import permission_required
 from accessflow.forms.service import CreateServiceForm
 from accessflow.models.service import Service
-from accessflow.handlers.gitlab_utils import sanitize_project_url
-from accessflow import db, gitlab_handler
+from accessflow.gitlab.gitlab_utils import sanitize_project_url
+from accessflow import db, gitlab_handler, logger
 
 class AdminServiceCreateView(View):
     methods = ["GET", "POST"]
