@@ -40,8 +40,10 @@
                             <thead>
                                 <tr>
                                     <th width="35%">Name</th>
-                                    <th width="30%">GitLab PAT Status</th>
-                                    <th width="30%">GitLab PAT Expires</th>
+                                    <th width="10%">Environments</th>
+                                    <th width="10%">Host Groups</th>
+                                    <th width="20%">GitLab PAT Status</th>
+                                    <th width="20%">GitLab PAT Expires</th>
                                     <th class="row-actions" width="5%"></th>
                                 </tr>
                             </thead>
@@ -50,6 +52,12 @@
                                     <tr data-service-id="{{ service.id }}" data-service-name="{{ service.name }}">
                                         <td class="align-middle">
                                             {{ service.name }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ service.environments | length }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ service.host_groups | length }}
                                         </td>
                                         <td class="align-middle">
                                             {% if service.gl_project_access_token_active %}

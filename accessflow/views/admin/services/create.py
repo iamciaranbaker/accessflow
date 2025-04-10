@@ -5,7 +5,8 @@ from accessflow.decorators import permission_required
 from accessflow.forms.service import CreateServiceForm
 from accessflow.models.service import Service
 from accessflow.gitlab.gitlab_utils import sanitize_project_url
-from accessflow import db, gitlab_handler, logger
+from accessflow import db, gitlab_handler
+import json
 
 class AdminServiceCreateView(View):
     methods = ["GET", "POST"]
@@ -23,8 +24,9 @@ class AdminServiceCreateView(View):
                     gl_project_access_token = form.project_access_token.data,
                     gl_project_access_token_auto_rotate = form.auto_rotate_pat.data
                 )
-                service.set_gl_project_access_token_id(token["id"])
-                service.set_gl_project_access_token_expires_at(token["expires_at"])
+                service.gl_pipeline_variables = json.dumps(gitlab_handler.get_project_pipeline_variables(service.gl_project_url, service.gl_project_access_token))
+                service.gl_project_access_token_id = token["id"]
+                service.gl_project_access_token_expires_at = token["expires_at"]
 
                 db.session.add(service)
                 db.session.commit()

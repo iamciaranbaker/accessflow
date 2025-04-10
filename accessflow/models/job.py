@@ -158,6 +158,13 @@ class Job(db.Model):
                 type = JobType.TRIGGER,
                 module_path = "accessflow.jobs.fuzzy_match_request_to_pids",
                 class_name = "FuzzyMatchRequestToPIDs"
+            ),
+            Job(
+                name = "update_gl_pipeline_variables",
+                type = JobType.SCHEDULE,
+                module_path = "accessflow.jobs.update_gl_pipeline_variables",
+                class_name = "UpdateGLPipelineVariables",
+                cron_expression = "* * * * *"
             )
         ]
 
