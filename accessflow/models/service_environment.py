@@ -4,6 +4,7 @@ from accessflow import db
 class ServiceEnvironmentType(Enum):
     NONPROD = "nonprod"
     PROD = "prod"
+    UNKNOWN = "unknown"
 
 class ServiceEnvironment(db.Model):
     # Table Name

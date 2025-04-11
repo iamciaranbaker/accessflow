@@ -1,7 +1,6 @@
 from accessflow.models.service import Service
 from accessflow.models.service_environment import ServiceEnvironment, ServiceEnvironmentType
 from accessflow.models.service_host_group import ServiceHostGroup
-from accessflow import db
 
 class FetchServiceDetailsFromGL:
     def __init__(self, logger, session):
@@ -15,7 +14,7 @@ class FetchServiceDetailsFromGL:
         # It should, as it's either just been created, or being updated periodically to ensure it's up-to-date
         if not service:
             self.logger.error(f"Could not find service with ID '{service_id}'!")
-            return
+            raise Exception
         
         self.logger.info(f"Deleting existing environments and host groups for {service.name}...")
 
@@ -31,7 +30,7 @@ class FetchServiceDetailsFromGL:
             service_environment = ServiceEnvironment(
                 service_id = service_id,
                 name = environment,
-                type = ServiceEnvironmentType.NONPROD,
+                type = self.calculate_environment_type(environment),
                 order = i + 1
             )
             self.session.add(service_environment)
@@ -48,3 +47,13 @@ class FetchServiceDetailsFromGL:
 
         # Commit changes to database
         self.session.commit()
+
+    def calculate_environment_type(self, name):
+        name = name.lower()
+
+        if any(keyword in name for keyword in ["dev", "fst", "ist", "ci", "nonprod", "non-prod"]):
+            return ServiceEnvironmentType.NONPROD
+        elif any(keyword in name for keyword in ["preprod", "pre-prod", "prod"]):
+            return ServiceEnvironmentType.PROD
+        else:
+            return ServiceEnvironmentType.UNKNOWN

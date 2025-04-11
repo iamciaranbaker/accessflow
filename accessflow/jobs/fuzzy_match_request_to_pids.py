@@ -8,10 +8,12 @@ class FuzzyMatchRequestToPIDs:
         self.session = session
 
     def run(self, request_id, name, nonprod_pid = None, prod_pid = None):
-        request = Request.query.filter(Request.id == request_id).first()
+        # Fetch request object from database
+        request = self.session.query(Request).filter(Request.id == request_id).first()
+        # Ensure request exists
         if not request:
             self.logger.error(f"Could not find request with ID '{request_id}'!")
-            raise Exception("Invalid request ID.")
+            raise Exception
 
         matches = {
             "nonprod": {
@@ -27,7 +29,7 @@ class FuzzyMatchRequestToPIDs:
         }
 
         # Fetch all PIDs from database
-        all_pids = PID.query.all()
+        all_pids = self.session.query(PID).all()
 
         # Step 1: Best PID comment match for request name
         best_comment_match = max(
