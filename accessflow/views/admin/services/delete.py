@@ -5,6 +5,7 @@ from accessflow.decorators import permission_required
 from accessflow.models.request_service import RequestService
 from accessflow.models.service_environment import ServiceEnvironment
 from accessflow.models.service_host_group import ServiceHostGroup
+from accessflow.models.service_host_group_team import ServiceHostGroupTeam
 from accessflow.models.service import Service
 from accessflow import db
 
@@ -28,6 +29,7 @@ class AdminServiceDeleteView(View):
         RequestService.query.filter(RequestService.service_id == service_id).delete()
         ServiceEnvironment.query.filter(ServiceEnvironment.service_id == service_id).delete()
         ServiceHostGroup.query.filter(ServiceHostGroup.service_id == service_id).delete()
+        ServiceHostGroupTeam.query.filter(ServiceHostGroupTeam.service_id == service_id).delete()
         service.delete()
 
         # Commit deletions to database

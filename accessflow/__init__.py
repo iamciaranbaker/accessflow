@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_caching import Cache
 from werkzeug.exceptions import HTTPException
 from accessflow.gitlab.gitlab_handler import GitLabHandler
 from accessflow.config import Config
@@ -22,6 +23,9 @@ login_manager.init_app(app)
 login_manager.login_view = "admin/login"
 login_manager.login_message = "You must be logged in to access this page."
 login_manager.login_message_category = "danger"
+
+cache = Cache(app, config = {"CACHE_TYPE": "simple"})
+app.cache = cache
 
 gitlab_handler = GitLabHandler()
 
