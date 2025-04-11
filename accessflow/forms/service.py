@@ -21,7 +21,7 @@ class CreateServiceForm(FlaskForm):
         
         # Check the provided Project URL and Project Access Token combination is valid
         if not gitlab_handler.validate_project_access_token(project_url, project_access_token, scopes = scopes_to_check):
-            error = "Project URL and Project Access Token are invalid."
+            error = "The Project URL and Project Access Token combination is invalid."
             # Manually add validation errors for both fields
             self.project_url.errors.append(error)
             self.project_access_token.errors.append(error)

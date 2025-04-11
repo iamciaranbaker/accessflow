@@ -29,12 +29,12 @@ class AdminJobLogsView(View):
             # Fetch the latest job run for the given job ID that isn't still running
             job_run = JobRun.query.filter(JobRun.job_id == job_id, JobRun.status != JobRunStatus.RUNNING).order_by(JobRun.started_at.desc()).first()
 
-        # Get the actual job run ID from the returned object
-        job_run_id = job_run.id
-        
         # If no job run was found with the given ID, return a 404 error
         if not job_run:
             abort(404)
+
+        # Get the actual job run ID from the returned object
+        job_run_id = job_run.id
 
         parameters = json.loads(job_run.parameters)
 

@@ -1,5 +1,4 @@
 from accessflow.gitlab.gitlab_utils import make_api_request, sanitize_project_url
-import yaml
 
 class GitLabHandler:
     def validate_project_access_token(self, project_url, project_access_token, scopes = []):
@@ -137,14 +136,3 @@ class GitLabHandler:
             return None
         
         return project_repository_endpoint_response.json()
-    
-    def get_project_pipeline_variables(self, project_url, project_access_token):
-        gitlab_ci_file = self.get_project_repository_file(project_url, project_access_token, ".gitlab-ci.yml")
-        if not gitlab_ci_file:
-            return None
-        
-        gitlab_ci_file = yaml.safe_load(gitlab_ci_file)
-        if not "variables" in gitlab_ci_file:
-            return None
-        
-        return gitlab_ci_file["variables"]
