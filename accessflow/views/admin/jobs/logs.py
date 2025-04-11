@@ -12,9 +12,9 @@ class AdminJobLogsView(View):
 
     def dispatch_request(self):
         # Fetch the job_id query parameter
-        job_id = request.args.get("job_id")
+        job_id = request.args.get("id")
         # Fetch the job_run_id query parameter - if not set, it will default to the latest run
-        job_run_id = request.args.get("job_run_id")
+        job_run_id = request.args.get("run_id")
 
         # Fetch the job based on the ID
         job = Job.query.filter(Job.id == job_id).first()

@@ -10,7 +10,7 @@ if (serviceDeleteButtons) {
             var serviceName = serviceRow.getAttribute("data-service-name");
             
             // Open the confirmation modal for service deletion
-            openDeleteConfirmationModal("Service", `/admin/services/delete?service_id=${serviceId}`, serviceName);
+            openDeleteConfirmationModal("Service", `/admin/services/delete?id=${serviceId}`, serviceName);
         });
     });
 }

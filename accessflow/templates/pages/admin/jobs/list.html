@@ -106,11 +106,11 @@
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                         <li>
-                                                            <a href="{{ url_for('admin/jobs/logs', job_id = job.id) }}" class="dropdown-item">Logs</a>
+                                                            <a href="{{ url_for('admin/jobs/logs', id = job.id) }}" class="dropdown-item">Logs</a>
                                                         </li>
                                                         {% if current_user.has_permission('run_jobs') %}
                                                             <li>
-                                                                <a href="{{ url_for('admin/jobs/run', job_id = job.id) }}" class="dropdown-item">Run</a>
+                                                                <a href="{{ url_for('admin/jobs/run', id = job.id) }}" class="dropdown-item">Run</a>
                                                             </li>
                                                         {% endif %}
                                                     </ul>
