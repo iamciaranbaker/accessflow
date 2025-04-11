@@ -51,7 +51,7 @@ class FetchServiceDetailsFromGL:
     def calculate_environment_type(self, name):
         name = name.lower()
 
-        if any(keyword in name for keyword in ["dev", "fst", "ist", "ci", "nonprod", "non-prod"]):
+        if any(keyword in name for keyword in ["test", "dev", "fst", "ist", "isit", "sit", "ci", "nonprod", "nonproduction", "non-prod", "non-production"]):
             return ServiceEnvironmentType.NONPROD
         elif any(keyword in name for keyword in ["preprod", "pre-prod", "prod"]):
             return ServiceEnvironmentType.PROD
