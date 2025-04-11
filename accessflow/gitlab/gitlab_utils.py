@@ -24,14 +24,11 @@ def make_api_request(api_url, project_access_token, type = "GET", data = None, p
         cached_data = cache.get(cache_key)
         # Check if response is already available in cache
         if cached_data:
-            print(f"{api_url} is in cache!")
             response = requests.Response()
             response.status_code = cached_data["status_code"]
             response._content = cached_data["content"].encode("utf-8")
             response.headers = cached_data["headers"]
             return response
-        else:
-            print(f"{api_url} is not in cache!")
             
     # If configured, use a proxy for any requests to GitLab
     proxies = None
