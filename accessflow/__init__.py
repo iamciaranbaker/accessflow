@@ -38,6 +38,7 @@ from accessflow.models.request_pid import RequestPID
 from accessflow.models.service import Service
 from accessflow.models.service_environment import ServiceEnvironment
 from accessflow.models.service_host_group import ServiceHostGroup
+from accessflow.models.service_host_group_team import ServiceHostGroupTeam
 from accessflow.models.pid import PID
 from accessflow.models.team import Team
 

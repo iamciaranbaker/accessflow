@@ -2,7 +2,6 @@ from accessflow.models.team import Team
 from accessflow.models.pid import PID, PIDEnvironmentType
 from accessflow.config import Config
 from accessflow import gitlab_handler
-import urllib.parse
 import yaml
 
 class FetchPIDsFromGL:
@@ -23,7 +22,7 @@ class FetchPIDsFromGL:
 
         for team in teams:
             for environment_type in PIDEnvironmentType:
-                environment_file = gitlab_handler.get_project_repository_file(Config.SUPPORT_USERS_PROJECT_URL, Config.SUPPORT_USERS_PROJECT_ACCESS_TOKEN, urllib.parse.quote_plus(f"teams/{team.name}/{environment_type.value}.yml"))
+                environment_file = gitlab_handler.get_project_repository_file(Config.SUPPORT_USERS_PROJECT_URL, Config.SUPPORT_USERS_PROJECT_ACCESS_TOKEN, f"teams/{team.name}/{environment_type.value}.yml")
                 # If for some reason the file does not exist, skip
                 if not environment_file:
                     self.logger.error(f"{environment_type.value}.yml not found in {team.name}")

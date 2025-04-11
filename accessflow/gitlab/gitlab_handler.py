@@ -1,4 +1,5 @@
 from accessflow.gitlab.gitlab_utils import make_api_request, sanitize_project_url
+import urllib.parse
 
 class GitLabHandler:
     def validate_project_access_token(self, project_url, project_access_token, scopes = []):
@@ -113,6 +114,8 @@ class GitLabHandler:
         
         # Sanitize the project URL before use
         project_url = sanitize_project_url(project_url)
+        # URL encode the file path before use
+        file_path = urllib.parse.quote_plus(file_path)
 
         project_repository_endpoint_response = make_api_request(f"projects/{project_url}/repository/files/{file_path}/raw", project_access_token, params = {"ref": branch})
         # If a 200 status code isn't reported then something has gone wrong

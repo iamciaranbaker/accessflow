@@ -7,7 +7,7 @@ class Team(db.Model):
 
     # Columns
     id = db.Column(db.Integer, primary_key = True, unique = True, nullable = False)
-    name = db.Column(db.String(50), nullable = False)
+    name = db.Column(db.String(50), unique = True, nullable = False)
     friendly_name = db.Column(db.String(50), nullable = False)
     exists_in_gl = db.Column(db.Boolean, default = True)
     created_at = db.Column(db.DateTime, default = db.func.now())

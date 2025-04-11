@@ -1,6 +1,10 @@
 from accessflow.models.service import Service
 from accessflow.models.service_environment import ServiceEnvironment, ServiceEnvironmentType
 from accessflow.models.service_host_group import ServiceHostGroup
+from accessflow.models.service_host_group_team import ServiceHostGroupTeam
+from accessflow.models.team import Team
+from accessflow import gitlab_handler
+import yaml
 
 class FetchServiceDetailsFromGL:
     def __init__(self, logger, session):
@@ -29,7 +33,7 @@ class FetchServiceDetailsFromGL:
         for i, environment in enumerate(pipeline_variables["ENV_TYPE"]["options"]):
             service_environment = ServiceEnvironment(
                 service_id = service_id,
-                name = environment,
+                name = environment.lower(),
                 type = self.calculate_environment_type(environment),
                 order = i + 1
             )
@@ -39,11 +43,29 @@ class FetchServiceDetailsFromGL:
         for i, host_group in enumerate(pipeline_variables["HOST_GROUP"]["options"]):
             service_host_group = ServiceHostGroup(
                 service_id = service_id,
-                name = host_group,
+                name = host_group.lower(),
                 order = i + 1
             )
             self.session.add(service_host_group)
             self.logger.info(f"Creating {service_host_group}")
+
+            # Fetch variables file for host group
+            variables_file = gitlab_handler.get_project_repository_file(service.gl_project_url, service.gl_project_access_token, f"ansible/support_users/group_vars/{host_group.lower()}.yml")
+            if variables_file:
+                # Load the variables file as yaml for easier manipulation
+                variables = yaml.safe_load(variables_file)
+                # Check if support_teams exists in variables file
+                if "support_teams" in variables and isinstance(variables["support_teams"], list):
+                    for team in variables["support_teams"]:
+                        team = self.session.query(Team).filter(Team.name == team).first()
+                        if team:
+                            service_host_group_team = ServiceHostGroupTeam(
+                                service_id = service_id,
+                                name = host_group.lower(),
+                                team_id = team.id
+                            )
+                            self.session.add(service_host_group_team)
+                            self.logger.info(f"Creating {service_host_group_team}")
 
         # Commit changes to database
         self.session.commit()
