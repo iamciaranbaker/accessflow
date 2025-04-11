@@ -42,7 +42,7 @@ class Job(db.Model):
             self.next_run_at = self.calculate_next_run()
 
     def __repr__(self):
-        return f"<Job(id=\"{self.id}\", name=\"{self.name}\", type=\"{self.type}\", module_path=\"{self.module_path}\", class_name=\"{self.class_name}\")"
+        return f"<Job(id = '{self.id}', name = '{self.name}', type = '{self.type}', module_path = '{self.module_path}', class_name = '{self.class_name}')"
     
     @property
     def last_run(self):

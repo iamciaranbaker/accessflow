@@ -42,7 +42,7 @@ class Request(db.Model):
         self.name = name
 
     def __repr__(self):
-        return f"<Request(id=\"{self.id}\")"
+        return f"<Request(id = '{self.id}', type = '{self.type}', name = '{self.name}', status = '{self.status}')"
 
     @property
     def nonprod_pids(self):

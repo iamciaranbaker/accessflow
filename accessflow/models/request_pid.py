@@ -17,3 +17,6 @@ class RequestPID(db.Model):
         self.request_id = request_id
         self.pid_id = pid_id
         self.confidence = confidence
+
+    def __repr__(self):
+        return f"<RequestPID(request_id = '{self.request_id}', pid_id = '{self.pid_id}', confidence = '{self.confidence}')"

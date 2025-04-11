@@ -23,4 +23,4 @@ class ServiceEnvironment(db.Model):
         self.order = order
 
     def __repr__(self):
-        return f"<ServiceEnvironment(service_id=\"{self.service_id}\", name=\"{self.name}\")"
+        return f"<ServiceEnvironment(service_id = '{self.service_id}', name = '{self.name}', type = '{self.type}')"

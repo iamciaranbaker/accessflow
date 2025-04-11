@@ -31,4 +31,4 @@ class PID(db.Model):
         self.environment_type = environment_type
 
     def __repr__(self):
-        return f"<PID(id=\"{self.id}\", uid=\"{self.uid}\", name=\"{self.name}\", comment=\"{self.comment}\")"
+        return f"<PID(id = '{self.id}', uid = '{self.uid}', name = '{self.name}', comment = '{self.comment}', team_id = '{self.team_id}', environment_type = '{self.environment_type}')"

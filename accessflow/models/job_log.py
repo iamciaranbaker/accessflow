@@ -37,4 +37,4 @@ class JobLog(db.Model):
         self.message = message
 
     def __repr__(self):
-        return f"<JobLog(id=\"{self.id}\")"
+        return f"<JobLog(id = '{self.id}', job_run_id = '{self.job_run_id}', level = '{self.level}', message = '{self.message}')"

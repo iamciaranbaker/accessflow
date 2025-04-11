@@ -15,4 +15,4 @@ class ServiceHostGroup(db.Model):
         self.order = order
 
     def __repr__(self):
-        return f"<ServiceHostGroup(service_id=\"{self.service_id}\", name=\"{self.name}\")"
+        return f"<ServiceHostGroup(service_id = '{self.service_id}', name = '{self.name}')"

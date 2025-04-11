@@ -30,7 +30,7 @@ class Service(db.Model):
         self.gl_project_access_token_expires_at = gl_project_access_token_expires_at
 
     def __repr__(self):
-        return f"<Service(id=\"{self.id}\", name=\"{self.name}\")"
+        return f"<Service(id = '{self.id}', name = '{self.name}', gl_project_url = '{self.gl_project_url}')"
     
     def get_pipeline_variables(self):
         gitlab_ci_file = gitlab_handler.get_project_repository_file(self.gl_project_url, self.gl_project_access_token, ".gitlab-ci.yml")

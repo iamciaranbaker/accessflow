@@ -15,4 +15,4 @@ class ServiceHostGroupTeam(db.Model):
         self.team_id = team_id
 
     def __repr__(self):
-        return f"<ServiceHostGroupTeam(service_id=\"{self.service_id}\", name=\"{self.name}\", team_id=\"{self.team_id}\")"
+        return f"<ServiceHostGroupTeam(service_id = '{self.service_id}', name = '{self.name}', team_id = '{self.team_id}')"

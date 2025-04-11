@@ -29,7 +29,7 @@ class JobRun(db.Model):
         self.triggered_by = triggered_by
 
     def __repr__(self):
-        return f"<JobRun(id=\"{self.id}\")"
+        return f"<JobRun(id = '{self.id}', job_id = '{self.job_id}', status = '{self.status}')"
     
     def mark_as_done(self, status, session):
         self.status = status

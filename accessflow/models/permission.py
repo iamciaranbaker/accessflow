@@ -28,7 +28,7 @@ class Permission(db.Model):
         self.given_by_default = given_by_default
 
     def __repr__(self):
-        return f"<Permission(id=\"{self.id}\", name=\"{self.name}\")"
+        return f"<Permission(id = '{self.id}', name = '{self.name}', friendly_name = '{self.friendly_name}', group_id = '{self.group_id}')"
     
     @staticmethod
     def seed_all():

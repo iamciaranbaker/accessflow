@@ -18,7 +18,7 @@ class Team(db.Model):
         self.friendly_name = friendly_name
 
     def __repr__(self):
-        return f"<Team(id=\"{self.id}\", name=\"{self.name}\")"
+        return f"<Team(id = '{self.id}', name = '{self.name}', friendly_name = '{self.friendly_name}')"
     
     @property
     def nonprod_pid_count(self):

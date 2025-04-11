@@ -20,7 +20,7 @@ class PermissionGroup(db.Model):
         self.display_order = display_order
 
     def __repr__(self):
-        return f"<PermissionGroup(id=\"{self.id}\", name=\"{self.name}\")"
+        return f"<PermissionGroup(id = '{self.id}', name = '{self.name}', friendly_name = '{self.friendly_name}')"
 
     @staticmethod
     def seed_all():

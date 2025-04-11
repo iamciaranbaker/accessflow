@@ -31,7 +31,7 @@ class User(db.Model):
         self.password_reset_required = password_reset_required
 
     def __repr__(self):
-        return f"<User(id=\"{self.id}\", first_name=\"{self.first_name}\", last_name=\"{self.last_name}\", email_address=\"{self.email_address}\")"
+        return f"<User(id = '{self.id}', first_name = '{self.first_name}', last_name = '{self.last_name}', email_address = '{self.email_address}')"
 
     # Set the password to the hashed value
     def set_password(self, password):
