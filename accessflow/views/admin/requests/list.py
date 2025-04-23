@@ -1,7 +1,11 @@
 from flask import request, abort, redirect, url_for, render_template
 from flask.views import View
 from flask_login import login_required
-from accessflow.models.request import Request, RequestType, RequestStatus
+from accessflow.models.request import Request
+from accessflow.models.service_environment import ServiceEnvironment
+from accessflow.models.service_host_group import ServiceHostGroup
+from accessflow.models.service_host_group_team import ServiceHostGroupTeam
+from accessflow import db
 
 class AdminRequestListView(View):
     methods = ["GET"]
@@ -17,7 +21,46 @@ class AdminRequestListView(View):
             if not requesto:
                 abort(404)
 
-            return render_template("pages/admin/requests/view.html", requesto = requesto)
+            service_matches = []
+
+            # Iterate through each service in the request
+            for service in requesto.services:
+                service_match = {
+                    "name": service.name,
+                    "nonprod": {
+                        "environments": [],
+                        "host_groups": []
+                    },
+                    "prod": {
+                        "environments": [],
+                        "host_groups": []
+                    }
+                }
+                for pid in requesto.pids:
+                    # Get all environments associated with the service
+                    environments = ServiceEnvironment.query.filter(ServiceEnvironment.service_id == service.id, ServiceEnvironment.type == pid.pid.environment_type.value).order_by(ServiceEnvironment.order.asc()).all()
+                    for environment in environments:
+                        service_match[pid.pid.environment_type.value]["environments"].append({
+                            "name": environment.name,
+                            "pid_id": pid.pid_id
+                        })
+                    # Get all host groups associated with the service as well as the matched PID's team
+                    host_groups = (
+                        db.session.query(ServiceHostGroup)
+                        .join(ServiceHostGroupTeam, (ServiceHostGroup.service_id == ServiceHostGroupTeam.service_id) & (ServiceHostGroup.name == ServiceHostGroupTeam.name))
+                        .filter(ServiceHostGroup.service_id == service.id, ServiceHostGroupTeam.team_id == pid.pid.team_id)
+                        .order_by(ServiceHostGroup.order.asc())
+                        .all()
+                    )
+                    for host_group in host_groups:
+                        if host_group.name not in service_match[pid.pid.environment_type.value]["host_groups"]:
+                            service_match[pid.pid.environment_type.value]["host_groups"].append({
+                                "name": host_group.name,
+                                "pid_id": pid.pid_id
+                            })
+                service_matches.append(service_match)
+
+            return render_template("pages/admin/requests/view.html", requesto = requesto, service_matches = service_matches)
 
         requests = Request.query
 

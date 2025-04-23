@@ -14,3 +14,5 @@ import "./src/js/pagination_popover.js";
 import "./src/js/filter_popover.js";
 import "./src/js/create_request.js";
 import "./src/js/decline_request_modal.js";
+import "./src/js/view_request.js";
+import "./src/js/card_explain.js";

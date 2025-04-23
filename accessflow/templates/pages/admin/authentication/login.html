@@ -13,9 +13,15 @@
         </div>
         <div class="card-body">
             {% for category, message in get_flashed_messages(with_categories = True) %}
-            <div class="alert alert-{{ category }}">
-                {{ message }}
-            </div>
+                {% set icon_map = {
+                    'danger': 'ban',
+                    'warning': 'exclamation-triangle',
+                    'info': 'info',
+                    'success': 'check'
+                } %}
+                <div class="alert alert-{{ category }}">
+                    <i class="icon fas fa-{{ icon_map.get(category, 'info') }}"></i> {{ message }}
+                </div>
             {% endfor %}
             <form method="post">
                 {{ form.csrf_token }}

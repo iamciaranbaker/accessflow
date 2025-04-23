@@ -8,7 +8,7 @@ if (requestDeclineButton) {
         
         // Open the confirmation modal
         openConfirmationModal(
-            "Decline Request #1",
+            "Decline Request",
             "Are you sure you want to decline this request?",
             "Decline Request",
             "",
