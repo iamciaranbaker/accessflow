@@ -6,156 +6,66 @@ from flask_caching import Cache
 from werkzeug.exceptions import HTTPException
 from accessflow.gitlab.gitlab_handler import GitLabHandler
 from accessflow.config import Config
-from accessflow.logger import get_logger
 from accessflow.filters import format_time, format_date, format_datetime
 import traceback
-import click
+import logging
 
-logger = get_logger()
+# Create an additional logging level
+logging.SUCCESS = 25 # Between WARNING and INFO
+logging.addLevelName(logging.SUCCESS, "SUCCESS")
 
-app = Flask(__name__, template_folder = "templates", static_folder = "static")
-app.config.from_object(Config)
-
-db = SQLAlchemy(app)
-
+db = SQLAlchemy()
+migrate = Migrate(compare_type = True)
+cache = Cache()
 login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = "admin/login"
-login_manager.login_message = "You must be logged in to access this page."
-login_manager.login_message_category = "danger"
-
-cache = Cache(app, config = {"CACHE_TYPE": "simple"})
-app.cache = cache
-
 gitlab_handler = GitLabHandler()
+logger = logging.getLogger()
 
-from accessflow.models.permission import Permission
-from accessflow.models.permission_group import PermissionGroup
-from accessflow.models.user import User
-from accessflow.models.user_permission import UserPermission
-from accessflow.models.job import Job
-from accessflow.models.job_run import JobRun
-from accessflow.models.job_log import JobLog
-from accessflow.models.request import Request
-from accessflow.models.request_service import RequestService
-from accessflow.models.request_pid import RequestPID
-from accessflow.models.service import Service
-from accessflow.models.service_environment import ServiceEnvironment
-from accessflow.models.service_host_group import ServiceHostGroup
-from accessflow.models.service_host_group_team import ServiceHostGroupTeam
-from accessflow.models.pid import PID
-from accessflow.models.team import Team
+def create_app():
+    app = Flask(__name__, template_folder = "templates", static_folder = "static")
+    app.config.from_object(Config)
+    app.jinja_env.trim_blocks = True
+    app.jinja_env.lstrip_blocks = True
+    app.jinja_env.filters["format_time"] = format_time
+    app.jinja_env.filters["format_date"] = format_date
+    app.jinja_env.filters["format_datetime"] = format_datetime
 
-migrate = Migrate(app, db, compare_type = True)
+    db.init_app(app)
+    migrate.init_app(app, db)
+    cache.init_app(app)
+    login_manager.init_app(app)
 
-app.jinja_env.trim_blocks = True
-app.jinja_env.lstrip_blocks = True
-app.jinja_env.filters["format_time"] = format_time
-app.jinja_env.filters["format_date"] = format_date
-app.jinja_env.filters["format_datetime"] = format_datetime
+    login_manager.login_view = "admin/login"
+    login_manager.login_message = "You must be logged in to access this page."
+    login_manager.login_message_category = "danger"
 
-from accessflow.views.index import IndexView
-from accessflow.views.requests.list import RequestListView
-from accessflow.views.requests.create import RequestCreateView
-from accessflow.views.admin.dashboard import AdminIndexView
-from accessflow.views.admin.requests.list import AdminRequestListView
-from accessflow.views.admin.pids.list import AdminPIDListView
-from accessflow.views.admin.teams.list import AdminTeamListView
-from accessflow.views.admin.services.list import AdminServiceListView
-from accessflow.views.admin.services.create import AdminServiceCreateView
-from accessflow.views.admin.services.delete import AdminServiceDeleteView
-from accessflow.views.admin.users.list import AdminUserListView
-from accessflow.views.admin.users.create import AdminUserCreateView
-from accessflow.views.admin.users.delete import AdminUserDeleteView
-from accessflow.views.admin.jobs.list import AdminJobListView
-from accessflow.views.admin.jobs.logs import AdminJobLogsView
-from accessflow.views.admin.jobs.run import AdminJobRunView
-from accessflow.views.admin.authentication.login import AdminLoginView
-from accessflow.views.admin.authentication.login_two_factor import AdminLoginTwoFactorView
-from accessflow.views.admin.authentication.logout import AdminLogoutView
+    app.cache = cache
 
-app.add_url_rule("/", view_func = IndexView.as_view("index"))
-app.add_url_rule("/requests", view_func = RequestListView.as_view("requests"))
-app.add_url_rule("/requests/create", view_func = RequestCreateView.as_view("requests/create"))
-"""
-Admin Routes
-"""
-app.add_url_rule("/admin", view_func = AdminIndexView.as_view("admin/index"))
-# Requests
-app.add_url_rule("/admin/requests", view_func = AdminRequestListView.as_view("admin/requests"))
-# PIDs
-app.add_url_rule("/admin/pids", view_func = AdminPIDListView.as_view("admin/pids"))
-# Teams
-app.add_url_rule("/admin/teams", view_func = AdminTeamListView.as_view("admin/teams"))
-# Services
-app.add_url_rule("/admin/services", view_func = AdminServiceListView.as_view("admin/services"))
-app.add_url_rule("/admin/services/create", view_func = AdminServiceCreateView.as_view("admin/services/create"))
-app.add_url_rule("/admin/services/delete", view_func = AdminServiceDeleteView.as_view("admin/services/delete"))
-# Users
-app.add_url_rule("/admin/users", view_func = AdminUserListView.as_view("admin/users"))
-app.add_url_rule("/admin/users/create", view_func = AdminUserCreateView.as_view("admin/users/create"))
-app.add_url_rule("/admin/users/delete", view_func = AdminUserDeleteView.as_view("admin/users/delete"))
-# Jobs
-app.add_url_rule("/admin/jobs", view_func = AdminJobListView.as_view("admin/jobs"))
-app.add_url_rule("/admin/jobs/logs", view_func = AdminJobLogsView.as_view("admin/jobs/logs"))
-app.add_url_rule("/admin/jobs/run", view_func = AdminJobRunView.as_view("admin/jobs/run"))
-# Authentication
-app.add_url_rule("/admin/login", view_func = AdminLoginView.as_view("admin/login"))
-app.add_url_rule("/admin/login/two-factor", view_func = AdminLoginTwoFactorView.as_view("admin/login/two-factor"))
-app.add_url_rule("/admin/logout", view_func = AdminLogoutView.as_view("admin/logout"))
+    logger.setLevel(logging.INFO)
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.DEBUG)
+    logger.addHandler(console_handler)
 
-@app.errorhandler(Exception)
-def handle_exception(exception):
-    try:
-        code = exception.code
-    except:
-        code = 500
+    from accessflow.routes import register_routes
+    register_routes(app)
 
-    if not isinstance(exception, HTTPException):
-        traceback.print_tb(exception.__traceback__)
+    from accessflow.cli import register_cli
+    register_cli(app)
 
-    if request.path.lower().startswith("/api"):
-        match code:
-            case 401:
-                return {"success": False, "error": "You are not authenticated."}, code
-            case 403:
-                return {"success": False, "error": "You do not have the required permission."}, code
-            case 404:
-                return {"success": False, "error": f"The route {request.path} does not exist."}, code
-            case _:
-                return {"success": False, "error": "There was an unexpected server error."}, code
-            
-    return render_template("pages/error.html", code = code), code
+    @app.errorhandler(Exception)
+    def handle_exception(exception):
+        code = getattr(exception, "code", 500)
 
-@app.cli.command("seed-db")
-def seed_database():
-    PermissionGroup.seed_all()
-    Permission.seed_all()
-    User.seed_default()
-    Job.seed_all()
+        if not isinstance(exception, HTTPException):
+            traceback.print_tb(exception.__traceback__)
 
-# For use during development ONLY
-@app.cli.command("recreate-db")
-def recreate_database():
-    db.drop_all()
-    db.session.commit()
-    db.create_all()
-    db.session.commit()
+        if request.path.lower().startswith("/api"):
+            return {
+                401: {"success": False, "error": "You are not authenticated."},
+                403: {"success": False, "error": "You do not have the required permission."},
+                404: {"success": False, "error": f"The route {request.path} does not exist."}
+            }.get(code, {"success": False, "error": "Unexpected server error."}), code
 
-@app.cli.command("run-jobs")
-@click.option("--force", is_flag = True, help = "Force run all jobs regardless of if they are due.")
-def run_jobs(force):
-    Job.run_all(force = force)
-
-"""
-Temporarily method to create a dummy request whilst testing request system.
-"""
-@app.cli.command("create-request")
-def create_request():
-    request = Request(
-        pid = 8904064,
-        service_id = 1,
-        justification = "I am part of the CIS Live Support team."
-    )
-    db.session.add(request)
-    db.session.commit()
+        return render_template("pages/error.html", code = code), code
+    
+    return app

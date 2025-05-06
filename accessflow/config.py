@@ -6,6 +6,10 @@ load_dotenv()
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY")
 
+    # Caching
+    CACHE_TYPE = "SimpleCache"
+    CACHE_DEFAULT_TIMEOUT = 300
+
     # URL of the GitLab instance
     GITLAB_URL = os.getenv("GITLAB_URL")
     GITLAB_PROXY = os.getenv("GITLAB_PROXY")

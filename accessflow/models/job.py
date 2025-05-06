@@ -73,8 +73,6 @@ class Job(db.Model):
         job_logger = logging.getLogger(f"job_{job_run_id}")
         # Set the job logger's default log level to info
         job_logger.setLevel(logging.INFO)
-        # Add the success log level to the job logger
-        setattr(job_logger, "success", lambda message, *args: job_logger._log(logging.SUCCESS, message, args))
         
         # Create a copy of the module_path and class_name for use in the background job
         module_path = self.module_path
@@ -85,6 +83,9 @@ class Job(db.Model):
                 # Create a new session that is independent of the main thread's session
                 Session = scoped_session(sessionmaker(bind = db.engine))
                 session = Session()
+
+                # Add the success log level to the job logger
+                setattr(job_logger, "success", lambda message, *args: job_logger._log(logging.SUCCESS, message, args))
 
                 # Add the custom log handler to the job logger and pass in the session
                 job_logger.addHandler(JobLogHandler(job_run_id, session = session))
