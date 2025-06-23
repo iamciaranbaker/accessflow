@@ -21,7 +21,7 @@ class PID(db.Model):
     updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
 
     # Relationships
-    team = db.relationship("Team", lazy = "joined")
+    team = db.relationship("Team", lazy = "select")
 
     def __init__(self, uid, name, comment, team_id, environment_type):
         self.uid = uid

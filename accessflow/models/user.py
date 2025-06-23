@@ -19,7 +19,7 @@ class User(db.Model):
     updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
 
     # Relationships
-    permissions = db.relationship("Permission", secondary = "user_permissions", lazy = "joined")
+    permissions = db.relationship("Permission", secondary = "user_permissions", lazy = "select")
 
     # Override the default constructor to pass in what we need to create a user.
     # Everything else is set as a default

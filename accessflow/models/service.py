@@ -18,8 +18,8 @@ class Service(db.Model):
     updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
 
     # Relationships
-    environments = db.relationship("ServiceEnvironment", lazy = "joined")
-    host_groups = db.relationship("ServiceHostGroup", lazy = "joined")
+    environments = db.relationship("ServiceEnvironment", lazy = "select")
+    host_groups = db.relationship("ServiceHostGroup", lazy = "select")
 
     def __init__(self, name, gl_project_url, gl_project_access_token, gl_project_access_token_id, gl_project_access_token_auto_rotate, gl_project_access_token_expires_at):
         self.name = name

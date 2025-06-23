@@ -20,8 +20,8 @@ class JobRun(db.Model):
     ended_at = db.Column(db.DateTime)
 
     # Relationships
-    logs = db.relationship("JobLog", lazy = "joined")
-    triggerer = db.relationship("User", lazy = "joined")
+    logs = db.relationship("JobLog", lazy = "select")
+    triggerer = db.relationship("User", lazy = "select")
 
     def __init__(self, job_id, parameters, triggered_by = None):
         self.job_id = job_id

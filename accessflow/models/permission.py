@@ -17,7 +17,7 @@ class Permission(db.Model):
     updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
 
     # Relationships
-    group = db.relationship("PermissionGroup", lazy = "joined")
+    group = db.relationship("PermissionGroup", lazy = "select")
 
     def __init__(self, name, friendly_name, group_id, description = None, display_order = 1, given_by_default = False):
         self.name = name

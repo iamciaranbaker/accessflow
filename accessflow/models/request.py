@@ -34,8 +34,8 @@ class Request(db.Model):
     updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
 
     # Relationships
-    services = db.relationship("Service", secondary = "request_services", lazy = "joined")
-    pids = db.relationship("RequestPID", back_populates = "request", lazy = "joined")
+    services = db.relationship("Service", secondary = "request_services", lazy = "select")
+    pids = db.relationship("RequestPID", back_populates = "request", lazy = "select")
 
     def __init__(self, type, name):
         self.type = type
