@@ -135,28 +135,28 @@ class Job(db.Model):
                 type = JobType.SCHEDULE,
                 module_path = "accessflow.jobs.check_gl_project_access_tokens",
                 class_name = "CheckGLProjectAccessTokens",
-                cron_expression = "* * * * *"
+                cron_expression = "30 */6 * * *"
             ),
             Job(
                 name = "rotate_gl_project_access_tokens",
                 type = JobType.SCHEDULE,
                 module_path = "accessflow.jobs.rotate_gl_project_access_tokens",
                 class_name = "RotateGLProjectAccessTokens",
-                cron_expression = "* * * * *"
+                cron_expression = "0 */6 * * *"
             ),
             Job(
                 name = "fetch_teams_from_gl",
                 type = JobType.SCHEDULE,
                 module_path = "accessflow.jobs.fetch_teams_from_gl",
                 class_name = "FetchTeamsFromGL",
-                cron_expression = "* * * * *"
+                cron_expression = "0 13 * * *"
             ),
             Job(
                 name = "fetch_pids_from_gl",
                 type = JobType.SCHEDULE,
                 module_path = "accessflow.jobs.fetch_pids_from_gl",
                 class_name = "FetchPIDsFromGL",
-                cron_expression = "* * * * *"
+                cron_expression = "30 13 * * *"
             ),
             Job(
                 name = "fuzzy_match_request_to_pids",
