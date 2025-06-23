@@ -63,7 +63,9 @@
                                                 <i class="fa fa-unlock text-red"></i>
                                             {% endif %}
                                         </td>
-                                        <td class="align-middle">Test</td>
+                                        <td class="align-middle">
+                                            {{ user.last_active_at | format_datetime }}
+                                        </td>
                                         <td class="align-middle text-right">
                                             {% if current_user.has_permission('edit_users') or current_user.has_permission('delete_users') %}
                                                 <div class="dropdown">

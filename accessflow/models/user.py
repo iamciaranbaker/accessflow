@@ -1,6 +1,7 @@
 import bcrypt, base64, os, onetimepass
+from flask_login import current_user
 from accessflow.models.permission import Permission
-from accessflow import db, login_manager
+from accessflow import db, login_manager, get_db_time
 
 class User(db.Model):
     # Table Name
@@ -17,6 +18,7 @@ class User(db.Model):
     two_factor_secret = db.Column(db.String(16))
     created_at = db.Column(db.DateTime, default = db.func.now())
     updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
+    last_active_at = db.Column(db.DateTime, default = db.func.now())
 
     # Relationships
     permissions = db.relationship("Permission", secondary = "user_permissions", lazy = "select")
@@ -113,3 +115,10 @@ class User(db.Model):
 @login_manager.user_loader
 def load_user(id):
     return User.query.filter(User.id == id).first()
+
+def update_last_active():
+    if current_user.is_authenticated:
+        now = get_db_time()
+        if not current_user.last_active_at or (now - current_user.last_active_at).total_seconds() > 60:
+            current_user.last_active_at = now
+            db.session.commit()

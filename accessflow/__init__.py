@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_caching import Cache
 from werkzeug.exceptions import HTTPException
+from datetime import datetime
 from accessflow.gitlab.gitlab_handler import GitLabHandler
 from accessflow.config import Config
 from accessflow.filters import format_time, format_date, format_datetime
@@ -20,6 +21,7 @@ cache = Cache()
 login_manager = LoginManager()
 gitlab_handler = GitLabHandler()
 logger = logging.getLogger()
+db_time_offset = None
 
 def create_app():
     app = Flask(__name__, template_folder = "templates", static_folder = "static")
@@ -53,6 +55,9 @@ def create_app():
     from accessflow.cli import register_cli
     register_cli(app)
 
+    from accessflow.models.user import update_last_active
+    app.before_request(update_last_active)
+
     @app.errorhandler(Exception)
     def handle_exception(exception):
         code = getattr(exception, "code", 500)
@@ -70,3 +75,12 @@ def create_app():
         return render_template("pages/error.html", code = code), code
     
     return app
+
+def get_db_time():
+    global db_time_offset
+
+    if db_time_offset is None:
+        db_time = db.session.query(db.func.now()).scalar()
+        db_time_offset = db_time - datetime.utcnow()
+
+    return datetime.utcnow() + db_time_offset
