@@ -3,6 +3,8 @@ from flask.views import View
 from flask_login import current_user, login_user
 from accessflow.forms.user import LoginForm
 from accessflow.models.user import User
+from accessflow.models.activity_log import ActivityLog
+from accessflow import db
 
 class AdminLoginView(View):
     methods = ["GET", "POST"]
@@ -34,6 +36,12 @@ class AdminLoginView(View):
                     
                     # If the user doesn't have two-factor authentication enabled, log them in
                     login_user(user)
+
+                    db.session.add(ActivityLog(
+                        "login",
+                        current_user
+                    ))
+                    db.session.commit()
 
                     # Check if the user needs to be redirected anywhere after login
                     try:
