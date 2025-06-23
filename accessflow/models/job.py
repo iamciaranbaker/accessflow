@@ -5,7 +5,7 @@ from croniter import croniter
 from enum import Enum
 from accessflow.models.job_run import JobRun, JobRunStatus
 from accessflow.models.job_log import JobLogHandler
-from accessflow import logger, db
+from accessflow import logger, db, get_db_time
 import importlib
 import logging
 import threading
@@ -47,7 +47,7 @@ class Job(db.Model):
         return f"<Job(id = '{self.id}', name = '{self.name}', type = '{self.type}', module_path = '{self.module_path}', class_name = '{self.class_name}')"
 
     def calculate_next_run(self):
-        return croniter(self.cron_expression, db.session.query(db.func.now()).scalar()).get_next(datetime)
+        return croniter(self.cron_expression, get_db_time()).get_next(datetime)
 
     def run(self, triggered_by = None, **kwargs):
         if self.type == JobType.SCHEDULE:
@@ -189,7 +189,7 @@ class Job(db.Model):
     def run_all(force = False):
         jobs = Job.query.filter(Job.type == JobType.SCHEDULE)
         if not force:
-            jobs = jobs.filter(Job.next_run_at < db.func.now())
+            jobs = jobs.filter(Job.next_run_at < get_db_time())
         jobs = jobs.all()
 
         if len(jobs) == 0:

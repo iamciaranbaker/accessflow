@@ -1,5 +1,5 @@
 from enum import Enum
-from accessflow import db
+from accessflow import db, get_db_time
 
 class JobRunStatus(Enum):
     SUCCEEDED = "Succeeded"
@@ -33,5 +33,5 @@ class JobRun(db.Model):
     
     def mark_as_done(self, status, session):
         self.status = status
-        self.ended_at = session.query(db.func.now()).scalar()
+        self.ended_at = get_db_time()
         session.commit()
