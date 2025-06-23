@@ -52,6 +52,9 @@ if (window.location.pathname.toLowerCase().startsWith("/admin/jobs/logs")) {
                 const cell = jobFinishedAt.querySelector("td:last-child");
                 if (cell) cell.textContent = data.finished_at;
             }
+
+            // Remove the border-bottom: none style from the card header when the job finishes
+            jobDuration.closest(".card").querySelector(".card-header").style.borderBottom = "";
         }
 
         function escapeHtml(str) {
