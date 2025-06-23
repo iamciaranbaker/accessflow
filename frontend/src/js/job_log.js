@@ -98,6 +98,6 @@ if (window.location.pathname.toLowerCase().startsWith("/admin/jobs/logs")) {
             } else {
                 clearInterval(interval);
             }
-        }, 1000);
+        }, 3000);
     }
 }
