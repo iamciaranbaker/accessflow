@@ -28,9 +28,11 @@ class Job(db.Model):
     class_name = db.Column(db.String(100), nullable = False)
     cron_expression = db.Column(db.String(30))
     next_run_at = db.Column(db.DateTime)
+    last_run_id = db.Column(db.Integer, db.ForeignKey("job_runs.id", name = "fk_job_last_run_id"), nullable = True)
 
     # Relationships
-    runs = db.relationship("JobRun", lazy = "joined")
+    runs = db.relationship("JobRun", foreign_keys = "JobRun.job_id", lazy = "joined")
+    last_run = db.relationship("JobRun", foreign_keys = [last_run_id], lazy = "joined")
 
     def __init__(self, name, type, module_path, class_name, cron_expression = None):
         self.name = name
@@ -43,10 +45,6 @@ class Job(db.Model):
 
     def __repr__(self):
         return f"<Job(id = '{self.id}', name = '{self.name}', type = '{self.type}', module_path = '{self.module_path}', class_name = '{self.class_name}')"
-    
-    @property
-    def last_run(self):
-        return JobRun.query.filter(JobRun.job_id == self.id).order_by(JobRun.started_at.desc()).first()
 
     def calculate_next_run(self):
         return croniter(self.cron_expression, db.session.query(db.func.now()).scalar()).get_next(datetime)
@@ -68,6 +66,10 @@ class Job(db.Model):
 
         # Capture the job run ID as the object will likely expire and it is needed later
         job_run_id = job_run.id
+
+        # Set the job's last run ID
+        self.last_run_id = job_run_id
+        db.session.commit()
 
         # Create a new logger for the job
         job_logger = logging.getLogger(f"job_{job_run_id}")

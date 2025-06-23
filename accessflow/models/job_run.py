@@ -12,7 +12,7 @@ class JobRun(db.Model):
 
     # Columns
     id = db.Column(db.Integer, primary_key = True)
-    job_id = db.Column(db.Integer, db.ForeignKey("jobs.id"))
+    job_id = db.Column(db.Integer, db.ForeignKey("jobs.id", name = "fk_job_run_job_id"))
     status = db.Column(db.Enum(JobRunStatus), default = JobRunStatus.RUNNING)
     parameters = db.Column(db.Text)
     triggered_by = db.Column(db.Integer, db.ForeignKey("users.id"))
