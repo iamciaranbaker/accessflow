@@ -54,6 +54,19 @@ if (window.location.pathname.toLowerCase().startsWith("/admin/jobs/logs")) {
             }
         }
 
+        function escapeHtml(str) {
+            return str.replace(/[&<>"']/g, function (match) {
+                const escapeMap = {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#039;"
+                };
+                return escapeMap[match];
+            });
+        }
+
         function fetchLogs() {
             fetch(`/admin/jobs/logs?id=${jobId}&run_id=${jobRunId}&offset=${offset}`)
                 .then(res => res.json())
@@ -66,7 +79,7 @@ if (window.location.pathname.toLowerCase().startsWith("/admin/jobs/logs")) {
                                     ${offset + index + 1}
                                 </td>
                                 <td class="align-middle pl-2 log-${log.level.toLowerCase()}">
-                                    ${log.created_at} - [ ${log.level} ] - ${log.message}
+                                    ${log.created_at} - [ ${log.level} ] - ${escapeHtml(log.message)}
                                 </td>
                             `;
                             logsContainer.appendChild(row);
