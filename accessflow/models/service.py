@@ -9,7 +9,7 @@ class Service(db.Model):
     id = db.Column(db.Integer, autoincrement = True, primary_key = True, unique = True, nullable = False)
     name = db.Column(db.String(50), nullable = False)
     gl_project_url = db.Column(db.String(250), nullable = False)
-    gl_project_access_token = db.Column(db.String(20), nullable = False)
+    gl_project_access_token = db.Column(db.String(50), nullable = False)
     gl_project_access_token_id = db.Column(db.Integer, unique = True, nullable = False)
     gl_project_access_token_active = db.Column(db.Boolean, default = True, nullable = False)
     gl_project_access_token_auto_rotate = db.Column(db.Boolean, nullable = False)

@@ -119,6 +119,7 @@ def load_user(id):
 def update_last_active():
     if current_user.is_authenticated:
         now = get_db_time()
-        if not current_user.last_active_at or (now - current_user.last_active_at).total_seconds() > 60:
+        last = current_user.last_active_at
+        if not last or (now.year, now.month, now.day, now.hour, now.minute) != (last.year, last.month, last.day, last.hour, last.minute):
             current_user.last_active_at = now
             db.session.commit()
