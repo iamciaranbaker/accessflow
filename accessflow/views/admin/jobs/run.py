@@ -19,6 +19,6 @@ class AdminJobRunView(View):
             abort(404)
 
         # Run the job
-        job.run(current_user.id)
+        job_run_id = job.run(current_user.id)
 
-        return redirect(url_for("admin/jobs"))
+        return redirect(url_for("admin/jobs/logs", id = job.id, run_id = job_run_id))

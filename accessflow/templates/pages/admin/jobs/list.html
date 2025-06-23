@@ -80,13 +80,13 @@
                                                     <span class="text-success">
                                                         <i class="fas fa-check-circle"></i> Succeeded
                                                     </span>
-                                                {% elif job.last_run.status.value == 'Failed' %}
-                                                    <span class="text-danger">
-                                                        <i class="fas fa-times-circle"></i> Failed
-                                                    </span>
                                                 {% elif job.last_run.status.value == 'Running' %}
                                                     <span class="text-primary">
                                                         <i class="fas fa-play-circle"></i> Running
+                                                    </span>
+                                                {% elif job.last_run.status.value == 'Failed' %}
+                                                    <span class="text-danger">
+                                                        <i class="fas fa-times-circle"></i> Failed
                                                     </span>
                                                 {% endif %}
                                             {% endif %}

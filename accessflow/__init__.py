@@ -29,6 +29,7 @@ def create_app():
     app.jinja_env.filters["format_time"] = format_time
     app.jinja_env.filters["format_date"] = format_date
     app.jinja_env.filters["format_datetime"] = format_datetime
+    app.json.sort_keys = False
 
     db.init_app(app)
     migrate.init_app(app, db)

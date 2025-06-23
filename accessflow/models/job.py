@@ -100,7 +100,7 @@ class Job(db.Model):
                     # Run the job instance (this could take some time)
                     job_instance.run(**kwargs)
                     # If it completes without exception, mark as successful
-                    job_logger.success("Job succeeded")
+                    job_logger.success("Job Succeeded")
                     # Fetch a new instance of the job run object due to previous one expiring
                     job_run = session.query(JobRun).filter(JobRun.id == job_run_id).first()
                     # Mark the job as done
@@ -108,7 +108,7 @@ class Job(db.Model):
                 except Exception as exception:
                     job_logger.critical(f"An exception occurred: {exception}")
                     # Mark the job as failed
-                    job_logger.error("Job failed")
+                    job_logger.error("Job Failed")
                     # Fetch a new instance of the job run object due to previous one expiring
                     job_run = session.query(JobRun).filter(JobRun.id == job_run_id).first()
                     # Mark the job as done
@@ -122,6 +122,8 @@ class Job(db.Model):
         app = current_app._get_current_object()
         # Run the job in a different thread
         threading.Thread(target = lambda: run_job_in_background(app, kwargs)).start()
+
+        return job_run_id
 
     @staticmethod
     def seed_all():

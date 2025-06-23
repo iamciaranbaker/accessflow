@@ -42,48 +42,56 @@
                     <div class="card-body p-0">
                         <table class="table table-head-fixed">
                             <tbody>
-                                <tr>
-                                    <td class="align-middle font-weight-bold" width="30%">
+                                <tr class="job-duration" {% if job_run.status.value == "Running" %}style="display: none"{% endif %}>
+                                    <td class="align-middle font-weight-bold" width="40%">
                                         Duration
                                     </td>
-                                    <td class="align-middle text-right" width="70%">
-                                        {{ (job_run.ended_at - job_run.started_at) | format_time }}
+                                    <td class="align-middle text-right" width="60%">
+                                        {% if job_run.status.value != "Running" %}
+                                            {{ (job_run.ended_at - job_run.started_at) | format_time }}
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="align-middle font-weight-bold" width="30%">
+                                    <td class="align-middle font-weight-bold" width="40%">
                                         Started At
                                     </td>
-                                    <td class="align-middle text-right" width="70%">
+                                    <td class="align-middle text-right job-started-at" width="60%">
                                         {{ job_run.started_at | format_datetime }}
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="align-middle font-weight-bold" width="30%">
+                                <tr class="job-finished-at" {% if job_run.status.value == "Running" %}style="display: none"{% endif %}>
+                                    <td class="align-middle font-weight-bold" width="40%">
                                         Finished At
                                     </td>
-                                    <td class="align-middle text-right" width="70%">
-                                        {{ job_run.ended_at | format_datetime }}
+                                    <td class="align-middle text-right" width="60%">
+                                        {% if job_run.status.value != "Running" %}
+                                            {{ job_run.ended_at | format_datetime }}
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 {% if job_run.triggered_by %}
                                     <tr>
-                                        <td class="align-middle font-weight-bold" width="30%">
+                                        <td class="align-middle font-weight-bold" width="40%">
                                             Triggered By
                                         </td>
-                                        <td class="align-middle text-right" width="70%">
+                                        <td class="align-middle text-right" width="60%">
                                             {{ job_run.triggerer.first_name }} {{ job_run.triggerer.last_name }}
                                         </td>
                                     </tr>
                                 {% endif %}
                                 <tr>
-                                    <td class="align-middle font-weight-bold" width="30%">
+                                    <td class="align-middle font-weight-bold" width="40%">
                                         Status
                                     </td>
-                                    <td class="align-middle text-right" width="70%">
+                                    <td class="align-middle text-right job-status" width="60%">
                                         {% if job_run.status.value == 'Succeeded' %}
                                             <span class="text-success">
                                                 <i class="fas fa-check-circle"></i> Succeeded
+                                            </span>
+                                        {% elif job_run.status.value == 'Running' %}
+                                            <span class="text-primary">
+                                                <i class="fas fa-play-circle"></i> Running
                                             </span>
                                         {% elif job_run.status.value == 'Failed' %}
                                             <span class="text-danger">
