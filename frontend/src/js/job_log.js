@@ -68,7 +68,10 @@ if (window.location.pathname.toLowerCase().startsWith("/admin/jobs/logs")) {
         }
 
         function fetchLogs() {
-            fetch(`/admin/jobs/logs?id=${jobId}&run_id=${jobRunId}&offset=${offset}`)
+            var urlParams = new URLSearchParams({ id: jobId, offset: offset });
+            if (jobRunId) urlParams.set("run_id", jobRunId);
+
+            fetch(`/admin/jobs/logs?${urlParams.toString()}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.logs && data.logs.length > 0) {
