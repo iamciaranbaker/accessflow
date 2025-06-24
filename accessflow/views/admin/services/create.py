@@ -1,10 +1,11 @@
 from flask import request, flash, redirect, url_for, render_template
 from flask.views import View
-from flask_login import login_required
+from flask_login import login_required, current_user
 from accessflow.decorators import permission_required
 from accessflow.forms.service import CreateServiceForm
 from accessflow.models.service import Service
 from accessflow.models.job import Job
+from accessflow.models.activity_log import ActivityLog
 from accessflow.gitlab.gitlab_utils import sanitize_project_url
 from accessflow import db, gitlab_handler
 
@@ -37,6 +38,13 @@ class AdminServiceCreateView(View):
                     return render_template("pages/admin/services/create.html", form = form)
                 
                 db.session.add(service)
+                db.session.commit()
+
+                db.session.add(ActivityLog(
+                    "service_create",
+                    target = service,
+                    user_id = current_user.id
+                ))
                 db.session.commit()
 
                 # Kick off background job to fetch service details from GitLab.

@@ -9,21 +9,37 @@ class ActivityLog(db.Model):
     # Columns
     id = db.Column(db.Integer, primary_key = True)
     event_type_id = db.Column(db.Integer, db.ForeignKey("activity_event_types.id"), nullable = False)
+    target_type = db.Column(db.String(100), nullable = True)
+    target_id = db.Column(db.String(50), nullable = True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete = "SET NULL"), nullable = True)
-    user_name = db.Column(db.String(150), nullable = True)
     created_at = db.Column(TIMESTAMP(fsp = 6), default = db.func.now(6))
 
     # Relationships
-    user = db.relationship("User", backref = "activity_logs", passive_deletes = True)
     event_type = db.relationship("ActivityEventType", backref = "activity_logs")
+    user = db.relationship("User", backref = "activity_logs", passive_deletes = True)
 
-    def __init__(self, event_type_name, user = None):
+    def __init__(self, event_type_name, target = None, user_id = None):
         event_type = ActivityEventType.query.filter(ActivityEventType.name == event_type_name).first()
         if not event_type:
             raise ValueError(f"No event type found with name '{event_type_name}'!")
         self.event_type_id = event_type.id
-        self.user_id = user.id
-        self.user_name = f"{user.first_name} {user.last_name}" or None
+        if target:
+            self.target_type = target.__class__.__name__
+            self.target_id = getattr(target, "id", None)
+            if not self.target_id:
+                raise ValueError("The target object must have an 'id' attribute!")
+        self.user_id = user_id
 
     def __repr__(self):
         return f"<ActivityLog(id = '{self.id}', event_type = '{self.event_type.name}')"
+    
+    def get_target_object(self):
+        if not self.target_type or not self.target_id:
+            return None
+        
+        from accessflow.models.model_registry import model_registry
+
+        model_class = model_registry.get(self.target_type)
+        if model_class:
+            return db.session.get(model_class, self.target_id)
+        return None

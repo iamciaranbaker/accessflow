@@ -11,7 +11,7 @@ class ActivityEventType(db.Model):
     created_at = db.Column(db.DateTime, default = db.func.now())
     updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
 
-    def __init__(self, id, name, friendly_name):
+    def __init__(self, name, friendly_name):
         self.name = name
         self.friendly_name = friendly_name
 
@@ -21,9 +21,11 @@ class ActivityEventType(db.Model):
     @staticmethod
     def seed_all():
         activity_event_types = [
-            ActivityEventType(1, "login", "Login"),
-            ActivityEventType(2, "logout", "Logout"),
-            ActivityEventType(3, "failed_login", "Failed Login")
+            ActivityEventType("login", "Login"),
+            ActivityEventType("logout", "Logout"),
+            ActivityEventType("login_attempt", "Login Attempt"),
+            ActivityEventType("service_create", "Service Created"),
+            ActivityEventType("service_delete", "Service Deleted")
         ]
 
         for activity_event_type in activity_event_types:
