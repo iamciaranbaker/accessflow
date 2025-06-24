@@ -5,6 +5,7 @@ from croniter import croniter
 from enum import Enum
 from accessflow.models.job_run import JobRun, JobRunStatus
 from accessflow.models.job_log import JobLogHandler
+from accessflow.models.activity_log import ActivityLog
 from accessflow import logger, db, get_db_time
 import importlib
 import logging
@@ -62,6 +63,13 @@ class Job(db.Model):
             triggered_by = triggered_by
         )
         db.session.add(job_run)
+        db.session.commit()
+
+        db.session.add(ActivityLog(
+            "job_trigger",
+            target = job_run,
+            user_id = triggered_by
+        ))
         db.session.commit()
 
         # Capture the job run ID as the object will likely expire and it is needed later

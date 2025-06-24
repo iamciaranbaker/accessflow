@@ -1,12 +1,13 @@
 from flask import request, flash, redirect, url_for, abort
 from flask.views import View
-from flask_login import login_required
+from flask_login import login_required, current_user
 from accessflow.decorators import permission_required
 from accessflow.models.request_service import RequestService
 from accessflow.models.service_environment import ServiceEnvironment
 from accessflow.models.service_host_group import ServiceHostGroup
 from accessflow.models.service_host_group_team import ServiceHostGroupTeam
 from accessflow.models.service import Service
+from accessflow.models.activity_log import ActivityLog
 from accessflow import db
 
 class AdminServiceDeleteView(View):
@@ -33,6 +34,13 @@ class AdminServiceDeleteView(View):
         service.delete()
 
         # Commit deletions to database
+        db.session.commit()
+
+        db.session.add(ActivityLog(
+            "service_delete",
+            target = service,
+            user_id = current_user.id
+        ))
         db.session.commit()
 
         flash("Service has been deleted successfully.", "success")
