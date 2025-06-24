@@ -33,7 +33,7 @@ class ActivityLog(db.Model):
     created_at = db.Column(TIMESTAMP(fsp = 6), default = db.func.now(6))
 
     # Relationships
-    event_type = db.relationship("ActivityEventType", backref = "activity_logs")
+    event_type = db.relationship("ActivityEventType", lazy = "select")
     user = db.relationship("User", backref = "activity_logs", passive_deletes = True)
 
     @property

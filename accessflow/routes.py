@@ -15,7 +15,7 @@ def register_routes(app):
     from accessflow.views.admin.jobs.list import AdminJobListView
     from accessflow.views.admin.jobs.logs import AdminJobLogsView
     from accessflow.views.admin.jobs.run import AdminJobRunView
-    from accessflow.views.admin.logs.list import AdminLogsListView
+    from accessflow.views.admin.sentinel.list import AdminSentinelListView
     from accessflow.views.admin.authentication.login import AdminLoginView
     from accessflow.views.admin.authentication.login_two_factor import AdminLoginTwoFactorView
     from accessflow.views.admin.authentication.logout import AdminLogoutView
@@ -36,7 +36,7 @@ def register_routes(app):
     app.add_url_rule("/admin/jobs", view_func = AdminJobListView.as_view("admin/jobs"))
     app.add_url_rule("/admin/jobs/logs", view_func = AdminJobLogsView.as_view("admin/jobs/logs"))
     app.add_url_rule("/admin/jobs/run", view_func = AdminJobRunView.as_view("admin/jobs/run"))
-    app.add_url_rule("/admin/logs", view_func = AdminLogsListView.as_view("admin/logs"))
+    app.add_url_rule("/admin/sentinel", view_func = AdminSentinelListView.as_view("admin/sentinel"))
     app.add_url_rule("/admin/login", view_func = AdminLoginView.as_view("admin/login"))
     app.add_url_rule("/admin/login/two-factor", view_func = AdminLoginTwoFactorView.as_view("admin/login/two-factor"))
     app.add_url_rule("/admin/logout", view_func = AdminLogoutView.as_view("admin/logout"))
