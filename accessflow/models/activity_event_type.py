@@ -8,12 +8,14 @@ class ActivityEventType(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(100), unique = True, nullable = False)
     description_template = db.Column(db.String(255), nullable = True)
+    fa_icon = db.Column(db.String(30), nullable = True)
     created_at = db.Column(db.DateTime, default = db.func.now())
     updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
 
-    def __init__(self, name, description_template = None):
+    def __init__(self, name, description_template = None, fa_icon = None):
         self.name = name
         self.description_template = description_template
+        self.fa_icon = fa_icon
 
     def __repr__(self):
         return f"<ActivityEventType(id = '{self.id}', name = '{self.name}', description_template = '{self.description_template}')"
@@ -24,9 +26,9 @@ class ActivityEventType(db.Model):
             ActivityEventType("login"),
             ActivityEventType("logout"),
             ActivityEventType("login_attempt"),
-            ActivityEventType("service_create", "{user} created service {target.name}"),
-            ActivityEventType("service_delete", "{user} deleted service {target.name}"),
-            ActivityEventType("job_trigger", "{user} triggered job #{target.id}")
+            ActivityEventType("service_create", "{user} created service {target.name}", "fa-server"),
+            ActivityEventType("service_delete", "{user} deleted service {target.name}", "fa-server"),
+            ActivityEventType("job_trigger", "{user} triggered job #{target.id}", "fa-wrench")
         ]
 
         for activity_event_type in activity_event_types:

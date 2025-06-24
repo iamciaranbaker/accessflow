@@ -23,8 +23,16 @@ class AdminServiceDeleteView(View):
 
         # Check the service ID is actually valid
         service = Service.query.filter(Service.id == service_id)
-        if not service.first():
+        service_object = service.first()
+        if not service_object:
             abort(404)
+
+        db.session.add(ActivityLog(
+            "service_delete",
+            target = service_object,
+            user_id = current_user.id
+        ))
+        db.session.commit()
 
         # Delete all records across all tables associated with the specified service
         RequestService.query.filter(RequestService.service_id == service_id).delete()
@@ -34,13 +42,6 @@ class AdminServiceDeleteView(View):
         service.delete()
 
         # Commit deletions to database
-        db.session.commit()
-
-        db.session.add(ActivityLog(
-            "service_delete",
-            target = service,
-            user_id = current_user.id
-        ))
         db.session.commit()
 
         flash("Service has been deleted successfully.", "success")

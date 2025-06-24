@@ -23,9 +23,9 @@
                             </div>
                             {% set ns.current_date = log_date %}
                         {% endif %}
-                        {% if log.description %}
+                        {% if log.description and log.event_type.fa_icon %}
                             <div>
-                                <i class="fas fa-circle bg-info"></i>
+                                <i class="fas {{ log.event_type.fa_icon }} bg-info"></i>
                                 <div class="timeline-item">
                                     <span class="time">
                                         <i class="fas fa-clock"></i> {{ log.created_at.strftime('%H:%M') }}
