@@ -23,7 +23,8 @@ class AdminSentinelListView(View):
             search = f"%{search}%"
             # Filter against user name
             activity_logs = activity_logs.filter(
-                ActivityLog.user.like(search)
+                ActivityLog.user.first_name.like(search) |
+                ActivityLog.user.last_name.like(search)
             )
 
         # Check if a filter has been applied for event type

@@ -20,7 +20,7 @@ class JobRun(db.Model):
     ended_at = db.Column(db.DateTime)
 
     # Relationships
-    job = db.relationship("Job", foreign_keys = [job_id], backref = "job_runs", lazy = "select")
+    job = db.relationship("Job", foreign_keys = [job_id], back_populates = "runs", lazy = "select")
     logs = db.relationship("JobLog", lazy = "select")
     triggerer = db.relationship("User", lazy = "select")
 

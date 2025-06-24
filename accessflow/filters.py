@@ -34,7 +34,7 @@ def get_day_with_suffix(day):
 
 def format_date(date):
     if isinstance(date, dt.datetime):
-        return date.strftime(f"{get_day_with_suffix(date.day)} %b %Y")
+        return date.strftime(f"{get_day_with_suffix(date.day)} %B %Y")
     return None
     
 def format_datetime(datetime):

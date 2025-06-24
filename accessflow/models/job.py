@@ -32,7 +32,7 @@ class Job(db.Model):
     last_run_id = db.Column(db.Integer, db.ForeignKey("job_runs.id", name = "fk_job_last_run_id"), nullable = True)
 
     # Relationships
-    runs = db.relationship("JobRun", foreign_keys = "JobRun.job_id", lazy = "select")
+    runs = db.relationship("JobRun", foreign_keys = [JobRun.job_id], back_populates = "job", lazy = "select")
     last_run = db.relationship("JobRun", foreign_keys = [last_run_id], lazy = "select")
 
     def __init__(self, name, type, module_path, class_name, cron_expression = None):
