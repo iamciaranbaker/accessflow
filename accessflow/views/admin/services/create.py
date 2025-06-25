@@ -43,7 +43,7 @@ class AdminServiceCreateView(View):
                 db.session.add(ActivityLog(
                     "service_create",
                     target = service,
-                    user_id = current_user.id
+                    user = current_user
                 ))
                 db.session.commit()
 

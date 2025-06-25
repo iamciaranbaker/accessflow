@@ -39,7 +39,7 @@ class AdminLoginView(View):
 
                     db.session.add(ActivityLog(
                         "login",
-                        user_id = current_user.id
+                        user = current_user
                     ))
                     db.session.commit()
 

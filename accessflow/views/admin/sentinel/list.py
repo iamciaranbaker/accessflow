@@ -10,7 +10,12 @@ class AdminSentinelListView(View):
     decorators = [login_required]
 
     def dispatch_request(self):
-        activity_logs = ActivityLog.query.options(joinedload(ActivityLog.event_type)).join(ActivityEventType)
+        activity_logs = (
+            ActivityLog.query
+            .options(joinedload(ActivityLog.event_type))
+            .join(ActivityEventType)
+            .filter(ActivityEventType.show_in_sentinel.is_(True))
+        )
 
         # Check if a search query parameter is present
         search = request.args.get("q")

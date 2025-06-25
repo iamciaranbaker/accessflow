@@ -11,7 +11,7 @@ class AdminLogoutView(View):
         if current_user.is_authenticated:
             db.session.add(ActivityLog(
                 "logout",
-                user_id = current_user.id
+                user = current_user
             ))
             db.session.commit()
 

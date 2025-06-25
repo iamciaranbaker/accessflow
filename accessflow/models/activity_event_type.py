@@ -11,15 +11,17 @@ class ActivityEventType(db.Model):
     description_template = db.Column(db.String(255), nullable = True)
     badge_icon = db.Column(db.String(30), nullable = True)
     badge_color = db.Column(db.String(10), nullable = True)
+    show_in_sentinel = db.Column(db.Boolean, default = True)
     created_at = db.Column(db.DateTime, default = db.func.now())
     updated_at = db.Column(db.DateTime, default = db.func.now(), onupdate = db.func.now())
 
-    def __init__(self, name, friendly_name, description_template = None, badge_icon = None, badge_color = None):
+    def __init__(self, name, friendly_name, description_template = None, badge_icon = None, badge_color = None, show_in_sentinel = True):
         self.name = name
         self.friendly_name = friendly_name
         self.description_template = description_template
         self.badge_icon = badge_icon
         self.badge_color = badge_color
+        self.show_in_sentinel = show_in_sentinel
 
     def __repr__(self):
         return f"<ActivityEventType(id = '{self.id}', name = '{self.name}', friendly_name = '{self.friendly_name}', description_template = '{self.description_template}')"
@@ -29,15 +31,18 @@ class ActivityEventType(db.Model):
         activity_event_types = [
             ActivityEventType(
                 name = "login",
-                friendly_name = "Login"
+                friendly_name = "Login",
+                show_in_sentinel = False
             ),
             ActivityEventType(
                 name = "logout",
-                friendly_name = "Logout"
+                friendly_name = "Logout",
+                show_in_sentinel = False
             ),
             ActivityEventType(
                 name = "login_attempt",
-                friendly_name = "Login Attempt"
+                friendly_name = "Login Attempt",
+                show_in_sentinel = False
             ),
             ActivityEventType(
                 name = "service_create",

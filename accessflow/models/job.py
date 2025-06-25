@@ -6,6 +6,7 @@ from enum import Enum
 from accessflow.models.job_run import JobRun, JobRunStatus
 from accessflow.models.job_log import JobLogHandler
 from accessflow.models.activity_log import ActivityLog
+from accessflow.models.user import User
 from accessflow import logger, db, get_db_time
 import importlib
 import logging
@@ -68,7 +69,7 @@ class Job(db.Model):
         db.session.add(ActivityLog(
             "job_trigger",
             target = job_run,
-            user_id = triggered_by
+            user = db.session.get(User, triggered_by)
         ))
         db.session.commit()
 
