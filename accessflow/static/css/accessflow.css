@@ -1,0 +1,159 @@
+/*!*****************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./frontend/src/css/main.css ***!
+  \*****************************************************************************/
+.nav-sidebar .nav-link {
+    padding-left: 14px;
+}
+
+.nav-sidebar .nav-link i {
+    margin-top: 0.5px;
+}
+
+.nav-sidebar .menu-open > .nav-link svg.right,
+.nav-sidebar .menu-open > .nav-link i.right,
+.nav-sidebar .menu-is-opening > .nav-link svg.right,
+.nav-sidebar .menu-is-opening > .nav-link i.right {
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+.user-info {
+    line-height: 1.2;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-actions:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.btn-actions {
+    background: none;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.table tbody tr:first-child td {
+    border-top: none;
+}
+
+.user-permissions-table {
+    width: 100%;
+}
+
+.user-permission-name {
+    width: 70%;
+}
+
+.user-permissions-table th:not(.user-permission-name), .user-permissions-table td:not(.user-permission-name) {
+    width: 10%;
+}
+
+tr.disabled {
+    background-color: #f8f9fa;
+    opacity: 0.5;
+}
+
+.user-permission-name {
+    line-height: 1.2;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toggle-password {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+}
+
+.row-actions {
+    width: 100px;
+    min-width: 100px;
+}
+
+#flash-messages {
+    display: none;
+}
+
+code {
+    display: inline-block;
+    font-family: "JetBrains Mono", "Menlo", "DejaVu Sans Mono", "Liberation Mono", "Consolas", "Ubuntu Mono", "Courier New", "andale mono", "lucida console", monospace;
+    background-color: #f4f4f4;
+    border-radius: 4px;
+    border: 1px solid #dcdcdc;
+    color: #000;
+    word-wrap: break-word;
+}
+
+code:before, code:after {
+    content: " ";
+}
+
+code {
+    white-space: pre-wrap;
+}
+
+.field-description {
+    display: inline-block;
+    line-height: 1.2;
+    padding-top: 0.2rem;
+    margin-top: 0.2rem;
+}
+
+.job-logs {
+    font-family: "JetBrains Mono", "Menlo", "DejaVu Sans Mono", "Liberation Mono", "Consolas", "Ubuntu Mono", "Courier New", "andale mono", "lucida console", monospace; /* Literally copied from GitLab's pipeline run stylesheet */
+    font-size: 14px;
+    line-height: 0.8;
+    white-space: nowrap;
+    overflow: auto;
+}
+
+.log-success {
+    color: #248e47;
+    font-weight: bold;
+}
+
+.log-warning {
+    color: #856404;
+}
+
+.log-error {
+    color: #c51022;
+}
+
+.log-critical {
+    color: #920513;
+    font-weight: bold; /* The critical error is probably quite important, so make it bold I guess? */
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance: textfield; /* Firefox */
+}
+
+.loading-dots::after {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    text-align: left;
+    animation: dots 1s steps(3, end) infinite;
+}
+
+@keyframes dots {
+    0%   { content: ''; }
+    33%  { content: '.'; }
+    66%  { content: '..'; }
+    100% { content: '...'; }
+}

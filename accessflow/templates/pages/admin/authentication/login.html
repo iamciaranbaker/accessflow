@@ -1,0 +1,54 @@
+{% extends 'layout/master.html' %}
+
+{% set title = 'Login' %}
+{% set body_class = 'hold-transition login-page' %}
+
+{% block layout %}
+<div class="login-box">
+    <div class="card card-outline card-primary">
+        <div class="card-header text-center">
+            <span class="h3 font-weight-light">
+                Access<i>Flow</i> Admin
+            </span>
+        </div>
+        <div class="card-body">
+            {% for category, message in get_flashed_messages(with_categories = True) %}
+                {% set icon_map = {
+                    'danger': 'ban',
+                    'warning': 'exclamation-triangle',
+                    'info': 'info',
+                    'success': 'check'
+                } %}
+                <div class="alert alert-{{ category }}">
+                    <i class="icon fas fa-{{ icon_map.get(category, 'info') }}"></i> {{ message }}
+                </div>
+            {% endfor %}
+            <form method="post">
+                {{ form.csrf_token }}
+                <div class="row">
+                    <div class="col-12">
+                        {{ form.email_address.label }}
+                        {{ render_field(form.email_address, autofocus = True) }}
+                    </div>
+                </div>
+                <div class="row pt-3">
+                    <div class="col-12">
+                        {{ form.password.label }}
+                        {{ render_field(form.password) }}
+                    </div>
+                </div>
+                <div class="row pt-3">
+                    <div class="col-12">
+                        {{ form.submit(class = 'btn btn-primary btn-block') }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <span class="text-muted small"><span class="brand-text font-weight-light">Access<i>Flow</i> Admin</span> is for authorised access only.</span>
+        </div>
+    </div>
+</div>
+{% endblock layout %}

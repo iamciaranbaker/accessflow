@@ -1,0 +1,42 @@
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    {% set is_admin = 'admin/' in request.endpoint %}
+    {% if not is_admin %}
+        <div class="container">
+            <a href="{{ url_for('index') }}" class="navbar-brand">
+                <span class="brand-text font-weight-light">Access<i>Flow</i></span>
+            </a>
+            <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle Navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a href="{{ url_for('requests') }}" class="nav-link {% if request.endpoint == 'requests' %}active{% endif %}">Requests</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    {% if current_user.is_authenticated %}
+                        {% include 'layout/partials/top_nav_user.html' %}
+                    {% else %}
+                        <li class="nav-item">
+                            <a href="{{ url_for('admin/login') }}" class="nav-link">
+                                Log In
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    {% else %}
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+                    <i class="fas fa-bars"></i>
+                </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            {% include 'layout/partials/top_nav_user.html' %}
+        </ul>
+    {% endif %}
+</nav>

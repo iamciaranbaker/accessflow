@@ -1,0 +1,27 @@
+{% extends 'layout/master.html' %}
+
+{% if code == 404 %}
+    {% set title = 'Not Found' %}
+{% else %}
+    {% set title = 'Internal Error' %}
+{% endif %}
+{% set body_class = 'hold-transition layout-top-nav' %}
+
+{% block layout %}
+<div class="wrapper">
+    <div class="content-wrapper d-flex justify-content-center align-items-center pb-5" style="min-height: 100vh;">
+        <div class="content-header"></div>
+        <div class="content text-center">
+            {% if code == 404 %}
+                <h3>404 Page Not Found</h3>
+                <span>We could not find the page you were looking for.</span>
+            {% else %}
+                <h3>500 Internal Server Error</h3>
+                <span>We could not find the page you were looking for.</span>
+            {% endif %}
+            <hr>
+            <button class="btn btn-primary btn-sm" onclick="history.back()">Go Back</button>
+        </div>
+    </div>
+</div>
+{% endblock layout %}

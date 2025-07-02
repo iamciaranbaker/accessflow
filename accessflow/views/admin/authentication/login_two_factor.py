@@ -1,0 +1,44 @@
+from flask import request, session, flash, redirect, url_for, render_template
+from flask.views import View
+from flask_login import current_user, login_user
+from accessflow.forms.user import TwoFactorForm
+from accessflow.models.user import User
+
+class AdminLoginTwoFactorView(View):
+    methods = ["GET", "POST"]
+
+    def dispatch_request(self):
+        if current_user.is_authenticated:
+            return redirect(url_for("admin/index"))
+
+        if not session.get("email_address"):
+            return redirect(url_for("login"))
+
+        form = TwoFactorForm(request.form)
+
+        if request.method == "POST":
+            if form.validate_on_submit():
+                user = User.query.filter(User.email_address == session["email_address"]).first()
+
+                if user and user.verify_two_factor(form.code.data):
+                    session.pop("email_address")
+
+                    login_user(user)
+
+                    # Check if the user needs to be redirected anywhere after login
+                    try:
+                        destination = url_for(f"{request.args.get("next").strip("/")}")
+                    except:
+                        destination = url_for("admin/index")
+
+                    return redirect(destination)
+                else:
+                    flash("Your two-factor code is invalid.", "danger")
+
+                    form.code.data = None
+            else:
+                for field in form.errors:
+                    for error in form.errors[field]:
+                        flash(error, "danger")
+
+        return render_template("pages/admin/authentication/two_factor.html", form = form)

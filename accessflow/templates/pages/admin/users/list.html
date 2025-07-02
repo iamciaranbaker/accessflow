@@ -1,0 +1,105 @@
+{% extends 'layout/base.html' %}
+
+{% set title = 'Users' %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-10">
+                <h1>Users</h1>
+                <span class="text-muted">A list of all registered users.</span>
+            </div>
+            <div class="col-2 text-right align-self-center">
+                <a class="btn btn-primary" href="{{ url_for('admin/users/create') }}">Create User</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header" style="border-bottom: none">
+                        <div class="card-tools">
+                            <form>
+                                <div class="input-group input-group-sm" style="width: 250px">
+                                    <input type="text" name="q" value="{{ request.args.get('q', '') }}" class="form-control float-right" placeholder="Search Users">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-head-fixed">
+                            <thead>
+                                <tr>
+                                    <th width="40%">Identity</th>
+                                    <th width="20%">Two-Factor Authentication</th>
+                                    <th width="35%">Last Activity</th>
+                                    <th class="row-actions" width="5%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                    <tr data-user-id="{{ user.id }}" data-user-email-address="{{ user.email_address }}">
+                                        <td class="align-middle">
+                                            <div class="d-flex align-items-center">
+                                                <div style="line-height: 1.2">
+                                                    <span class="d-block">{{ user.first_name }} {{ user.last_name }}</span>
+                                                    <span class="small text-muted">{{ user.email_address }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            {% if user.has_two_factor %}
+                                                <i class="fa fa-lock text-green"></i>
+                                            {% else %}
+                                                <i class="fa fa-unlock text-red"></i>
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ user.last_active_at | format_datetime }}
+                                        </td>
+                                        <td class="align-middle text-right">
+                                            {% if current_user.has_permission('edit_users') or current_user.has_permission('delete_users') %}
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-actions" type="button" data-toggle="dropdown">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        {% if current_user.has_permission('edit_users') %}
+                                                            <li>
+                                                                <a href="" class="dropdown-item">Edit</a>
+                                                            </li>
+                                                        {% endif %}
+                                                        {% if current_user.has_permission('delete_users') and current_user.id != user.id %}
+                                                            <li>
+                                                                <a class="dropdown-item text-danger user-delete">Delete</a>
+                                                            </li>
+                                                        {% endif %}
+                                                    </ul>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if users.pages > 1 %}
+                        <div class="card-footer">
+                            {{ render_pagination(users, 'admin/users') }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

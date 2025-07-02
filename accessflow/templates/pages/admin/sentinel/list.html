@@ -1,0 +1,87 @@
+{% extends 'layout/base.html' %}
+
+{% set title = 'Sentinel' %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <h1>Sentinel</h1>
+        <span class="text-muted">A chronological record of user actions and system events.</span>
+    </div>
+</div>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-tools">
+                            <form>
+                                <div class="input-group input-group-sm" style="width: 250px">
+                                    <div class="input-group-prepend pr-2">
+                                        {% set has_filters = request.args.getlist('filter[event_type]') %}
+                                        <button type="button" class="btn {{ 'btn-primary' if has_filters else 'btn-default' }} filter">
+                                            <i class="fas fa-filter"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" name="q" value="{{ request.args.get('q', '') }}" class="form-control float-right rounded-left" placeholder="Search Sentinel">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body pt-3 pl-3 pr-1 pb-1">
+                        <div class="timeline">
+                            {% set ns = namespace(current_date = None) %}
+                            {% for log in activity_logs.items %}
+                                {% set log_date = log.created_at | format_date %}
+                                {% if log_date != ns.current_date %}
+                                    <div class="time-label">
+                                        <span class="bg-primary pr-2 pl-2">{{ log_date }}</span>
+                                    </div>
+                                    {% set ns.current_date = log_date %}
+                                {% endif %}
+                                {% if log.description and log.event_type.badge_icon %}
+                                    <div>
+                                        <i class="fas {{ log.event_type.badge_icon }} bg-{{ log.event_type.badge_color }}"></i>
+                                        <div class="timeline-item">
+                                            <span class="time">
+                                                <i class="fas fa-clock"></i> {{ log.created_at.strftime('%H:%M') }}
+                                            </span>
+                                            <h3 class="timeline-header no-border">{{ log.description | safe }}</h3>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            <div>
+                                <i class="fas fa-clock bg-secondary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    {% if activity_logs.pages > 1 %}
+                        <div class="card-footer">
+                            {{ render_pagination(activity_logs, 'admin/sentinel') }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    var filterOptions = [
+        {
+            name: "event_type",
+            label: "Event Type",
+            options: {{ filter_options['event_types'] | tojson }}
+        }
+    ];
+</script>
+{% endblock scripts %}

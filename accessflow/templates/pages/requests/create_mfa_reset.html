@@ -1,0 +1,31 @@
+{% extends 'layout/base.html' %}
+
+{% set title = 'MFA Reset Request' %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container">
+        <h1>MFA Reset Request</h1>
+        <span class="text-muted">Use this form to request your MFA to be reset for a specific service.</span>
+    </div>
+</div>
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <form method="post">
+                        {{ form.csrf_token(id = False) }}
+                        <div class="card-body">
+                            
+                        </div>
+                        <div class="card-footer">
+                            {{ form.submit(class = 'btn btn-primary') }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

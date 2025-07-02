@@ -1,0 +1,147 @@
+{% extends 'layout/base.html' %}
+
+{% set title = 'Jobs' %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h1>Jobs</h1>
+                <span class="text-muted">A list of all system jobs.</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header" style="border-bottom: none">
+                        <div class="card-tools">
+                            <form>
+                                <div class="input-group input-group-sm" style="width: 250px">
+                                    <div class="input-group-prepend pr-2">
+                                        {% set has_filters = request.args.getlist('filter[type]') %}
+                                        <button type="button" class="btn {{ 'btn-primary' if has_filters else 'btn-default' }} filter">
+                                            <i class="fas fa-filter"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" name="q" value="{{ request.args.get('q', '') }}" class="form-control float-right" placeholder="Search Jobs">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-head-fixed">
+                            <thead>
+                                <tr>
+                                    <th width="28%">Name</th>
+                                    <th width="8%">Type</th>
+                                    <th width="14%">Cron</th>
+                                    <th width="17%">Last Run</th>
+                                    <th width="11%">Last Run Status</th>
+                                    <th width="17%">Next Run</th>
+                                    <th class="row-actions" width="5%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for job in jobs %}
+                                    <tr>
+                                        <td class="align-middle">
+                                            <code>{{ job.name }}</code>
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ job.type.value | title }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {% if job.type.value == 'schedule' %}
+                                                <code>{{ job.cron_expression }}</code>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">
+                                            {% if job.last_run.started_at %}
+                                                {{ job.last_run.started_at | format_datetime }}
+                                            {% else %}
+                                                Never
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">
+                                            {% if job.last_run.status %}
+                                                {% if job.last_run.status.value == 'Succeeded' %}
+                                                    <span class="text-success">
+                                                        <i class="fas fa-check-circle"></i> Succeeded
+                                                    </span>
+                                                {% elif job.last_run.status.value == 'Running' %}
+                                                    <span class="text-primary">
+                                                        <i class="fas fa-play-circle"></i> Running
+                                                    </span>
+                                                {% elif job.last_run.status.value == 'Failed' %}
+                                                    <span class="text-danger">
+                                                        <i class="fas fa-times-circle"></i> Failed
+                                                    </span>
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">
+                                            {% if job.type.value == 'schedule' %}
+                                                {{ job.next_run_at | format_datetime }}
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle text-right">
+                                            {% if current_user.has_permission('run_jobs') %}
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-actions" type="button" data-toggle="dropdown">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        <li>
+                                                            <a href="{{ url_for('admin/jobs/logs', id = job.id) }}" class="dropdown-item">Logs</a>
+                                                        </li>
+                                                        {% if current_user.has_permission('run_jobs') %}
+                                                            <li>
+                                                                <a href="{{ url_for('admin/jobs/run', id = job.id) }}" class="dropdown-item">Run</a>
+                                                            </li>
+                                                        {% endif %}
+                                                    </ul>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if jobs.pages > 1 %}
+                        <div class="card-footer">
+                            {{ render_pagination(jobs, 'admin/jobs') }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    var filterOptions = [
+        {
+            name: "type",
+            label: "Type",
+            options: {{ filter_options['types'] | tojson }}
+        }
+    ];
+</script>
+{% endblock scripts %}
