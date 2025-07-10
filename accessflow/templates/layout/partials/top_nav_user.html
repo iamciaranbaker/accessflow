@@ -1,0 +1,17 @@
+<li class="nav-item dropdown">
+    <a href="#" class="nav-link d-flex align-items-center" data-toggle="dropdown" style="gap: 10px">
+        <div class="text-right" style="line-height: 1; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">
+            <span class="font-weight-bold d-block">{{ current_user.first_name }} {{ current_user.last_name }}</span>
+            <span class="small">{{ current_user.email_address }}</span>
+        </div>
+        <i class="fas fa-angle-down"></i>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-right">
+        <li>
+            <a href="#" class="dropdown-item">Account</a>
+        </li>
+        <li>
+            <a href="{{ url_for('admin/logout') }}" class="dropdown-item text-danger">Log Out</a>
+        </li>
+    </ul>
+</li>

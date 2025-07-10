@@ -1,0 +1,68 @@
+<aside class="main-sidebar sidebar-dark-info elevation-4 sidebar-no-expand">
+    <a href="{{ url_for('admin/index') }}" class="brand-link text-center">
+        <span class="brand-text font-weight-light">Access<i>Flow</i> Admin</span>
+    </a>
+    <div class="sidebar">
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column nav-legacy nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
+                {% set current_page = request.endpoint if request.endpoint else '' %}
+                <li class="nav-item">
+                    <a href="{{ url_for('admin/index') }}" class="nav-link {% if current_page == 'admin/index' %}active{% endif %}" data-tooltip="Dashboard">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('admin/requests') }}" class="nav-link {% if current_page == 'admin/requests' %}active{% endif %}" data-tooltip="Requests">
+                        <i class="nav-icon fas fa-tasks"></i>
+                        <p>Requests</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('admin/pids') }}" class="nav-link {% if current_page == 'admin/pids' %}active{% endif %}" data-tooltip="PIDs">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>PIDs</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('admin/teams') }}" class="nav-link {% if current_page == 'admin/teams' %}active{% endif %}" data-tooltip="Teams">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>Teams</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('admin/services') }}" class="nav-link {% if 'admin/services' in current_page %}active{% endif %}" data-tooltip="Services">
+                        <div class="nav-item-content">
+                            <i class="fas fa-server nav-icon"></i>
+                            <p>Services</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('admin/users') }}" class="nav-link {% if 'admin/users' in current_page %}active{% endif %}" data-tooltip="Users">
+                        <div class="nav-item-content">
+                            <i class="fas fa-user nav-icon"></i>
+                            <p>Users</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('admin/jobs') }}" class="nav-link {% if 'admin/jobs' in current_page %}active{% endif %}" data-tooltip="Jobs">
+                        <div class="nav-item-content">
+                            <i class="fas fa-wrench nav-icon"></i>
+                            <p>Jobs</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('admin/sentinel') }}" class="nav-link {% if 'admin/sentinel' in current_page %}active{% endif %}" data-tooltip="Sentinel">
+                        <div class="nav-item-content">
+                            <i class="fas fa-shield-alt nav-icon"></i>
+                            <p>Sentinel</p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>

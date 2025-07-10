@@ -1,0 +1,42 @@
+{% macro render_field(field, class = 'form-control', placeholder = None, autofocus = False, extras = {}) %}
+    {% set dynamic_placeholder = placeholder or field.label.text %}
+    {{ field(class = class + (' is-invalid' if field.errors else ''), placeholder = dynamic_placeholder, autofocus = autofocus, **extras) }}
+{% endmacro %}
+
+{% macro render_pagination(pagination, endpoint) %}
+    {% set filter_params = {} %}
+    {% for key, value in request.args.lists() %}
+        {% if key.startswith('filter[') %}
+            {% set _ = filter_params.update({key: value}) %}
+        {% endif %}
+    {% endfor %}
+    <ul class="pagination pagination-sm m-0 float-right">
+        {% if pagination.has_prev %}
+            <a class="page-link mr-2" href="{{ url_for(endpoint, page = pagination.prev_num if pagination.prev_num != 1 else None, q = request.args.get('q'), **filter_params) }}">
+                Previous
+            </a>
+        {% endif %}
+        {% set last_was_none = False %}
+        {% for page in pagination.iter_pages(left_edge = 1, left_current = 2, right_current = 2, right_edge = 1) %}
+            <li class="page-item {% if page == pagination.page %}active{% endif %}">
+                {% if page %}
+                    <a class="page-link" href="{{ url_for(endpoint, page = page if page != 1 else None, q = request.args.get('q'), **filter_params) }}">{{ page }}</a>
+                    {% set last_was_none = False %}
+                {% else %}
+                    {% if not last_was_none %}
+                        {% if loop.index0 < loop.length / 2 %}
+                            <a class="page-link paginate-goto" role="button" data-page="{{ pagination.page - 3 }}" data-page-max="{{ pagination.pages }}">&hellip;</a>
+                        {% else %}
+                            <a class="page-link paginate-goto" role="button" data-page="{{ pagination.page + 3 }}" data-page-max="{{ pagination.pages }}">&hellip;</a>
+                        {% endif %}
+                        {% set last_was_none = True %}
+                    {% endif %}
+                {% endif %}
+            </li>
+        {% endfor %}
+        {% if pagination.has_next %}
+            <a class="page-link ml-2"
+            href="{{ url_for(endpoint, page = pagination.next_num, q = request.args.get('q'), **filter_params) }}">Next</a>
+        {% endif %}
+    </ul>
+{% endmacro %}

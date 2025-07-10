@@ -1,0 +1,256 @@
+{% extends 'layout/base.html' %}
+
+{% set title = 'View Request' %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-8">
+                <h1>Request #{{ requesto.id }}</h1>
+                <span class="text-muted">Review the details of this request.</span>
+            </div>
+            <div class="col-4 text-right align-self-center">
+                <button class="btn btn-success" id="request-approve">Approve</button>
+                <button class="btn btn-danger request-decline">Decline</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title d-flex align-items-center">
+                            Details
+                            <i class="far fa-question-circle ml-2 text-muted card-explain" data-content="This section contains details from the user submitted request."></i>
+                        </h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-head-fixed">
+                            <tbody>
+                                <tr>
+                                    <td class="align-middle font-weight-bold" width="30%">
+                                        Identity
+                                    </td>
+                                    <td class="align-middle text-left" width="70%">
+                                        {{ requesto.name }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="align-middle font-weight-bold" width="30%">
+                                        Type
+                                    </td>
+                                    <td class="align-middle text-left" width="70%">
+                                        {% if requesto.type.value == 'account_creation' %}
+                                            Account Creation
+                                        {% elif requesto.type.value == 'service_access' %}
+                                            Service Access
+                                        {% elif requesto.type.value == 'mfa_reset' %}
+                                            MFA Reset
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% if requesto.team %}
+                                    <tr>
+                                        <td class="align-middle font-weight-bold" width="30%">
+                                            Team
+                                        </td>
+                                        <td class="align-middle text-left" width="70%">
+                                            {{ requesto.team }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                <tr>
+                                    <td class="align-middle font-weight-bold" width="30%">
+                                        Environments
+                                    </td>
+                                    <td class="align-middle text-left" width="70%">
+                                        {% if requesto.nonprod_pid %}
+                                            <span class="badge bg-success">Non-Production</span>
+                                        {% endif %}
+                                        {% if requesto.prod_pid %}
+                                            <span class="badge bg-danger">Production</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% if requesto.services %}
+                                    <tr>
+                                        <td class="align-middle font-weight-bold" width="30%">
+                                            Services
+                                        </td>
+                                        <td class="align-middle text-left" width="70%">
+                                            {% for service in requesto.services %}
+                                                <span class="badge bg-primary">{{ service.name }}</span>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if requesto.nonprod_pid %}
+                                    <tr>
+                                        <td class="align-middle font-weight-bold" width="30%">
+                                            Non-Production PID
+                                        </td>
+                                        <td class="align-middle text-left" width="70%">
+                                            {{ requesto.nonprod_pid }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if requesto.prod_pid %}
+                                    <tr>
+                                        <td class="align-middle font-weight-bold" width="30%">
+                                            Production PID
+                                        </td>
+                                        <td class="align-middle text-left" width="70%">
+                                            {{ requesto.prod_pid }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if requesto.justification %}
+                                    <tr>
+                                        <td class="align-middle font-weight-bold" width="30%">
+                                            Justification
+                                        </td>
+                                        <td class="align-middle text-left" width="70%">
+                                            {{ requesto.justification }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-7">
+                <div class="card">
+                    <div class="card-header" style="border-bottom: none">
+                        <h3 class="card-title d-flex align-items-center">
+                            PID Matches
+                            <i class="far fa-question-circle ml-2 text-muted card-explain" data-content="This section contains a selection of fuzzy-matched PIDs based on the user request. They are allocated a confidence rating based on how close the match is to the user creating the request."></i>
+                        </h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-head-fixed" id="pid-matches">
+                            <thead>
+                                <tr>
+                                    <th width="45%">Identity</th>
+                                    <th width="20%">Team</th>
+                                    <th width="25%">Environment</th>
+                                    <th width="5%">Confidence</th>
+                                    <th class="row-actions" width="5%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set best_nonprod = (requesto.nonprod_pids | sort(attribute = 'confidence', reverse = True))[:1] %}
+                                {% set best_prod = (requesto.prod_pids | sort(attribute = 'confidence', reverse = True))[:1] %}
+                                {% for pid in requesto.nonprod_pids + requesto.prod_pids %}
+                                    {% set env_type = pid.pid.environment_type.value %}
+                                    {% set is_best = (
+                                        (env_type == 'nonprod' and best_nonprod and pid == best_nonprod[0]) or
+                                        (env_type == 'prod' and best_prod and pid == best_prod[0])
+                                    ) %}
+                                    <tr>
+                                        <td class="align-middle">
+                                            <div class="d-flex align-items-center">
+                                                <div style="line-height: 1.2">
+                                                    <span class="d-block">{{ pid.pid.comment }}</span>
+                                                    <span class="small text-muted">{{ pid.pid.name }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ pid.pid.team.friendly_name }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {% if pid.pid.environment_type.value == 'nonprod' %}
+                                                <span class="badge bg-success">Non-Production</span>
+                                            {% elif pid.pid.environment_type.value == 'prod' %}
+                                                <span class="badge bg-danger">Production</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">
+                                            <span class="
+                                                {% if pid.confidence >= 85 %}
+                                                    text-success
+                                                {% elif pid.confidence >= 60 %}
+                                                    text-warning
+                                                {% else %}
+                                                    text-danger
+                                                {% endif %}
+                                            ">
+                                                {{ pid.confidence }}%
+                                            </span>
+                                        </td>
+                                        <td class="align-middle text-right">
+                                            <input data-pid-name="{{ pid.pid.name }}" type="radio" name="selected_pid_{{ env_type }}" value="{{ pid.pid.id }}" {% if is_best %}checked{% endif %}>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" style="border-bottom: none">
+                        <h3 class="card-title">Environment and Host Group Matches</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-head-fixed" id="host-group-matches">
+                            <thead>
+                                <tr>
+                                    <th width="15%">Service</th>
+                                    <th width="25%">Environment Type</th>
+                                    <th width="30%">Environments</th>
+                                    <th width="30%">Host Groups</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for service_match in service_matches %}
+                                    <tr>
+                                        <td class="align-middle">
+                                            {{ service_match.name }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <span class="badge bg-success">Non-Production</span>
+                                        </td>
+                                        <td class="align-middle">
+                                            {% for environment in service_match.nonprod.environments %}
+                                                <code data-pid-id="{{ environment.pid_id }}">{{ environment.name }}</code>
+                                            {% endfor %}
+                                        </td>
+                                        <td class="align-middle">
+                                            {% for host_group in service_match.nonprod.host_groups %}
+                                                <code data-pid-id="{{ host_group.pid_id }}">{{ host_group.name }}</code>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="align-middle">
+                                            {{ service_match.name }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <span class="badge bg-danger">Production</span>
+                                        </td>
+                                        <td class="align-middle">
+                                            {% for environment in service_match.prod.environments %}
+                                                <code data-pid-id="{{ environment.pid_id }}">{{ environment.name }}</code>
+                                            {% endfor %}
+                                        </td>
+                                        <td class="align-middle">
+                                            {% for host_group in service_match.prod.host_groups %}
+                                                <code data-pid-id="{{ host_group.pid_id }}">{{ host_group.name }}</code>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
